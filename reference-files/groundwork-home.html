@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groundwork — Websites for local trades</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#ffffff;
+    --ink:#0d0d0d;
+    --paper:#f7f7f5;
+    --gray:#5c5c5c;
+    --line:#0d0d0d;
+    --lime:#c6f24e;
+    --violet:#7c5cd6;
+    --violet-dim:#5f42b3;
+    --card-alt:#1c1c1c;
+    --card-alt-border:#3a3a3a;
+    --bg:var(--white);
+    --fg:var(--ink);
+    --fg-inverse:var(--white);
+    --muted:var(--gray);
+    --panel:var(--paper);
+    --edge:var(--ink);
+    --nav-bg:rgba(255,255,255,0.92);
+    --input-bg:#1c1c1c;
+    --input-border:#3a3a3a;
+    --faq-border-color:var(--ink);
+    --transition-theme: background .35s ease, color .35s ease, border-color .35s ease;
+    --feature-bg:#0d0d0d;
+    --feature-fg:#ffffff;
+    --feature-border:#0d0d0d;
+  }
+  [data-theme="dark"]{
+    --feature-bg:#f7f7f5;
+    --feature-fg:#0d0d0d;
+    --feature-border:#f7f7f5;
+  }
+  [data-theme="dark"]{
+    --white:#0d0d0d;
+    --ink:#f7f7f5;
+    --paper:#181818;
+    --gray:#a8a8a8;
+    --line:#f7f7f5;
+    --card-alt:#f7f7f5;
+    --card-alt-border:#d8d8d8;
+    --nav-bg:rgba(13,13,13,0.9);
+    --input-bg:#1c1c1c;
+    --input-border:#3a3a3a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden;transition:var(--transition-theme);}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:1100px;margin:0 auto;padding:0 32px;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(6px);border-bottom:2px solid transparent;transition:border-color .3s ease, background .35s ease;}
+  nav.scrolled{border-bottom-color:var(--ink);}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;letter-spacing:.5px;}
+  .logo .work{color:var(--violet);}
+  .nav-links{display:flex;gap:36px;font-size:14px;color:var(--gray);}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-cta{background:var(--ink);color:var(--white);padding:10px 20px;border-radius:999px;font-size:14px;transition:background .2s ease;}
+  .nav-cta:hover{background:var(--violet);}
+
+  .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding-top:80px;overflow:hidden;}
+  .blob-field{position:absolute;inset:0;z-index:0;}
+  .blob{position:absolute;border-radius:50%;filter:blur(50px);opacity:.55;}
+  .blob-1{width:520px;height:520px;background:var(--lime);top:-160px;right:-140px;animation:morph1 16s ease-in-out infinite;}
+  .blob-2{width:420px;height:420px;background:var(--violet);bottom:-140px;left:-100px;opacity:.35;animation:morph2 20s ease-in-out infinite;}
+  @keyframes morph1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-50px,60px) scale(1.15);}}
+  @keyframes morph2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(40px,-40px) scale(1.1);}}
+  .grain{position:absolute;inset:0;background-image:radial-gradient(var(--ink) 1px, transparent 1px);background-size:22px 22px;opacity:.035;}
+
+  .hero-grid-layout{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;width:100%;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--white);font-size:12px;letter-spacing:2px;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:24px;}
+  .hero h1{font-size:clamp(34px,4.6vw,58px);font-weight:700;line-height:1.08;margin-bottom:22px;}
+  .hero h1 .u{background:linear-gradient(transparent 60%, var(--lime) 60%);}
+  .hero p{font-size:18px;color:var(--gray);max-width:480px;margin-bottom:32px;}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{padding:14px 26px;border-radius:999px;font-size:15px;font-weight:500;display:inline-block;border:2px solid var(--ink);transition:transform .15s ease, background .2s ease, color .2s ease;}
+  .btn-primary{background:var(--ink);color:var(--white);}
+  .btn-primary:hover{background:var(--violet);border-color:var(--violet);transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:var(--white);}
+
+  .hero-card{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:28px;position:relative;box-shadow:8px 8px 0 var(--violet);}
+  .hero-card .tag{display:inline-block;background:var(--lime);color:var(--ink);font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;}
+  .hero-card h3{font-size:20px;margin-bottom:8px;}
+  .hero-card p{color:var(--gray);font-size:14px;margin-bottom:18px;}
+  .mini-flow{display:flex;flex-direction:column;gap:10px;}
+  .mini-flow-item{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;}
+  .mini-dot{width:10px;height:10px;border-radius:50%;background:var(--violet);flex-shrink:0;}
+
+  section{padding:110px 0;}
+  .section-head{max-width:600px;margin-bottom:56px;}
+  .section-eyebrow{color:var(--violet);font-size:13px;letter-spacing:3px;font-weight:600;margin-bottom:12px;}
+  .section-head h2{font-size:clamp(28px,4vw,38px);font-weight:700;}
+  .section-head p{color:var(--gray);margin-top:14px;font-size:16px;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  .flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .flow-step{border:2px solid var(--ink);border-radius:14px;padding:22px;background:var(--paper);}
+  .flow-step .step-num{color:var(--violet);font-size:12px;letter-spacing:2px;font-weight:700;margin-bottom:10px;}
+  .flow-step h3{font-size:16px;font-weight:500;margin-bottom:8px;}
+  .flow-step p{color:var(--gray);font-size:14px;}
+
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .plan{background:var(--white);border:2px solid var(--ink);border-radius:18px;padding:34px 26px;display:flex;flex-direction:column;}
+  .plan.featured{background:var(--feature-bg);color:var(--feature-fg);border-color:var(--feature-border);position:relative;}
+  .plan-badge{position:absolute;top:-14px;left:26px;background:var(--lime);color:var(--ink);font-size:11px;letter-spacing:1.5px;font-weight:700;padding:5px 14px;border-radius:999px;}
+  .plan-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px;}
+  .plan-tagline{color:var(--gray);font-size:14px;margin-bottom:22px;}
+  .plan.featured .plan-tagline{color:#bdbdbd;}
+  .plan-price{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:var(--violet);margin-bottom:2px;}
+  .plan.featured .plan-price{color:var(--lime);}
+  .plan-cadence{color:var(--gray);font-size:13px;margin-bottom:26px;}
+  .plan.featured .plan-cadence{color:#bdbdbd;}
+  .plan-features{list-style:none;flex:1;margin-bottom:26px;}
+  .plan-features li{font-size:14px;padding:9px 0;border-top:1px solid #e2e2e2;display:flex;gap:10px;}
+  [data-theme="dark"] .plan-features li{border-top-color:#3a3a3a;}
+  .plan.featured .plan-features li{border-top:1px solid #333;}
+  .plan-features li:first-child{border-top:none;}
+  .plan-features li::before{content:"—";color:var(--violet);flex-shrink:0;}
+  .plan.featured .plan-features li::before{color:var(--lime);}
+  .plan .btn{text-align:center;}
+  .plan.featured .btn-primary{background:var(--lime);color:var(--ink);border-color:var(--lime);}
+  .plan.featured .btn-primary:hover{background:var(--white);}
+
+  .faq-item{border-bottom:2px solid var(--ink);padding:24px 0;}
+  .faq-item h3{font-size:17px;font-weight:500;margin-bottom:10px;}
+  .faq-item p{color:var(--gray);font-size:15px;max-width:680px;}
+
+  .contact-box{background:var(--feature-bg);color:var(--feature-fg);border-radius:20px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+  .contact-copy h2{font-size:28px;margin-bottom:16px;}
+  .contact-copy p{color:var(--gray);}
+  form{display:flex;flex-direction:column;gap:14px;}
+  input,textarea{background:transparent;border:1px solid var(--gray);border-radius:8px;padding:12px 14px;color:var(--feature-fg);font-family:'Inter',sans-serif;font-size:14px;}
+  input:focus,textarea:focus{outline:none;border-color:var(--violet);}
+  textarea{resize:vertical;min-height:90px;}
+  form button{align-self:flex-start;border:none;cursor:pointer;font-family:'Inter',sans-serif;background:var(--lime);color:#0d0d0d;border-radius:999px;}
+  form button:hover{opacity:.85;}
+
+  footer{border-top:2px solid var(--ink);padding:36px 0;color:var(--gray);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+
+  @media(max-width:900px){
+    .hero-grid-layout{grid-template-columns:1fr;}
+    .pricing-grid{grid-template-columns:1fr;}
+    .flow-steps{grid-template-columns:1fr 1fr;}
+    .contact-box{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+    .blob-1,.blob-2{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="logo">GROUND<span class="work">WORK</span></div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button id="theme-toggle" aria-label="Toggle dark and light theme" style="border:2px solid var(--ink);background:transparent;color:var(--ink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:var(--transition-theme);">🌙</button>
+      <a href="#contact" class="nav-cta">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="blob-field">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="grain"></div>
+  </div>
+  <div class="container hero-grid-layout">
+    <div>
+      <div class="eyebrow">WEBSITES FOR LOCAL TRADES</div>
+      <h1>We build the site.<br>We keep it running.<br><span class="u">We bring you customers.</span></h1>
+      <p>Groundwork designs, hosts, and grows websites for electricians, plumbers, roofers, and other local trades — and we only make more when you do.</p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn btn-primary">See plans</a>
+        <a href="#how" class="btn btn-ghost">How it works</a>
+      </div>
+    </div>
+    <div class="hero-card reveal in">
+      <span class="tag">Grow plan</span>
+      <h3>Build → Host → Grow</h3>
+      <p>One plan, three jobs done for you.</p>
+      <div class="mini-flow">
+        <div class="mini-flow-item"><span class="mini-dot"></span>Site built for your trade</div>
+        <div class="mini-flow-item"><span class="mini-dot"></span>Hosted and kept running</div>
+        <div class="mini-flow-item"><span class="mini-dot"></span>$50 per booked job, nothing else</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">HOW IT WORKS</div>
+      <h2>One site, three ways to move forward</h2>
+      <p>Start with just a website, or let us run everything — including the work of finding you customers.</p>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step reveal"><div class="step-num">STEP 1</div><h3>We design your site</h3><p>Built for your trade, your service area, and how customers actually search for you.</p></div>
+      <div class="flow-step reveal"><div class="step-num">STEP 2</div><h3>You choose a plan</h3><p>Just the build, ongoing hosting, or the full growth plan below.</p></div>
+      <div class="flow-step reveal"><div class="step-num">STEP 3</div><h3>Leads come through your site</h3><p>A booking form and call tracking are built in, so every lead is counted.</p></div>
+      <div class="flow-step reveal"><div class="step-num">STEP 4</div><h3>You only pay for results</h3><p>On the Grow plan, we charge $50 per booked job — nothing if it doesn't turn into work.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">PRICING</div>
+      <h2>Choose how much we handle</h2>
+      <p>Every plan starts with a site built for your trade. Hosting and growth are optional add-ons.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan reveal">
+        <div class="plan-name">Build</div>
+        <div class="plan-tagline">A finished site, handed to you</div>
+        <div class="plan-price">$500</div>
+        <div class="plan-cadence">one-time</div>
+        <ul class="plan-features">
+          <li>Custom-designed site for your trade</li>
+          <li>Mobile-friendly, fast-loading</li>
+          <li>Contact form included</li>
+          <li>You host it anywhere you like</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Get started</a>
+      </div>
+      <div class="plan featured reveal">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Grow</div>
+        <div class="plan-tagline">Build + host, plus we find you work</div>
+        <div class="plan-price">$1,000</div>
+        <div class="plan-cadence">per month</div>
+        <ul class="plan-features">
+          <li>Everything in Build and Host</li>
+          <li>Ongoing SEO and performance work</li>
+          <li>Booking form + call tracking built in</li>
+          <li>$50 charged only when a lead turns into a booked job</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Get started</a>
+      </div>
+      <div class="plan reveal">
+        <div class="plan-name">Host</div>
+        <div class="plan-tagline">Keep an existing site alive</div>
+        <div class="plan-price">$700</div>
+        <div class="plan-cadence">per month</div>
+        <ul class="plan-features">
+          <li>Hosting, uptime, and backups</li>
+          <li>Security and software updates</li>
+          <li>Content and copy updates</li>
+          <li>Direct support line to us</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Get started</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">FAQ</div>
+      <h2>How the $50-per-booked-job fee works</h2>
+    </div>
+    <div class="reveal">
+      <div class="faq-item"><h3>How do you know when I get a lead?</h3><p>Your Grow-plan site includes a booking form and a dedicated tracking phone number. Every submission or call through those is logged automatically — nothing to report yourself.</p></div>
+      <div class="faq-item"><h3>What if the lead doesn't turn into a job?</h3><p>You're only charged once a lead is marked as a booked job — not for raw form submissions or calls that don't go anywhere. It's a flat $50 per completed job, so there's never a dispute over what it was worth.</p></div>
+      <div class="faq-item"><h3>Can I see every lead I'm charged for?</h3><p>Yes — your dashboard shows a running log of every lead, when it came in, and the charge tied to it.</p></div>
+      <div class="faq-item"><h3>Can I switch plans later?</h3><p>Yes, you can move between Host and Grow at any time from your dashboard.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="contact-box reveal">
+      <div class="contact-copy">
+        <h2>Let's build your site</h2>
+        <p>Tell us about your business and we'll follow up with a plan recommendation and a quote.</p>
+      </div>
+      <form onsubmit="event.preventDefault();">
+        <input type="text" placeholder="Business name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="text" placeholder="Trade (electrician, plumber, roofer...)" required>
+        <textarea placeholder="Anything else we should know?"></textarea>
+        <button type="submit" class="btn">Send</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%;">
+    <span>© 2026 Groundwork</span>
+    <span>Build · Host · Grow</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  const themeToggle = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+  function applyTheme(theme){
+    if(theme === 'dark'){
+      root.setAttribute('data-theme','dark');
+      themeToggle.textContent = '☀️';
+    } else {
+      root.removeAttribute('data-theme');
+      themeToggle.textContent = '🌙';
+    }
+  }
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('groundwork-theme') || 'light'; } catch(e) {}
+  applyTheme(savedTheme);
+  themeToggle.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    const next = isDark ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('groundwork-theme', next); } catch(e) {}
+  });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealEls = document.querySelectorAll('.reveal:not(.in)');
+  if (reduceMotion) {
+    revealEls.forEach(el => el.classList.add('in'));
+  } else {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('in'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => observer.observe(el));
+  }
+</script>
+
+</body>
+</html>

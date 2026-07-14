@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in or sign up — Groundwork</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#ffffff;--ink:#0d0d0d;--paper:#f7f7f5;--gray:#5c5c5c;
+    --lime:#c6f24e;--violet:#7c5cd6;--violet-dim:#5f42b3;
+    --nav-bg:rgba(255,255,255,0.92);--input-border:#3a3a3a;
+    --transition-theme: background .35s ease, color .35s ease, border-color .35s ease;
+  }
+  [data-theme="dark"]{
+    --white:#0d0d0d;--ink:#f7f7f5;--paper:#181818;--gray:#a8a8a8;
+    --nav-bg:rgba(13,13,13,0.9);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;min-height:100vh;transition:var(--transition-theme);}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
+  a{color:inherit;text-decoration:none;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(6px);border-bottom:2px solid var(--ink);}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;}
+  .logo .work{color:var(--violet);}
+  #theme-toggle{border:2px solid var(--ink);background:transparent;color:var(--ink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:var(--transition-theme);}
+
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 60px;}
+  .auth-card{width:100%;max-width:420px;border:2px solid var(--ink);border-radius:20px;padding:40px;background:var(--paper);transition:var(--transition-theme);}
+  .tabs{display:flex;border:2px solid var(--ink);border-radius:999px;padding:4px;margin-bottom:28px;}
+  .tab{flex:1;text-align:center;padding:10px;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;color:var(--gray);}
+  .tab.active{background:var(--ink);color:var(--white);}
+  h1.title{font-size:22px;margin-bottom:6px;}
+  .subtitle{color:var(--gray);font-size:14px;margin-bottom:26px;}
+
+  form{display:flex;flex-direction:column;gap:14px;}
+  .field label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;}
+  .field input, .field select{width:100%;background:var(--white);border:2px solid var(--input-border);border-radius:8px;padding:11px 13px;color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;transition:var(--transition-theme);}
+  .field input:focus, .field select:focus{outline:none;border-color:var(--violet);}
+
+  .btn{padding:13px 24px;border-radius:999px;font-size:15px;font-weight:500;border:2px solid var(--ink);text-align:center;cursor:pointer;transition:transform .15s ease, background .2s ease, color .2s ease;}
+  .btn-primary{background:var(--ink);color:var(--white);}
+  .btn-primary:hover{background:var(--violet);border-color:var(--violet);transform:translateY(-1px);}
+
+  .divider{display:flex;align-items:center;gap:12px;color:var(--gray);font-size:13px;margin:20px 0;}
+  .divider::before, .divider::after{content:"";flex:1;height:1px;background:var(--input-border);}
+
+  .fine-print{text-align:center;font-size:13px;color:var(--gray);margin-top:20px;}
+  .fine-print a{color:var(--violet);font-weight:500;}
+  .forgot{text-align:right;font-size:13px;color:var(--violet);margin-top:-4px;}
+
+  .role-toggle{display:flex;gap:10px;margin-bottom:6px;}
+  .role-option{flex:1;border:2px solid var(--input-border);border-radius:10px;padding:10px;text-align:center;font-size:13px;cursor:pointer;transition:var(--transition-theme);}
+  .role-option.selected{border-color:var(--violet);background:rgba(124,92,214,0.08);font-weight:500;}
+
+  @media(prefers-reduced-motion:reduce){
+    * {transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="groundwork-home.html" class="logo">GROUND<span class="work">WORK</span></a>
+    <button id="theme-toggle" aria-label="Toggle dark and light theme">🌙</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="auth-card">
+    <div class="tabs">
+      <div class="tab active" id="tab-login" onclick="switchTab('login')">Log in</div>
+      <div class="tab" id="tab-signup" onclick="switchTab('signup')">Sign up</div>
+    </div>
+
+    <div id="panel-login">
+      <h1 class="title">Welcome back</h1>
+      <p class="subtitle">Log in to your Groundwork dashboard.</p>
+      <form onsubmit="event.preventDefault();">
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="you@business.com" required>
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
+        <div class="forgot"><a href="#">Forgot password?</a></div>
+        <button type="submit" class="btn btn-primary">Log in</button>
+      </form>
+    </div>
+
+    <div id="panel-signup" style="display:none;">
+      <h1 class="title">Create your account</h1>
+      <p class="subtitle">Set up access to your Groundwork dashboard.</p>
+      <form onsubmit="event.preventDefault();">
+        <div class="field">
+          <label>I am a</label>
+          <div class="role-toggle">
+            <div class="role-option selected" id="role-client" onclick="selectRole('client')">Business owner</div>
+            <div class="role-option" id="role-admin" onclick="selectRole('admin')">Groundwork admin</div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="signup-business">Business name</label>
+          <input type="text" id="signup-business" placeholder="Rowe Electrical Services" required>
+        </div>
+        <div class="field">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="you@business.com" required>
+        </div>
+        <div class="field">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" placeholder="At least 8 characters" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create account</button>
+      </form>
+    </div>
+
+    <div class="fine-print" id="fine-print-login">
+      Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign up</a>
+    </div>
+    <div class="fine-print" id="fine-print-signup" style="display:none;">
+      Already have an account? <a href="#" onclick="switchTab('login');return false;">Log in</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+  function applyTheme(theme){
+    if(theme === 'dark'){
+      root.setAttribute('data-theme','dark');
+      themeToggle.textContent = '☀️';
+    } else {
+      root.removeAttribute('data-theme');
+      themeToggle.textContent = '🌙';
+    }
+  }
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('groundwork-theme') || 'light'; } catch(e) {}
+  applyTheme(savedTheme);
+  themeToggle.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    const next = isDark ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('groundwork-theme', next); } catch(e) {}
+  });
+
+  function switchTab(tab){
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    document.getElementById('panel-login').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('panel-signup').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('fine-print-login').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('fine-print-signup').style.display = tab === 'signup' ? 'block' : 'none';
+  }
+
+  function selectRole(role){
+    document.getElementById('role-client').classList.toggle('selected', role === 'client');
+    document.getElementById('role-admin').classList.toggle('selected', role === 'admin');
+  }
+</script>
+
+</body>
+</html>

@@ -1,26 +1,1136 @@
-@import "tailwindcss";
+/* ============================================================
+   Groundwork — Global Styles
+   Fonts are loaded via next/font/google in layout.tsx and
+   exposed here as CSS custom properties.
+   ============================================================ */
 
+/* ---------- Design Tokens ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Raw palette */
+  --white:   #ffffff;
+  --ink:     #0d0d0d;
+  --paper:   #f7f7f5;
+  --gray:    #5c5c5c;
+  --line:    #0d0d0d;
+  --lime:    #c6f24e;
+  --violet:  #7c5cd6;
+  --violet-dim: #5f42b3;
+
+  /* Dark-card palette (used for dark-on-light cards in light mode) */
+  --card-alt:        #1c1c1c;
+  --card-alt-border: #3a3a3a;
+
+  /* Semantic aliases */
+  --bg:          var(--white);
+  --fg:          var(--ink);
+  --fg-inverse:  var(--white);
+  --muted:       var(--gray);
+  --panel:       var(--paper);
+  --edge:        var(--ink);
+
+  /* Navigation */
+  --nav-bg: rgba(255, 255, 255, 0.92);
+
+  /* Inputs */
+  --input-bg:     #1c1c1c;
+  --input-border: #3a3a3a;
+
+  /* Feature / CTA band (inverted block) */
+  --feature-bg:     #0d0d0d;
+  --feature-fg:     #ffffff;
+  --feature-border: #0d0d0d;
+
+  /* FAQ */
+  --faq-border-color: var(--ink);
+
+  /* Fonts (injected by next/font/google in layout.tsx) */
+  --font-inter:         var(--font-inter-var);
+  --font-space-grotesk: var(--font-space-grotesk-var);
+
+  /* Transitions */
+  --transition-theme: background 0.35s ease, color 0.35s ease,
+                      border-color 0.35s ease;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ---------- Dark-mode overrides ---------- */
+[data-theme="dark"] {
+  --white: #0d0d0d;
+  --ink:   #f7f7f5;
+  --paper: #181818;
+  --gray:  #a8a8a8;
+  --line:  #f7f7f5;
+
+  /* Dark-card becomes light in dark mode */
+  --card-alt:        #f7f7f5;
+  --card-alt-border: #d8d8d8;
+
+  --nav-bg: rgba(13, 13, 13, 0.9);
+
+  --input-bg:     #1c1c1c;
+  --input-border: #3a3a3a;
+
+  /* Feature / CTA band flips to light */
+  --feature-bg:     #f7f7f5;
+  --feature-fg:     #0d0d0d;
+  --feature-border: #f7f7f5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---------- Base Reset ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:   var(--white);
+  color:        var(--ink);
+  font-family:  var(--font-inter), sans-serif;
+  line-height:  1.6;
+  overflow-x:   hidden;
+  transition:   var(--transition-theme);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Layout Helpers ---------- */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ---------- Scroll-reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  display: inline-block;
+  border: 2px solid var(--ink);
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color:      var(--white);
+}
+
+.btn-primary:hover {
+  background:   var(--violet);
+  border-color: var(--violet);
+  transform:    translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color:      var(--ink);
+}
+
+.btn-ghost:hover {
+  background: var(--ink);
+  color:      var(--white);
+}
+
+/* ---------- Navigation ---------- */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease, background 0.35s ease;
+}
+
+nav.scrolled {
+  border-bottom-color: var(--ink);
+}
+
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  font-weight: 700;
+  font-size:   20px;
+  letter-spacing: 0.5px;
+}
+
+.logo .work {
+  color: var(--violet);
+}
+
+.nav-links {
+  display:   flex;
+  gap:       36px;
+  font-size: 14px;
+  color:     var(--gray);
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.nav-links a.active {
+  color:       var(--ink);
+  font-weight: 500;
+}
+
+.nav-cta {
+  background:    var(--ink);
+  color:         var(--white);
+  padding:       10px 20px;
+  border-radius: 999px;
+  font-size:     14px;
+  transition:    background 0.2s ease;
+}
+
+.nav-cta:hover {
+  background: var(--violet);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  border:        2px solid var(--ink);
+  background:    transparent;
+  color:         var(--ink);
+  width:         38px;
+  height:        38px;
+  border-radius: 50%;
+  cursor:        pointer;
+  font-size:     16px;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  transition:    var(--transition-theme);
+}
+
+/* ---------- Sections ---------- */
+section {
+  padding: 110px 0;
+}
+
+.section-head {
+  max-width:     600px;
+  margin-bottom: 56px;
+}
+
+.section-eyebrow {
+  color:          var(--violet);
+  font-size:      13px;
+  letter-spacing: 3px;
+  font-weight:    600;
+  margin-bottom:  12px;
+}
+
+.section-head h2 {
+  font-size:   clamp(28px, 4vw, 38px);
+  font-weight: 700;
+}
+
+.section-head p {
+  color:        var(--gray);
+  margin-top:   14px;
+  font-size:    16px;
+}
+
+/* ---------- Pricing Grid ---------- */
+.pricing-grid {
+  display:               grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:                   24px;
+}
+
+.plan {
+  background:     var(--white);
+  border:         2px solid var(--ink);
+  border-radius:  18px;
+  padding:        34px 26px;
+  display:        flex;
+  flex-direction: column;
+  transition:     var(--transition-theme);
+}
+
+.plan.featured {
+  background:   var(--feature-bg);
+  color:        var(--feature-fg);
+  border-color: var(--feature-border);
+  position:     relative;
+}
+
+.plan-badge {
+  position:      absolute;
+  top:           -14px;
+  left:          26px;
+  background:    var(--lime);
+  color:         var(--ink);
+  font-size:     11px;
+  letter-spacing: 1.5px;
+  font-weight:   700;
+  padding:       5px 14px;
+  border-radius: 999px;
+}
+
+.plan-name {
+  font-family:  var(--font-space-grotesk), sans-serif;
+  font-weight:  700;
+  font-size:    20px;
+  margin-bottom: 6px;
+}
+
+.plan-tagline {
+  color:         var(--gray);
+  font-size:     14px;
+  margin-bottom: 22px;
+}
+
+.plan.featured .plan-tagline { color: #bdbdbd; }
+
+.plan-price {
+  font-family:   var(--font-space-grotesk), sans-serif;
+  font-size:     36px;
+  font-weight:   700;
+  color:         var(--violet);
+  margin-bottom: 2px;
+}
+
+.plan.featured .plan-price { color: var(--lime); }
+
+.plan-cadence {
+  color:         var(--gray);
+  font-size:     13px;
+  margin-bottom: 26px;
+}
+
+.plan.featured .plan-cadence { color: #bdbdbd; }
+
+.plan-features {
+  list-style:    none;
+  flex:          1;
+  margin-bottom: 26px;
+}
+
+.plan-features li {
+  font-size:  14px;
+  padding:    9px 0;
+  border-top: 1px solid #e2e2e2;
+  display:    flex;
+  gap:        10px;
+}
+
+[data-theme="dark"] .plan-features li { border-top-color: #3a3a3a; }
+
+.plan.featured .plan-features li { border-top: 1px solid #333; }
+.plan-features li:first-child    { border-top: none; }
+
+.plan-features li::before        { content: "—"; color: var(--violet); flex-shrink: 0; }
+.plan.featured .plan-features li::before { color: var(--lime); }
+
+.plan .btn { text-align: center; }
+
+.plan.featured .btn-primary {
+  background:   var(--lime);
+  color:        var(--ink);
+  border-color: var(--lime);
+}
+
+.plan.featured .btn-primary:hover { background: var(--white); }
+
+/* ---------- FAQ ---------- */
+.faq-item {
+  border-bottom: 2px solid var(--ink);
+  padding:       24px 0;
+}
+
+.faq-item h3 {
+  font-size:     17px;
+  font-weight:   500;
+  margin-bottom: 10px;
+}
+
+.faq-item p {
+  color:     var(--gray);
+  font-size: 15px;
+  max-width: 680px;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  border-top:   2px solid var(--ink);
+  padding:      36px 0;
+  color:        var(--gray);
+  font-size:    13px;
+  display:      flex;
+  justify-content: space-between;
+  flex-wrap:    wrap;
+  gap:          12px;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  min-height:  100vh;
+  display:     flex;
+  align-items: center;
+  position:    relative;
+  padding-top: 80px;
+  overflow:    hidden;
+}
+
+.blob-field {
+  position: absolute;
+  inset:    0;
+  z-index:  0;
+}
+
+.blob {
+  position:      absolute;
+  border-radius: 50%;
+  filter:        blur(50px);
+  opacity:       0.55;
+}
+
+.blob-1 {
+  width:      520px;
+  height:     520px;
+  background: var(--lime);
+  top:        -160px;
+  right:      -140px;
+  animation:  morph1 16s ease-in-out infinite;
+}
+
+.blob-2 {
+  width:      420px;
+  height:     420px;
+  background: var(--violet);
+  bottom:     -140px;
+  left:       -100px;
+  opacity:    0.35;
+  animation:  morph2 20s ease-in-out infinite;
+}
+
+@keyframes morph1 {
+  0%,  100% { transform: translate(0, 0)    scale(1);    }
+  50%        { transform: translate(-50px, 60px) scale(1.15); }
+}
+
+@keyframes morph2 {
+  0%,  100% { transform: translate(0, 0)   scale(1);   }
+  50%        { transform: translate(40px, -40px) scale(1.1); }
+}
+
+.grain {
+  position:         absolute;
+  inset:            0;
+  background-image: radial-gradient(var(--ink) 1px, transparent 1px);
+  background-size:  22px 22px;
+  opacity:          0.035;
+}
+
+.hero-grid-layout {
+  position:              relative;
+  z-index:               1;
+  display:               grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap:                   48px;
+  align-items:           center;
+  width:                 100%;
+}
+
+.eyebrow {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  background:     var(--ink);
+  color:          var(--white);
+  font-size:      12px;
+  letter-spacing: 2px;
+  font-weight:    600;
+  padding:        6px 14px;
+  border-radius:  999px;
+  margin-bottom:  24px;
+}
+
+.hero h1 {
+  font-size:     clamp(34px, 4.6vw, 58px);
+  font-weight:   700;
+  line-height:   1.08;
+  margin-bottom: 22px;
+}
+
+.hero h1 .u {
+  background: linear-gradient(transparent 60%, var(--lime) 60%);
+}
+
+.hero p {
+  font-size:     18px;
+  color:         var(--gray);
+  max-width:     480px;
+  margin-bottom: 32px;
+}
+
+.hero-actions {
+  display:   flex;
+  gap:       14px;
+  flex-wrap: wrap;
+}
+
+/* Hero card (right column) */
+.hero-card {
+  background:    var(--paper);
+  border:        2px solid var(--ink);
+  border-radius: 20px;
+  padding:       28px;
+  position:      relative;
+  box-shadow:    8px 8px 0 var(--violet);
+}
+
+.hero-card .tag {
+  display:       inline-block;
+  background:    var(--lime);
+  color:         var(--ink);
+  font-size:     12px;
+  font-weight:   600;
+  padding:       4px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.hero-card h3 {
+  font-size:     20px;
+  margin-bottom: 8px;
+}
+
+.hero-card p {
+  color:         var(--gray);
+  font-size:     14px;
+  margin-bottom: 18px;
+}
+
+.mini-flow {
+  display:        flex;
+  flex-direction: column;
+  gap:            10px;
+}
+
+.mini-flow-item {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  font-size:   14px;
+  font-weight: 500;
+}
+
+.mini-dot {
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  background:    var(--violet);
+  flex-shrink:   0;
+}
+
+/* ---------- How It Works ---------- */
+.flow-steps {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   20px;
+}
+
+.flow-step {
+  border:        2px solid var(--ink);
+  border-radius: 14px;
+  padding:       22px;
+  background:    var(--paper);
+}
+
+.flow-step .step-num {
+  color:         var(--violet);
+  font-size:     12px;
+  letter-spacing: 2px;
+  font-weight:   700;
+  margin-bottom: 10px;
+}
+
+.flow-step h3 {
+  font-size:     16px;
+  font-weight:   500;
+  margin-bottom: 8px;
+}
+
+.flow-step p {
+  color:     var(--gray);
+  font-size: 14px;
+}
+
+/* ---------- Contact Section ---------- */
+.contact-box {
+  background:    var(--feature-bg);
+  color:         var(--feature-fg);
+  border-radius: 20px;
+  padding:       48px;
+  display:       grid;
+  grid-template-columns: 1fr 1fr;
+  gap:           48px;
+}
+
+.contact-copy h2 {
+  font-size:     28px;
+  margin-bottom: 16px;
+}
+
+.contact-copy p {
+  color: var(--gray);
+}
+
+form {
+  display:        flex;
+  flex-direction: column;
+  gap:            14px;
+}
+
+input,
+textarea {
+  background:  transparent;
+  border:      1px solid var(--gray);
+  border-radius: 8px;
+  padding:     12px 14px;
+  color:       var(--feature-fg);
+  font-family: var(--font-inter), sans-serif;
+  font-size:   14px;
+}
+
+input:focus,
+textarea:focus {
+  outline:      none;
+  border-color: var(--violet);
+}
+
+textarea {
+  resize:     vertical;
+  min-height: 90px;
+}
+
+form button {
+  align-self:    flex-start;
+  border:        none;
+  cursor:        pointer;
+  font-family:   var(--font-inter), sans-serif;
+  background:    var(--lime);
+  color:         #0d0d0d;
+  border-radius: 999px;
+}
+
+form button:hover {
+  opacity: 0.85;
+}
+
+/* ---------- Page Header (interior pages) ---------- */
+header.page-head {
+  padding:    160px 0 60px;
+  text-align: center;
+}
+
+header.page-head .section-eyebrow {
+  margin-bottom: 14px;
+}
+
+header.page-head h1 {
+  font-size:     clamp(32px, 5vw, 52px);
+  font-weight:   700;
+  margin-bottom: 16px;
+}
+
+header.page-head p {
+  color:     var(--gray);
+  font-size: 18px;
+  max-width: 600px;
+  margin:    0 auto;
+}
+
+/* Compact section padding for interior pages (pricing uses 60px vs home's 110px) */
+.section-sm {
+  padding: 60px 0;
+}
+
+/* Small note / disclaimer text */
+.note {
+  text-align:    center;
+  color:         var(--gray);
+  font-size:     14px;
+  margin-bottom: 80px;
+}
+
+/* ---------- Feature Comparison Table ---------- */
+.compare-wrap {
+  overflow-x:    auto;
+  margin-bottom: 100px;
+}
+
+table {
+  width:           100%;
+  border-collapse: collapse;
+  min-width:       640px;
+}
+
+th,
+td {
+  text-align:    left;
+  padding:       16px;
+  border-bottom: 1px solid var(--input-border);
+  font-size:     14px;
+}
+
+thead th {
+  font-family:   var(--font-space-grotesk), sans-serif;
+  font-size:     15px;
+  font-weight:   700;
+  border-bottom: 2px solid var(--ink);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+th:not(:first-child),
+td:not(:first-child) {
+  text-align: center;
+}
+
+.check     { color: var(--violet); font-weight: 700; }
+.dash      { color: var(--gray); }
+.row-label { color: var(--gray); }
+
+/* ---------- Lead Explainer ---------- */
+.lead-explainer {
+  background:    var(--paper);
+  border:        2px solid var(--ink);
+  border-radius: 20px;
+  padding:       48px;
+  margin-bottom: 100px;
+}
+
+.lead-explainer h2 {
+  font-size:     26px;
+  margin-bottom: 32px;
+  text-align:    center;
+}
+
+.lead-steps {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   20px;
+}
+
+.lead-step {
+  text-align: center;
+}
+
+.lead-step .num {
+  width:           36px;
+  height:          36px;
+  border-radius:   50%;
+  background:      var(--violet);
+  color:           #fff;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-weight:     700;
+  margin:          0 auto 12px;
+}
+
+.lead-step h3 {
+  font-size:     15px;
+  margin-bottom: 6px;
+}
+
+.lead-step p {
+  color:     var(--gray);
+  font-size: 13px;
+}
+
+/* ---------- CTA Band ---------- */
+.cta-band {
+  background:    var(--feature-bg);
+  color:         var(--feature-fg);
+  border-radius: 20px;
+  padding:       56px;
+  text-align:    center;
+  margin:        100px 0;
+}
+
+.cta-band h2 {
+  font-size:     28px;
+  margin-bottom: 14px;
+}
+
+.cta-band p {
+  color:         var(--gray);
+  margin-bottom: 28px;
+}
+
+.cta-band .btn-primary {
+  background:   var(--lime);
+  color:        #0d0d0d;
+  border-color: var(--lime);
+}
+
+/* ---------- Auth / Login Page ---------- */
+.wrap {
+  min-height:      100vh;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  padding:         120px 24px 60px;
+}
+
+.auth-card {
+  width:         100%;
+  max-width:     420px;
+  border:        2px solid var(--ink);
+  border-radius: 20px;
+  padding:       40px;
+  background:    var(--paper);
+  transition:    var(--transition-theme);
+}
+
+/* Tab strip (Log in / Sign up) */
+.tabs {
+  display:       flex;
+  border:        2px solid var(--ink);
+  border-radius: 999px;
+  padding:       4px;
+  margin-bottom: 28px;
+}
+
+.tab {
+  flex:          1;
+  text-align:    center;
+  padding:       10px;
+  border-radius: 999px;
+  font-size:     14px;
+  font-weight:   500;
+  cursor:        pointer;
+  color:         var(--gray);
+  transition:    background 0.2s ease, color 0.2s ease;
+}
+
+.tab.active {
+  background: var(--ink);
+  color:      var(--white);
+}
+
+/* Card title + subtitle */
+h1.title {
+  font-size:     22px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color:         var(--gray);
+  font-size:     14px;
+  margin-bottom: 26px;
+}
+
+/* Form fields with labels */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  display:       block;
+  font-size:     13px;
+  font-weight:   500;
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+  width:       100%;
+  background:  var(--white);
+  border:      2px solid var(--input-border);
+  border-radius: 8px;
+  padding:     11px 13px;
+  color:       var(--ink);
+  font-family: var(--font-inter), sans-serif;
+  font-size:   14px;
+  transition:  var(--transition-theme);
+}
+
+.field input:focus,
+.field select:focus {
+  outline:      none;
+  border-color: var(--violet);
+}
+
+/* OR divider */
+.divider {
+  display:     flex;
+  align-items: center;
+  gap:         12px;
+  color:       var(--gray);
+  font-size:   13px;
+  margin:      20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content:    "";
+  flex:       1;
+  height:     1px;
+  background: var(--input-border);
+}
+
+/* Fine print below the card */
+.fine-print {
+  text-align: center;
+  font-size:  13px;
+  color:      var(--gray);
+  margin-top: 20px;
+}
+
+.fine-print a {
+  color:       var(--violet);
+  font-weight: 500;
+}
+
+/* Forgot password link */
+.forgot {
+  text-align: right;
+  font-size:  13px;
+  color:      var(--violet);
+  margin-top: -4px;
+}
+
+/* Role selector (Business owner / Groundwork admin) */
+.role-toggle {
+  display:       flex;
+  gap:           10px;
+  margin-bottom: 6px;
+}
+
+.role-option {
+  flex:          1;
+  border:        2px solid var(--input-border);
+  border-radius: 10px;
+  padding:       10px;
+  text-align:    center;
+  font-size:     13px;
+  cursor:        pointer;
+  transition:    var(--transition-theme);
+}
+
+.role-option.selected {
+  border-color: var(--violet);
+  background:   rgba(124, 92, 214, 0.08);
+  font-weight:  500;
+}
+
+/* ---------- App Shell (Dashboard / Admin) ---------- */
+
+/* Full-page background wrapper used by app/dashboard and app/admin */
+.app-shell {
+  background:  var(--paper);
+  min-height:  100vh;
+  transition:  var(--transition-theme);
+}
+
+/* Content area — wider than marketing container */
+.page {
+  max-width: 1200px;
+  margin:    0 auto;
+  padding:   100px 32px 60px;
+}
+
+.page-title {
+  font-size:     26px;
+  margin-bottom: 4px;
+}
+
+.page-sub {
+  color:         var(--gray);
+  font-size:     14px;
+  margin-bottom: 32px;
+}
+
+/* Generic grid container */
+.grid {
+  display: grid;
+  gap:     20px;
+}
+
+/* Metric row (4-up across the top) */
+.metrics {
+  grid-template-columns: repeat(4, 1fr);
+  margin-bottom:         28px;
+}
+
+.metric-card {
+  background:    var(--white);
+  border:        2px solid var(--ink);
+  border-radius: 14px;
+  padding:       20px;
+  transition:    var(--transition-theme);
+}
+
+.metric-label {
+  font-size:     13px;
+  color:         var(--gray);
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size:   26px;
+  font-weight: 700;
+}
+
+.metric-value.accent {
+  color: var(--violet);
+}
+
+/* Content panels */
+.panel {
+  background:    var(--white);
+  border:        2px solid var(--ink);
+  border-radius: 16px;
+  padding:       26px;
+  margin-bottom: 24px;
+  transition:    var(--transition-theme);
+}
+
+.panel-head {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  margin-bottom:   18px;
+}
+
+.panel-head h2 {
+  font-size: 17px;
+}
+
+/* Status badges */
+.badge {
+  font-size:     12px;
+  font-weight:   600;
+  padding:       4px 12px;
+  border-radius: 999px;
+}
+
+.badge-live {
+  background: var(--lime);
+  color:      var(--ink);
+}
+
+.badge-pending {
+  background: var(--paper);
+  border:     1px solid var(--input-border);
+  color:      var(--gray);
+}
+
+/* Plan / billing row list */
+.plan-row {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         14px 0;
+  border-bottom:   1px solid var(--input-border);
+}
+
+.plan-row:last-child {
+  border-bottom: none;
+}
+
+/* Two-column layout for leads + billing side-by-side */
+.two-col {
+  grid-template-columns: 1.4fr 1fr;
+  align-items:           start;
+}
+
+/* Compact button variant (used inside dashboard panels) */
+.btn-sm {
+  padding:   10px 20px;
+  font-size: 13px;
+}
+
+/* Dashboard data-table overrides
+   (tighter padding + muted uppercase headers vs. the pricing compare table) */
+.panel table th,
+.panel table td {
+  padding: 12px 8px;
+}
+
+.panel table thead th {
+  font-family:    inherit;
+  font-size:      12px;
+  font-weight:    500;
+  color:          var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom:  1px solid var(--input-border);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .hero-grid-layout  { grid-template-columns: 1fr; }
+  .pricing-grid      { grid-template-columns: 1fr; }
+  .flow-steps        { grid-template-columns: 1fr 1fr; }
+  .contact-box       { grid-template-columns: 1fr; }
+  .nav-links         { display: none; }
+  .metrics           { grid-template-columns: 1fr 1fr; }
+  .two-col           { grid-template-columns: 1fr; }
+  .lead-steps        { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity:    1;
+    transform:  none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .blob-1,
+  .blob-2 {
+    animation: none;
+  }
 }

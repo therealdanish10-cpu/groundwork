@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Groundwork</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#ffffff;--ink:#0d0d0d;--paper:#f7f7f5;--gray:#5c5c5c;
+    --lime:#c6f24e;--violet:#7c5cd6;--violet-dim:#5f42b3;
+    --nav-bg:rgba(255,255,255,0.92);--input-border:#3a3a3a;
+    --feature-bg:#0d0d0d;--feature-fg:#ffffff;--feature-border:#0d0d0d;
+    --transition-theme: background .35s ease, color .35s ease, border-color .35s ease;
+  }
+  [data-theme="dark"]{
+    --white:#0d0d0d;--ink:#f7f7f5;--paper:#181818;--gray:#a8a8a8;
+    --nav-bg:rgba(13,13,13,0.9);
+    --feature-bg:#f7f7f5;--feature-fg:#0d0d0d;--feature-border:#f7f7f5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--white);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;transition:var(--transition-theme);}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:1100px;margin:0 auto;padding:0 32px;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(6px);border-bottom:2px solid var(--ink);}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;}
+  .logo .work{color:var(--violet);}
+  .nav-links{display:flex;gap:36px;font-size:14px;color:var(--gray);}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);font-weight:500;}
+  .nav-cta{background:var(--ink);color:var(--white);padding:10px 20px;border-radius:999px;font-size:14px;}
+  .nav-cta:hover{background:var(--violet);}
+  #theme-toggle{border:2px solid var(--ink);background:transparent;color:var(--ink);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:var(--transition-theme);}
+
+  header.page-head{padding:160px 0 60px;text-align:center;}
+  .section-eyebrow{color:var(--violet);font-size:13px;letter-spacing:3px;font-weight:600;margin-bottom:14px;}
+  header.page-head h1{font-size:clamp(32px,5vw,52px);font-weight:700;margin-bottom:16px;}
+  header.page-head p{color:var(--gray);font-size:18px;max-width:600px;margin:0 auto;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  section{padding:60px 0;}
+
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px;}
+  .plan{background:var(--white);border:2px solid var(--ink);border-radius:18px;padding:34px 26px;display:flex;flex-direction:column;transition:var(--transition-theme);}
+  .plan.featured{background:var(--feature-bg);color:var(--feature-fg);border-color:var(--feature-border);position:relative;}
+  .plan-badge{position:absolute;top:-14px;left:26px;background:var(--lime);color:var(--ink);font-size:11px;letter-spacing:1.5px;font-weight:700;padding:5px 14px;border-radius:999px;}
+  .plan-name{font-weight:700;font-size:20px;margin-bottom:6px;}
+  .plan-tagline{color:var(--gray);font-size:14px;margin-bottom:22px;}
+  .plan-price{font-size:36px;font-weight:700;color:var(--violet);margin-bottom:2px;}
+  .plan.featured .plan-price{color:var(--lime);}
+  .plan-cadence{color:var(--gray);font-size:13px;margin-bottom:26px;}
+  .plan-features{list-style:none;flex:1;margin-bottom:26px;}
+  .plan-features li{font-size:14px;padding:9px 0;border-top:1px solid var(--input-border);display:flex;gap:10px;}
+  .plan-features li:first-child{border-top:none;}
+  .plan-features li::before{content:"—";color:var(--violet);flex-shrink:0;}
+  .plan.featured .plan-features li::before{color:var(--lime);}
+  .btn{padding:14px 26px;border-radius:999px;font-size:15px;font-weight:500;display:inline-block;border:2px solid var(--ink);text-align:center;transition:transform .15s ease, background .2s ease, color .2s ease;}
+  .btn-primary{background:var(--ink);color:var(--white);}
+  .btn-primary:hover{background:var(--violet);border-color:var(--violet);transform:translateY(-2px);}
+  .btn-ghost{background:transparent;color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:var(--white);}
+  .plan.featured .btn-primary{background:var(--lime);color:var(--ink);border-color:var(--lime);}
+
+  .note{text-align:center;color:var(--gray);font-size:14px;margin-bottom:80px;}
+
+  .compare-wrap{overflow-x:auto;margin-bottom:100px;}
+  table{width:100%;border-collapse:collapse;min-width:640px;}
+  th,td{text-align:left;padding:16px;border-bottom:1px solid var(--input-border);font-size:14px;}
+  thead th{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;border-bottom:2px solid var(--ink);}
+  tbody tr:last-child td{border-bottom:none;}
+  th:not(:first-child),td:not(:first-child){text-align:center;}
+  .check{color:var(--violet);font-weight:700;}
+  .dash{color:var(--gray);}
+  .row-label{color:var(--gray);}
+
+  .lead-explainer{background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:48px;margin-bottom:100px;}
+  .lead-explainer h2{font-size:26px;margin-bottom:32px;text-align:center;}
+  .lead-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .lead-step{text-align:center;}
+  .lead-step .num{width:36px;height:36px;border-radius:50%;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;margin:0 auto 12px;}
+  .lead-step h3{font-size:15px;margin-bottom:6px;}
+  .lead-step p{color:var(--gray);font-size:13px;}
+
+  .faq-item{border-bottom:2px solid var(--ink);padding:24px 0;}
+  .faq-item h3{font-size:17px;font-weight:500;margin-bottom:10px;}
+  .faq-item p{color:var(--gray);font-size:15px;max-width:680px;}
+
+  .cta-band{background:var(--feature-bg);color:var(--feature-fg);border-radius:20px;padding:56px;text-align:center;margin:100px 0;}
+  .cta-band h2{font-size:28px;margin-bottom:14px;}
+  .cta-band p{color:var(--gray);margin-bottom:28px;}
+  .cta-band .btn-primary{background:var(--lime);color:#0d0d0d;border-color:var(--lime);}
+
+  footer{border-top:2px solid var(--ink);padding:36px 0;color:var(--gray);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+
+  @media(max-width:900px){
+    .pricing-grid{grid-template-columns:1fr;}
+    .lead-steps{grid-template-columns:1fr 1fr;}
+    .nav-links{display:none;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="groundwork-home.html" class="logo">GROUND<span class="work">WORK</span></a>
+    <div class="nav-links">
+      <a href="groundwork-home.html#how">How it works</a>
+      <a href="#" class="active">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="groundwork-home.html#contact">Contact</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button id="theme-toggle" aria-label="Toggle dark and light theme">🌙</button>
+      <a href="groundwork-home.html#contact" class="nav-cta">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <div class="section-eyebrow">PRICING</div>
+    <h1>One plan for every stage of your business</h1>
+    <p>Start with just a site, or let Groundwork run the whole thing — hosting, growth, and finding you customers.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="pricing-grid">
+      <div class="plan reveal">
+        <div class="plan-name">Build</div>
+        <div class="plan-tagline">A finished site, handed to you</div>
+        <div class="plan-price">$500</div>
+        <div class="plan-cadence">one-time</div>
+        <ul class="plan-features">
+          <li>Custom-designed site for your trade</li>
+          <li>Mobile-friendly, fast-loading</li>
+          <li>Contact form included</li>
+          <li>You host it anywhere you like</li>
+          <li>One round of revisions</li>
+        </ul>
+        <a href="groundwork-home.html#contact" class="btn btn-ghost">Get started</a>
+      </div>
+      <div class="plan featured reveal">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Grow</div>
+        <div class="plan-tagline">Build + host, plus we find you work</div>
+        <div class="plan-price">$1,000</div>
+        <div class="plan-cadence">per month</div>
+        <ul class="plan-features">
+          <li>Everything in Build and Host</li>
+          <li>Ongoing SEO and performance work</li>
+          <li>Booking form + call tracking built in</li>
+          <li>Monthly performance report</li>
+          <li>$50 charged only when a lead turns into a booked job</li>
+        </ul>
+        <a href="groundwork-home.html#contact" class="btn btn-primary">Get started</a>
+      </div>
+      <div class="plan reveal">
+        <div class="plan-name">Host</div>
+        <div class="plan-tagline">Keep an existing site alive</div>
+        <div class="plan-price">$700</div>
+        <div class="plan-cadence">per month</div>
+        <ul class="plan-features">
+          <li>Hosting, uptime, and backups</li>
+          <li>Security and software updates</li>
+          <li>Content and copy updates</li>
+          <li>Direct support line to us</li>
+          <li>No job fees</li>
+        </ul>
+        <a href="groundwork-home.html#contact" class="btn btn-ghost">Get started</a>
+      </div>
+    </div>
+    <p class="note">All monthly plans are billed month-to-month — cancel or switch plans any time from your dashboard.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head reveal" style="max-width:600px;margin-bottom:40px;">
+      <div class="section-eyebrow">COMPARE</div>
+      <h2 style="font-size:clamp(24px,3.5vw,32px);">What's included in each plan</h2>
+    </div>
+    <div class="compare-wrap reveal">
+      <table>
+        <thead>
+          <tr><th>Feature</th><th>Build</th><th>Host</th><th>Grow</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="row-label">Custom site design</td><td class="check">✓</td><td class="dash">—</td><td class="check">✓</td></tr>
+          <tr><td class="row-label">Hosting and uptime</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+          <tr><td class="row-label">Security and updates</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+          <tr><td class="row-label">Content edits</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+          <tr><td class="row-label">SEO and performance work</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+          <tr><td class="row-label">Booking form + call tracking</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+          <tr><td class="row-label">Job fee</td><td class="dash">—</td><td class="dash">—</td><td class="row-label">$50 / booked job</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="lead-explainer reveal">
+      <h2>How the $50-per-booked-job fee works</h2>
+      <div class="lead-steps">
+        <div class="lead-step"><div class="num">1</div><h3>Lead comes in</h3><p>Through your site's booking form or tracking phone number.</p></div>
+        <div class="lead-step"><div class="num">2</div><h3>It's logged automatically</h3><p>No reporting needed — it shows up in your dashboard right away.</p></div>
+        <div class="lead-step"><div class="num">3</div><h3>You mark it as booked</h3><p>Once the job is won, you (or we) mark it booked in the dashboard.</p></div>
+        <div class="lead-step"><div class="num">4</div><h3>$50 is charged</h3><p>A flat fee, charged to your card on file, only for booked jobs.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head reveal" style="max-width:600px;margin-bottom:40px;">
+      <div class="section-eyebrow">FAQ</div>
+      <h2 style="font-size:clamp(24px,3.5vw,32px);">Common questions</h2>
+    </div>
+    <div class="reveal">
+      <div class="faq-item"><h3>Can I start with Build and upgrade later?</h3><p>Yes — most clients start with Build, then move to Host or Grow once the site is live and they see the value in ongoing support.</p></div>
+      <div class="faq-item"><h3>Is there a contract or commitment?</h3><p>No. Host and Grow are billed monthly and you can cancel or switch anytime from your dashboard.</p></div>
+      <div class="faq-item"><h3>What if I already have a website?</h3><p>We can take over hosting an existing site on the Host plan, or rebuild it as part of Grow if it needs work to convert visitors into leads.</p></div>
+      <div class="faq-item"><h3>Is the $50 job fee capped?</h3><p>Not currently — it scales with how many jobs your site brings in, which is the same incentive we have: the better it performs, the more we both earn.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Ready to get your business online?</h2>
+      <p>Tell us about your trade and we'll recommend the right plan.</p>
+      <a href="groundwork-home.html#contact" class="btn btn-primary">Get started</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;width:100%;">
+    <span>© 2026 Groundwork</span>
+    <span>Build · Host · Grow</span>
+  </div>
+</footer>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+  function applyTheme(theme){
+    if(theme === 'dark'){
+      root.setAttribute('data-theme','dark');
+      themeToggle.textContent = '☀️';
+    } else {
+      root.removeAttribute('data-theme');
+      themeToggle.textContent = '🌙';
+    }
+  }
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('groundwork-theme') || 'light'; } catch(e) {}
+  applyTheme(savedTheme);
+  themeToggle.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    const next = isDark ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('groundwork-theme', next); } catch(e) {}
+  });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const revealEls = document.querySelectorAll('.reveal');
+  if (reduceMotion) {
+    revealEls.forEach(el => el.classList.add('in'));
+  } else {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('in'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => observer.observe(el));
+  }
+</script>
+
+</body>
+</html>
