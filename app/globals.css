@@ -274,24 +274,44 @@ section {
 .pricing-grid {
   display:               grid;
   grid-template-columns: repeat(3, 1fr);
+  align-items:           stretch;   /* stretches the direct grid children (.reveal wrappers) to equal row height */
   gap:                   24px;
+  padding-top:           20px;      /* headroom so the .plan-badge (top:-14px) never clips into section padding */
+}
+
+/*
+ * ROOT CAUSE FIX: each .plan is wrapped in a <Reveal> → <div class="reveal">.
+ * The grid stretches .reveal to equal height, but .plan inside doesn't auto-fill it.
+ * Fix: make the .reveal wrapper a flex column so it transmits its full height to .plan.
+ */
+.pricing-grid > .reveal {
+  display:        flex;
+  flex-direction: column;
+}
+
+/* .plan must expand to fill the flex .reveal wrapper — this is what equalizes heights */
+.pricing-grid > .reveal > .plan {
+  flex: 1;
 }
 
 .plan {
   background:     var(--white);
-  border:         2px solid var(--ink);
+  border:         2px solid var(--ink);  /* must stay 2px — same as .plan.featured */
   border-radius:  18px;
-  padding:        34px 26px;
+  padding:        34px 26px;             /* must stay 34px 26px — same as .plan.featured */
   display:        flex;
   flex-direction: column;
+  position:       relative;             /* consistent with .plan.featured; safe for both */
   transition:     var(--transition-theme);
 }
 
 .plan.featured {
+  /* Only color/appearance overrides here — NO box-model changes.
+     border-width and padding are intentionally inherited from .plan
+     so both variants remain pixel-identical in size. */
   background:   var(--feature-bg);
   color:        var(--feature-fg);
   border-color: var(--feature-border);
-  position:     relative;
 }
 
 .plan-badge {
@@ -578,6 +598,19 @@ footer {
   background:    var(--paper);
 }
 
+/*
+ * Same fix as .pricing-grid: each .flow-step is wrapped in a <Reveal> → div.reveal,
+ * which is the actual grid child. Stretch reaches .reveal but not .flow-step inside it.
+ */
+.flow-steps > .reveal {
+  display:        flex;
+  flex-direction: column;
+}
+
+.flow-steps > .reveal > .flow-step {
+  flex: 1;
+}
+
 .flow-step .step-num {
   color:         var(--violet);
   font-size:     12px;
@@ -752,7 +785,7 @@ td:not(:first-child) {
 
 .lead-steps {
   display:               grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr); /* 5 steps after "You mark it as booked" was added */
   gap:                   20px;
 }
 

@@ -63,7 +63,7 @@ export default function HomePage() {
                 </div>
                 <div className="mini-flow-item">
                   <span className="mini-dot" />
-                  $50 per lead, nothing else
+                  $50 per booked job, nothing else
                 </div>
               </div>
             </div>
@@ -119,8 +119,8 @@ export default function HomePage() {
                 <div className="step-num">STEP 4</div>
                 <h3>You only pay for results</h3>
                 <p>
-                  On the Grow plan, we charge $50 per lead — nothing if the
-                  site doesn't perform.
+                  On the Grow plan, we charge $50 per booked job — nothing if
+                  it doesn't turn into work.
                 </p>
               </div>
             </Reveal>
@@ -153,6 +153,7 @@ export default function HomePage() {
                   <li>Mobile-friendly, fast-loading</li>
                   <li>Contact form included</li>
                   <li>You host it anywhere you like</li>
+                  <li>Optional hosting add-on: +$20/mo</li>
                 </ul>
                 <Link href="#contact" className="btn btn-ghost">Get started</Link>
               </div>
@@ -170,7 +171,7 @@ export default function HomePage() {
                   <li>Everything in Build and Host</li>
                   <li>Ongoing SEO and performance work</li>
                   <li>Booking form + call tracking built in</li>
-                  <li>$50 charged only per lead you receive</li>
+                  <li>$50 charged only when a lead turns into a booked job</li>
                 </ul>
                 <Link href="#contact" className="btn btn-primary">Get started</Link>
               </div>
@@ -201,7 +202,7 @@ export default function HomePage() {
         <div className="container">
           <Reveal className="section-head">
             <div className="section-eyebrow">FAQ</div>
-            <h2>How the $50-per-lead works</h2>
+            <h2>How the $50-per-booked-job fee works</h2>
           </Reveal>
 
           <Reveal>
@@ -216,9 +217,10 @@ export default function HomePage() {
             <div className="faq-item">
               <h3>What if the lead doesn't turn into a job?</h3>
               <p>
-                We charge per lead delivered, not per job won — the same way a
-                call-tracking or ad platform would. It's a flat $50, so
-                there's never a dispute over what a job was worth.
+                You're only charged once a lead is marked as a booked job —
+                not for raw form submissions or calls that don't go anywhere.
+                It's a flat $50 per completed job, so there's never a dispute
+                over what it was worth.
               </p>
             </div>
             <div className="faq-item">

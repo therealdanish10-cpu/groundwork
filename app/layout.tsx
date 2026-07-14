@@ -25,11 +25,11 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default:  'Groundwork — Websites for local trades',
-    template: '%s — Groundwork',
+    default:  'Groundwork Technologies — Websites for local trades',
+    template: '%s — Groundwork Technologies',
   },
   description:
-    'Groundwork designs, hosts, and grows websites for electricians, plumbers, roofers, and other local trades.',
+    'Groundwork Technologies designs, hosts, and grows websites for electricians, plumbers, roofers, and other local trades.',
 };
 
 export default function RootLayout({
@@ -58,7 +58,7 @@ export default function RootLayout({
               width:          '100%',
             }}
           >
-            <span>© {new Date().getFullYear()} Groundwork</span>
+            <span>© {new Date().getFullYear()} Groundwork Technologies</span>
             <span>Build · Host · Grow</span>
           </div>
         </footer>

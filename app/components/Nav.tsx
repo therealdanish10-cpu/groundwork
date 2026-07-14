@@ -25,8 +25,9 @@ export default function Nav() {
     <nav id="nav" className={scrolled ? 'scrolled' : ''}>
       <div className="nav-inner">
         {/* Logo — clickable link back to home */}
-        <Link href="/" className="logo" aria-label="Groundwork home">
-          GROUND<span className="work">WORK</span>
+        <Link href="/" className="logo" aria-label="Groundwork Technologies home" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+          <span>GROUND<span className="work">WORK</span></span>
+          <span style={{ fontSize: '11px', letterSpacing: '3px', color: 'var(--gray)', fontWeight: 500, marginTop: '3px' }}>TECHNOLOGIES</span>
         </Link>
 
         {/* Primary nav links */}

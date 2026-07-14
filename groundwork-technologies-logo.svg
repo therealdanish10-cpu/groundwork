@@ -1,0 +1,11 @@
+<svg width="520" height="140" viewBox="0 0 520 140" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Groundwork Technologies logo</title>
+<desc>Wordmark logo reading GROUND WORK in black and violet, with TECHNOLOGIES in small letter-spaced text below, and a small lime square accent mark</desc>
+
+<rect x="20" y="34" width="18" height="18" rx="3" fill="#c6f24e"/>
+
+<text x="50" y="52" font-family="Space Grotesk, Arial, sans-serif" font-size="34" font-weight="700" fill="#0d0d0d" letter-spacing="0.5">GROUND<tspan fill="#7c5cd6">WORK</tspan></text>
+
+<text x="51" y="76" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="500" fill="#5c5c5c" letter-spacing="4">TECHNOLOGIES</text>
+
+</svg>

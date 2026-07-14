@@ -45,6 +45,7 @@ export default function PricingPage() {
                   <li>Contact form included</li>
                   <li>You host it anywhere you like</li>
                   <li>One round of revisions</li>
+                  <li>Optional hosting add-on: +$20/mo</li>
                 </ul>
                 <Link href="/#contact" className="btn btn-ghost">Get started</Link>
               </div>
@@ -63,7 +64,7 @@ export default function PricingPage() {
                   <li>Ongoing SEO and performance work</li>
                   <li>Booking form + call tracking built in</li>
                   <li>Monthly performance report</li>
-                  <li>$50 charged only per lead you receive</li>
+                  <li>$50 charged only when a lead turns into a booked job</li>
                 </ul>
                 <Link href="/#contact" className="btn btn-primary">Get started</Link>
               </div>
@@ -81,7 +82,7 @@ export default function PricingPage() {
                   <li>Security and software updates</li>
                   <li>Content and copy updates</li>
                   <li>Direct support line to us</li>
-                  <li>No lead fees</li>
+                  <li>No job fees</li>
                 </ul>
                 <Link href="/#contact" className="btn btn-ghost">Get started</Link>
               </div>
@@ -153,10 +154,10 @@ export default function PricingPage() {
                   <td className="check">✓</td>
                 </tr>
                 <tr>
-                  <td className="row-label">Lead fee</td>
+                  <td className="row-label">Job fee</td>
                   <td className="dash">—</td>
                   <td className="dash">—</td>
-                  <td className="row-label">$50 / lead</td>
+                  <td className="row-label">$50 / booked job</td>
                 </tr>
               </tbody>
             </table>
@@ -164,12 +165,12 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ── HOW THE $50-PER-LEAD FEE WORKS ──────────────────── */}
+      {/* ── HOW THE $50-PER-BOOKED-JOB FEE WORKS ────────────── */}
       <section className="section-sm">
         <div className="container">
           <Reveal>
             <div className="lead-explainer">
-              <h2>How the $50-per-lead fee works</h2>
+              <h2>How the $50-per-booked-job fee works</h2>
               <div className="lead-steps">
                 <div className="lead-step">
                   <div className="num">1</div>
@@ -183,11 +184,16 @@ export default function PricingPage() {
                 </div>
                 <div className="lead-step">
                   <div className="num">3</div>
-                  <h3>$50 is charged</h3>
-                  <p>A flat fee, charged to your card on file, per lead delivered.</p>
+                  <h3>You mark it as booked</h3>
+                  <p>Once the job is won, you or we mark it booked in the dashboard.</p>
                 </div>
                 <div className="lead-step">
                   <div className="num">4</div>
+                  <h3>$50 is charged</h3>
+                  <p>A flat fee, charged to your card on file, only for booked jobs.</p>
+                </div>
+                <div className="lead-step">
+                  <div className="num">5</div>
                   <h3>You see everything</h3>
                   <p>Every lead and every charge is itemized, always visible to you.</p>
                 </div>
@@ -229,10 +235,10 @@ export default function PricingPage() {
               </p>
             </div>
             <div className="faq-item">
-              <h3>Is the $50 lead fee capped?</h3>
+              <h3>Is the $50 job fee capped?</h3>
               <p>
-                Not currently — it scales with how many leads your site brings
-                in, which is the same incentive we have: the better it
+                Not currently — it scales with how many jobs your site helps
+                you win, which is the same incentive we have: the better it
                 performs, the more we both earn.
               </p>
             </div>
