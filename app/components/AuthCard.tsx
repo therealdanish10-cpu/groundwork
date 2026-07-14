@@ -1,22 +1,108 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 type Tab  = 'login'  | 'signup';
 type Role = 'client' | 'admin';
 
 export default function AuthCard() {
+  const router = useRouter();
+
+  /* ── Tab / role state ──────────────────────────────────── */
   const [activeTab,    setActiveTab]    = useState<Tab>('login');
   const [selectedRole, setSelectedRole] = useState<Role>('client');
 
-  function handleLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    // Phase 2: wire up real authentication here.
+  /* ── Shared loading / error state ─────────────────────── */
+  const [loading, setLoading] = useState(false);
+  const [error,   setError]   = useState<string | null>(null);
+
+  /* ── Login form state ──────────────────────────────────── */
+  const [loginEmail,    setLoginEmail]    = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  /* ── Sign-up form state ────────────────────────────────── */
+  const [signupBusiness, setSignupBusiness] = useState('');
+  const [signupTrade,    setSignupTrade]    = useState('');
+  const [signupEmail,    setSignupEmail]    = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+
+  /* ── Switch tabs and clear state ──────────────────────── */
+  function switchTab(tab: Tab) {
+    setActiveTab(tab);
+    setError(null);
   }
 
-  function handleSignupSubmit(e: React.FormEvent<HTMLFormElement>) {
+  /* ── Login handler ─────────────────────────────────────── */
+  async function handleLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Phase 2: wire up real account creation here.
+    setError(null);
+    setLoading(true);
+
+    const supabase = createClient();
+
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email:    loginEmail,
+      password: loginPassword,
+    });
+
+    if (authError || !data.user) {
+      setError(authError?.message ?? 'Login failed — please try again.');
+      setLoading(false);
+      return;
+    }
+
+    // Look up the user's role from their profiles row so we can redirect correctly.
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single();
+
+    setLoading(false);
+
+    if (profileError || !profile) {
+      // Fallback: default to /dashboard if the profile row isn't readable yet.
+      router.push('/dashboard');
+      return;
+    }
+
+    router.push(profile.role === 'admin' ? '/admin' : '/dashboard');
+  }
+
+  /* ── Sign-up handler ───────────────────────────────────── */
+  async function handleSignupSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const supabase = createClient();
+
+    const { error: authError } = await supabase.auth.signUp({
+      email:    signupEmail,
+      password: signupPassword,
+      options: {
+        // These fields are picked up by the handle_new_user trigger to
+        // auto-create the corresponding row in the profiles table.
+        data: {
+          role:          selectedRole,
+          business_name: signupBusiness,
+          trade:         signupTrade,
+        },
+      },
+    });
+
+    setLoading(false);
+
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
+
+    // Redirect immediately based on the role chosen in the form.
+    // (The profile row is created asynchronously by the DB trigger.)
+    router.push(selectedRole === 'admin' ? '/admin' : '/dashboard');
   }
 
   return (
@@ -31,7 +117,7 @@ export default function AuthCard() {
             aria-selected={activeTab === 'login'}
             aria-controls="panel-login"
             tabIndex={activeTab === 'login' ? 0 : -1}
-            onClick={() => setActiveTab('login')}
+            onClick={() => switchTab('login')}
           >
             Log in
           </div>
@@ -42,11 +128,18 @@ export default function AuthCard() {
             aria-selected={activeTab === 'signup'}
             aria-controls="panel-signup"
             tabIndex={activeTab === 'signup' ? 0 : -1}
-            onClick={() => setActiveTab('signup')}
+            onClick={() => switchTab('signup')}
           >
             Sign up
           </div>
         </div>
+
+        {/* ── Inline error banner ─────────────────────────── */}
+        {error && (
+          <div className="auth-error" role="alert">
+            {error}
+          </div>
+        )}
 
         {/* ── Log in panel ───────────────────────────────── */}
         {activeTab === 'login' && (
@@ -63,6 +156,8 @@ export default function AuthCard() {
                   placeholder="you@business.com"
                   required
                   autoComplete="email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
                 />
               </div>
 
@@ -74,6 +169,8 @@ export default function AuthCard() {
                   placeholder="••••••••"
                   required
                   autoComplete="current-password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
                 />
               </div>
 
@@ -83,8 +180,12 @@ export default function AuthCard() {
                 </a>
               </div>
 
-              <button type="submit" className="btn btn-primary">
-                Log in
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? 'Signing in…' : 'Log in'}
               </button>
             </form>
 
@@ -92,7 +193,7 @@ export default function AuthCard() {
               Don&rsquo;t have an account?{' '}
               <a
                 href="#"
-                onClick={(e) => { e.preventDefault(); setActiveTab('signup'); }}
+                onClick={(e) => { e.preventDefault(); switchTab('signup'); }}
               >
                 Sign up
               </a>
@@ -142,6 +243,20 @@ export default function AuthCard() {
                   placeholder="Rowe Electrical Services"
                   required
                   autoComplete="organization"
+                  value={signupBusiness}
+                  onChange={(e) => setSignupBusiness(e.target.value)}
+                />
+              </div>
+
+              <div className="field">
+                <label htmlFor="signup-trade">Trade / industry</label>
+                <input
+                  type="text"
+                  id="signup-trade"
+                  placeholder="e.g. Electrician, Plumber, Roofer"
+                  required
+                  value={signupTrade}
+                  onChange={(e) => setSignupTrade(e.target.value)}
                 />
               </div>
 
@@ -153,6 +268,8 @@ export default function AuthCard() {
                   placeholder="you@business.com"
                   required
                   autoComplete="email"
+                  value={signupEmail}
+                  onChange={(e) => setSignupEmail(e.target.value)}
                 />
               </div>
 
@@ -165,11 +282,17 @@ export default function AuthCard() {
                   minLength={8}
                   required
                   autoComplete="new-password"
+                  value={signupPassword}
+                  onChange={(e) => setSignupPassword(e.target.value)}
                 />
               </div>
 
-              <button type="submit" className="btn btn-primary">
-                Create account
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? 'Creating account…' : 'Create account'}
               </button>
             </form>
 
@@ -177,7 +300,7 @@ export default function AuthCard() {
               Already have an account?{' '}
               <a
                 href="#"
-                onClick={(e) => { e.preventDefault(); setActiveTab('login'); }}
+                onClick={(e) => { e.preventDefault(); switchTab('login'); }}
               >
                 Log in
               </a>

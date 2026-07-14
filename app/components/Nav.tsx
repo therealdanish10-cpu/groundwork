@@ -2,13 +2,17 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
+import { createClient } from '@/lib/supabase/client';
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [hasSession,  setHasSession]  = useState(false);
   const pathname = usePathname();
+  const router   = useRouter();
 
+  // ── Scroll handler ──────────────────────────────────────────────────────
   useEffect(() => {
     function onScroll() {
       setScrolled(window.scrollY > 20);
@@ -16,6 +20,34 @@ export default function Nav() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // ── Session state ───────────────────────────────────────────────────────
+  // Check once on mount, then keep in sync via onAuthStateChange so the
+  // button swaps immediately after login/logout without a full page reload.
+  useEffect(() => {
+    const supabase = createClient();
+
+    // Initial check
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setHasSession(!!user);
+    });
+
+    // Subscribe to future auth events (login, logout, token refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setHasSession(!!session?.user);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // ── Log out ─────────────────────────────────────────────────────────────
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/');
+  }
 
   function isActive(href: string) {
     return pathname === href ? 'active' : undefined;
@@ -41,7 +73,20 @@ export default function Nav() {
         {/* Right-side controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <ThemeToggle />
-          <Link href="/#contact" className="nav-cta">Get started</Link>
+
+          {hasSession ? (
+            /* Logged-in: show Log out button */
+            <button
+              id="nav-logout"
+              className="nav-cta nav-logout"
+              onClick={handleLogout}
+            >
+              Log out
+            </button>
+          ) : (
+            /* Logged-out: show Get started CTA */
+            <Link href="/#contact" className="nav-cta">Get started</Link>
+          )}
         </div>
       </div>
     </nav>
