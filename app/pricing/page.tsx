@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from '../components/Reveal';
+import CheckoutButton from '../components/CheckoutButton';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -47,7 +48,7 @@ export default function PricingPage() {
                   <li>One round of revisions</li>
                   <li>Optional hosting add-on: +$20/mo</li>
                 </ul>
-                <Link href="/#contact" className="btn btn-ghost">Get started</Link>
+                <CheckoutButton plan="build" className="btn btn-ghost">Get started</CheckoutButton>
               </div>
             </Reveal>
 
@@ -66,7 +67,7 @@ export default function PricingPage() {
                   <li>Monthly performance report</li>
                   <li>$50 charged only when a lead turns into a booked job</li>
                 </ul>
-                <Link href="/#contact" className="btn btn-primary">Get started</Link>
+                <CheckoutButton plan="grow" className="btn btn-primary">Get started</CheckoutButton>
               </div>
             </Reveal>
 
@@ -84,7 +85,7 @@ export default function PricingPage() {
                   <li>Direct support line to us</li>
                   <li>No job fees</li>
                 </ul>
-                <Link href="/#contact" className="btn btn-ghost">Get started</Link>
+                <CheckoutButton plan="host" className="btn btn-ghost">Get started</CheckoutButton>
               </div>
             </Reveal>
           </div>

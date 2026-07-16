@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import LeadsTable from './LeadsTable';
 import SiteRequestPanel from './SiteRequestPanel';
+import ManageBillingButton from '@/app/components/ManageBillingButton';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -48,7 +49,7 @@ export default async function DashboardPage() {
       .single(),
     supabase
       .from('subscriptions')
-      .select('plan_type, status, started_at')
+      .select('plan_type, status, started_at, stripe_customer_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .maybeSingle(),
@@ -91,10 +92,12 @@ export default async function DashboardPage() {
   const leads        = recentLeadsResult.data ?? [];
   const siteRequests = siteRequestsResult.data ?? [];
 
-  const businessName = profile?.business_name ?? 'your business';
-  const planLabel    = subscription
+  const businessName      = profile?.business_name ?? 'your business';
+  const planLabel         = subscription
     ? subscription.plan_type.charAt(0).toUpperCase() + subscription.plan_type.slice(1)
     : null;
+  /* Billing portal requires a Stripe customer ID (subscription plans only) */
+  const hasStripeCustomer = Boolean(subscription?.stripe_customer_id);
 
   /* ── No active subscription — empty state ──────────────────────────── */
   if (!subscription) {
@@ -179,13 +182,10 @@ export default async function DashboardPage() {
                 </span>
               </div>
             )}
-            <Link
-              href="#"
+            <ManageBillingButton
+              hasStripeCustomer={hasStripeCustomer}
               className="btn btn-primary btn-sm"
-              style={{ display: 'block', textAlign: 'center', marginTop: '14px' }}
-            >
-              Manage billing
-            </Link>
+            />
           </div>
         </div>
 

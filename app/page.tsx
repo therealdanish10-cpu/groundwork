@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from './components/Reveal';
+import CheckoutButton from './components/CheckoutButton';
 import ContactForm from './components/ContactForm';
 
 export const metadata: Metadata = {
@@ -155,7 +156,7 @@ export default function HomePage() {
                   <li>You host it anywhere you like</li>
                   <li>Optional hosting add-on: +$20/mo</li>
                 </ul>
-                <Link href="#contact" className="btn btn-ghost">Get started</Link>
+                <CheckoutButton plan="build" className="btn btn-ghost">Get started</CheckoutButton>
               </div>
             </Reveal>
 
@@ -173,7 +174,7 @@ export default function HomePage() {
                   <li>Booking form + call tracking built in</li>
                   <li>$50 charged only when a lead turns into a booked job</li>
                 </ul>
-                <Link href="#contact" className="btn btn-primary">Get started</Link>
+                <CheckoutButton plan="grow" className="btn btn-primary">Get started</CheckoutButton>
               </div>
             </Reveal>
 
@@ -190,7 +191,7 @@ export default function HomePage() {
                   <li>Content and copy updates</li>
                   <li>Direct support line to us</li>
                 </ul>
-                <Link href="#contact" className="btn btn-ghost">Get started</Link>
+                <CheckoutButton plan="host" className="btn btn-ghost">Get started</CheckoutButton>
               </div>
             </Reveal>
           </div>
