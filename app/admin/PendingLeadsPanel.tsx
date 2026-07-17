@@ -42,6 +42,7 @@ export default function PendingLeadsPanel({ leads }: { leads: PendingLead[] }) {
           {leads.length} pending
         </span>
       </div>
+      <div className="table-scroll-wrap">
       <table>
         <thead>
           <tr>
@@ -70,6 +71,7 @@ export default function PendingLeadsPanel({ leads }: { leads: PendingLead[] }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

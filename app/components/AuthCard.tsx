@@ -5,6 +5,36 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 type Tab  = 'login'  | 'signup';
+
+/**
+ * Maps raw Supabase auth error strings to friendlier, user-facing messages.
+ * Keeps error phrasing consistent and avoids leaking internal details.
+ */
+function friendlyAuthError(raw: string): string {
+  const m = raw.toLowerCase();
+  if (m.includes('invalid login credentials') ||
+      m.includes('invalid email or password') ||
+      m.includes('email not confirmed')) {
+    return 'Invalid email or password — please check your details and try again.';
+  }
+  if (m.includes('user already registered') ||
+      m.includes('already been registered') ||
+      m.includes('already exists')) {
+    return 'An account with this email already exists. Try logging in instead.';
+  }
+  if (m.includes('password should be') ||
+      m.includes('password must be') ||
+      m.includes('too short')) {
+    return 'Password must be at least 6 characters.';
+  }
+  if (m.includes('rate limit') || m.includes('too many requests')) {
+    return 'Too many attempts — please wait a moment and try again.';
+  }
+  if (m.includes('email') && (m.includes('invalid') || m.includes('format'))) {
+    return 'Please enter a valid email address.';
+  }
+  return raw; // unknown error — show as-is
+}
 type Role = 'client' | 'admin';
 
 export default function AuthCard() {
@@ -48,7 +78,7 @@ export default function AuthCard() {
     });
 
     if (authError || !data.user) {
-      setError(authError?.message ?? 'Login failed — please try again.');
+      setError(friendlyAuthError(authError?.message ?? 'Login failed — please try again.'));
       setLoading(false);
       return;
     }
@@ -96,7 +126,7 @@ export default function AuthCard() {
     setLoading(false);
 
     if (authError) {
-      setError(authError.message);
+      setError(friendlyAuthError(authError.message));
       return;
     }
 

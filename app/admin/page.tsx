@@ -183,6 +183,7 @@ export default async function AdminPage() {
               No client accounts yet.
             </p>
           ) : (
+          <div className="table-scroll-wrap">
             <table>
               <thead>
                 <tr>
@@ -222,6 +223,7 @@ export default async function AdminPage() {
                 })}
               </tbody>
             </table>
+          </div>
           )}
         </div>
 

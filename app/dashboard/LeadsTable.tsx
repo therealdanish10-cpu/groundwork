@@ -38,42 +38,44 @@ export default function LeadsTable({ leads }: { leads: Lead[] }) {
           enquiries.
         </p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Source</th>
-              <th>Status</th>
-              <th>Fee</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {leads.map(lead => (
-              <tr key={lead.id}>
-                <td style={{ whiteSpace: 'nowrap' }}>{formatDate(lead.created_at)}</td>
-                <td>{SOURCE_LABELS[lead.source] ?? lead.source}</td>
-                <td>
-                  <span className={leadStatusBadge(lead.status)}>
-                    {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
-                  </span>
-                </td>
-                <td>
-                  {lead.fee_amount != null ? `$${lead.fee_amount}` : '—'}
-                </td>
-                <td>
-                  {lead.status !== 'booked' ? (
-                    <MarkBookedButton leadId={lead.id} />
-                  ) : (
-                    <span style={{ color: 'var(--gray)', fontSize: '13px' }}>
-                      Booked ✓
-                    </span>
-                  )}
-                </td>
+        <div className="table-scroll-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Source</th>
+                <th>Status</th>
+                <th>Fee</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {leads.map(lead => (
+                <tr key={lead.id}>
+                  <td style={{ whiteSpace: 'nowrap' }}>{formatDate(lead.created_at)}</td>
+                  <td>{SOURCE_LABELS[lead.source] ?? lead.source}</td>
+                  <td>
+                    <span className={leadStatusBadge(lead.status)}>
+                      {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
+                    </span>
+                  </td>
+                  <td>
+                    {lead.fee_amount != null ? `$${lead.fee_amount}` : '—'}
+                  </td>
+                  <td>
+                    {lead.status !== 'booked' ? (
+                      <MarkBookedButton leadId={lead.id} />
+                    ) : (
+                      <span style={{ color: 'var(--gray)', fontSize: '13px' }}>
+                        Booked ✓
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

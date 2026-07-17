@@ -40,6 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       // Inject font CSS-variable class names onto <html> so every element
       // in the tree can reference --font-inter-var and --font-space-grotesk-var.
       className={`${inter.variable} ${spaceGrotesk.variable}`}

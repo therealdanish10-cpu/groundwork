@@ -131,6 +131,7 @@ export default function SiteRequestPanel({ siteRequests, clientId }: Props) {
           Hit <strong>New request</strong> above and we&apos;ll handle it.
         </p>
       ) : siteRequests.length > 0 ? (
+        <div className="table-scroll-wrap">
         <table>
           <thead>
             <tr>
@@ -155,6 +156,7 @@ export default function SiteRequestPanel({ siteRequests, clientId }: Props) {
             ))}
           </tbody>
         </table>
+        </div>
       ) : null}
     </div>
   );

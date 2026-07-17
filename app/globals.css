@@ -86,7 +86,9 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* belt-and-suspenders alongside body */
 }
+
 
 body {
   background:   var(--white);
@@ -96,6 +98,16 @@ body {
   overflow-x:   hidden;
   transition:   var(--transition-theme);
 }
+
+/* Scrollable table container — used inside .panel to avoid page-level overflow */
+.table-scroll-wrap {
+  overflow-x:                 auto;
+  -webkit-overflow-scrolling: touch;
+  /* Thin scrollbar so it's visible but unobtrusive */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-space-grotesk), sans-serif;
@@ -236,6 +248,87 @@ nav.scrolled {
 .nav-logout:hover {
   background: #c0392b;
 }
+
+/* ── Hamburger button (hidden on desktop) ──────────────────────────── */
+.nav-hamburger {
+  display:        none;      /* shown only in the ≤900px media query */
+  flex-direction: column;
+  justify-content: center;
+  gap:            5px;
+  width:          36px;
+  height:         36px;
+  background:     transparent;
+  border:         none;
+  cursor:         pointer;
+  padding:        4px;
+  border-radius:  8px;
+}
+
+.ham-bar {
+  display:       block;
+  width:         22px;
+  height:        2px;
+  background:    var(--ink);
+  border-radius: 2px;
+  transition:    transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* ── Mobile menu overlay ───────────────────────────────────────────── */
+.nav-mobile-menu {
+  position:   fixed;
+  top:        0;
+  left:       0;
+  right:      0;
+  bottom:     0;
+  z-index:    99;            /* just below the nav (z-index: 100) */
+  background: var(--nav-bg);
+  backdrop-filter: blur(8px);
+  display:    flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;         /* clear the fixed nav bar */
+}
+
+.nav-mobile-links {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            32px;
+  font-size:      20px;
+  font-weight:    500;
+  text-align:     center;
+}
+
+.nav-mobile-links a {
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+.nav-mobile-links a:hover {
+  color: var(--violet);
+}
+
+.nav-mobile-divider {
+  width:      60px;
+  height:     2px;
+  background: var(--input-border);
+  border-radius: 1px;
+}
+
+.nav-mobile-logout {
+  background:  transparent;
+  border:      none;
+  cursor:      pointer;
+  font-family: var(--font-inter), sans-serif;
+  font-size:   20px;
+  font-weight: 500;
+  color:       var(--gray);
+}
+
+.nav-mobile-logout:hover {
+  color: #dc2626;
+}
+
 
 /* Theme toggle button */
 .theme-toggle {
@@ -1180,9 +1273,108 @@ h1.title {
   .flow-steps        { grid-template-columns: 1fr 1fr; }
   .contact-box       { grid-template-columns: 1fr; }
   .nav-links         { display: none; }
+  .nav-hamburger     { display: flex; } /* show hamburger */
   .metrics           { grid-template-columns: 1fr 1fr; }
   .two-col           { grid-template-columns: 1fr; }
   .lead-steps        { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- 600px — tablets and large phones ---------- */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 20px;
+  }
+
+  .page {
+    padding: 90px 20px 48px;
+  }
+
+  section {
+    padding: 72px 0;
+  }
+
+  .section-sm {
+    padding: 40px 0;
+  }
+
+  /* Collapse to single column */
+  .flow-steps  { grid-template-columns: 1fr; }
+  .lead-steps  { grid-template-columns: 1fr; }
+
+  /* Metric cards — 2-up is still readable, keep */
+
+  /* Contact box already 1fr at 900px */
+
+  /* Auth card tighter padding */
+  .auth-card {
+    padding: 28px 24px;
+  }
+
+  /* Panel tighter padding */
+  .panel {
+    padding: 18px 16px;
+  }
+
+  /* Lead explainer box */
+  .lead-explainer {
+    padding: 28px 20px;
+  }
+
+  /* CTA band */
+  .cta-band {
+    padding: 40px 24px;
+    margin: 60px 0;
+  }
+}
+
+/* ---------- 480px — small phones ---------- */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .page {
+    padding: 88px 16px 40px;
+  }
+
+  /* Metric cards — stack to 1 column */
+  .metrics {
+    grid-template-columns: 1fr 1fr; /* keep 2-up; each card is simple enough */
+  }
+
+  /* Hero adjustments */
+  .hero-actions {
+    flex-direction: column;
+    align-items:    flex-start;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Nav inner — less horizontal padding */
+  .nav-inner {
+    padding: 14px 16px;
+  }
+
+  /* Footer — stack */
+  footer {
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            8px;
+  }
+
+  /* Plan cards — tighten */
+  .plan {
+    padding: 28px 20px;
+  }
+
+  /* Dashboard panel buttons — full-width on tiny screens */
+  .panel-head {
+    flex-wrap: wrap;
+    gap:       10px;
+  }
 }
 
 /* ---------- Reduced Motion ---------- */

@@ -54,6 +54,17 @@ export default function CheckoutButton({ plan, className, children }: Props) {
         return;
       }
 
+      /* 409 — user already has this plan active */
+      if (res.status === 409) {
+        const data = await res.json() as { message?: string };
+        setError(
+          data.message ??
+          'You already have this plan active. Visit your dashboard to manage billing.'
+        );
+        setLoading(false);
+        return;
+      }
+
       if (!res.ok) {
         const data = await res.json() as { error?: string };
         throw new Error(data.error ?? 'Failed to create checkout session');

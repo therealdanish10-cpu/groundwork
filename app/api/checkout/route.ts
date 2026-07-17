@@ -47,6 +47,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid plan' }, { status: 400 });
   }
 
+  /* ── Same-plan guard — don't create a duplicate session ─────────── */
+  const { data: existingActiveSub } = await supabase
+    .from('subscriptions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .eq('plan_type', plan)
+    .maybeSingle();
+
+  if (existingActiveSub) {
+    const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
+    return NextResponse.json(
+      {
+        error:   'already_subscribed',
+        message: `You already have an active ${planLabel} plan. Visit your dashboard to manage billing.`,
+      },
+      { status: 409 },
+    );
+  }
+
+
   /* ── Reuse existing Stripe customer if possible ─────────────────── */
   const { data: existingSub } = await supabase
     .from('subscriptions')

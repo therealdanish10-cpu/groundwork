@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client';
 export default function Nav() {
   const [scrolled,    setScrolled]    = useState(false);
   const [hasSession,  setHasSession]  = useState(false);
+  const [menuOpen,    setMenuOpen]    = useState(false);
   const pathname = usePathname();
   const router   = useRouter();
 
@@ -21,18 +22,25 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // ── Close mobile menu on route change ───────────────────────────────────
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // ── Prevent body scroll while mobile menu is open ───────────────────────
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   // ── Session state ───────────────────────────────────────────────────────
-  // Check once on mount, then keep in sync via onAuthStateChange so the
-  // button swaps immediately after login/logout without a full page reload.
   useEffect(() => {
     const supabase = createClient();
 
-    // Initial check
     supabase.auth.getUser().then(({ data: { user } }) => {
       setHasSession(!!user);
     });
 
-    // Subscribe to future auth events (login, logout, token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setHasSession(!!session?.user);
@@ -46,6 +54,7 @@ export default function Nav() {
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
+    setMenuOpen(false);
     router.push('/');
   }
 
@@ -53,42 +62,83 @@ export default function Nav() {
     return pathname === href ? 'active' : undefined;
   }
 
+  const navLinks = (
+    <>
+      <Link href="/#how"     className={isActive('/#how')}     onClick={() => setMenuOpen(false)}>How it works</Link>
+      <Link href="/pricing"  className={isActive('/pricing')}  onClick={() => setMenuOpen(false)}>Pricing</Link>
+      <Link href="/#faq"     className={isActive('/#faq')}     onClick={() => setMenuOpen(false)}>FAQ</Link>
+      <Link href="/#contact" className={isActive('/#contact')} onClick={() => setMenuOpen(false)}>Contact</Link>
+    </>
+  );
+
   return (
-    <nav id="nav" className={scrolled ? 'scrolled' : ''}>
-      <div className="nav-inner">
-        {/* Logo — clickable link back to home */}
-        <Link href="/" className="logo" aria-label="Groundwork Technologies home" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-          <span>GROUND<span className="work">WORK</span></span>
-          <span style={{ fontSize: '11px', letterSpacing: '3px', color: 'var(--gray)', fontWeight: 500, marginTop: '3px' }}>TECHNOLOGIES</span>
-        </Link>
+    <>
+      <nav id="nav" className={scrolled ? 'scrolled' : ''}>
+        <div className="nav-inner">
+          {/* Logo */}
+          <Link href="/" className="logo" aria-label="Groundwork Technologies home" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+            <span>GROUND<span className="work">WORK</span></span>
+            <span style={{ fontSize: '11px', letterSpacing: '3px', color: 'var(--gray)', fontWeight: 500, marginTop: '3px' }}>TECHNOLOGIES</span>
+          </Link>
 
-        {/* Primary nav links */}
-        <div className="nav-links">
-          <Link href="/#how"      className={isActive('/#how')}>How it works</Link>
-          <Link href="/pricing"   className={isActive('/pricing')}>Pricing</Link>
-          <Link href="/#faq"      className={isActive('/#faq')}>FAQ</Link>
-          <Link href="/#contact"  className={isActive('/#contact')}>Contact</Link>
-        </div>
+          {/* Desktop nav links */}
+          <div className="nav-links">
+            {navLinks}
+          </div>
 
-        {/* Right-side controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <ThemeToggle />
+          {/* Right-side controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <ThemeToggle />
 
-          {hasSession ? (
-            /* Logged-in: show Log out button */
+            {hasSession ? (
+              <button
+                id="nav-logout"
+                className="nav-cta nav-logout"
+                onClick={handleLogout}
+              >
+                Log out
+              </button>
+            ) : (
+              <Link href="/#contact" className="nav-cta">Get started</Link>
+            )}
+
+            {/* Hamburger — visible only on mobile (≤900px via CSS) */}
             <button
-              id="nav-logout"
-              className="nav-cta nav-logout"
-              onClick={handleLogout}
+              className="nav-hamburger"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(v => !v)}
             >
-              Log out
+              <span className={`ham-bar${menuOpen ? ' open' : ''}`} />
+              <span className={`ham-bar${menuOpen ? ' open' : ''}`} />
+              <span className={`ham-bar${menuOpen ? ' open' : ''}`} />
             </button>
-          ) : (
-            /* Logged-out: show Get started CTA */
-            <Link href="/#contact" className="nav-cta">Get started</Link>
-          )}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile menu overlay */}
+      {menuOpen && (
+        <div
+          className="nav-mobile-menu"
+          role="dialog"
+          aria-label="Navigation menu"
+        >
+          <div className="nav-mobile-links">
+            {navLinks}
+            <div className="nav-mobile-divider" />
+            {hasSession ? (
+              <button className="nav-mobile-logout" onClick={handleLogout}>
+                Log out
+              </button>
+            ) : (
+              <Link href="/#contact" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+                Get started
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
