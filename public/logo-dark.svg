@@ -1,0 +1,15 @@
+<svg width="640" height="180" viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Groundwork Technologies logo</title>
+<desc>Circular badge with an upward-trending lime arrow, white GROUNDWORK wordmark, TECHNOLOGIES flanked by two lime lines beneath it, for dark backgrounds</desc>
+
+<circle cx="90" cy="90" r="70" fill="#f4f4f4"/>
+<polyline points="55,110 80,85 95,100 125,60" fill="none" stroke="#0d0d0d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="125,60 108,64 121,77" fill="#0d0d0d"/>
+<circle cx="55" cy="110" r="7" fill="#7c5cd6"/>
+
+<text x="365" y="88" font-family="Arial, sans-serif" font-size="46" font-weight="800" fill="#f4f4f4" letter-spacing="0.5" text-anchor="middle">GROUND<tspan fill="#a78cf0">WORK</tspan></text>
+
+<line x1="255" y1="113" x2="300" y2="113" stroke="#c6f24e" stroke-width="2.5"/>
+<text x="365" y="118" font-family="Arial, sans-serif" font-size="20" font-weight="600" fill="#9a9a9a" letter-spacing="5" text-anchor="middle">TECHNOLOGIES</text>
+<line x1="430" y1="113" x2="475" y2="113" stroke="#c6f24e" stroke-width="2.5"/>
+</svg>

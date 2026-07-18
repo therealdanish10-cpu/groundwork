@@ -189,24 +189,47 @@ nav.scrolled {
 .nav-inner {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 18px 32px;
+  padding: 8px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+
 .logo {
   display:     flex;
   align-items: center;
   gap:         8px;
-  font-weight: 700;
-  font-size:   20px;
-  letter-spacing: 0.5px;
+  line-height: 0;        /* eliminate phantom text strut from inherited font-size */
+  /*
+   * SVG visual correction: the badge+wordmark has more visual weight near the
+   * top of its bounding box. translateY nudges it down without affecting flex
+   * layout dimensions (the box still occupies its mathematically centered spot).
+   * If the SVG's viewBox is ever updated to have equal whitespace top/bottom,
+   * remove this.
+   */
+  transform:   translateY(5px);
 }
 
-.logo .work {
-  color: var(--violet);
+/* Ensure the rendered <img> is block-level — removes any inline baseline gap */
+.logo-img {
+  display: block;
 }
+
+/* Theme-based logo image switching.
+   Both images are always in the DOM; CSS hides the wrong one.
+   This avoids hydration mismatches and FOUC with no React state needed. */
+.logo-img-dark { display: none; }
+[data-theme="dark"] .logo-img-light { display: none; }
+[data-theme="dark"] .logo-img-dark  { display: block; }
+
+/* Logo height at mobile — smaller so it doesn't crowd the hamburger.
+   At 46px the badge+wordmark is legible on phones; the right-side controls
+   (theme toggle 38px + hamburger 36px + 14px gap) sit comfortably alongside. */
+@media (max-width: 600px) {
+  .logo-img { height: 46px !important; }
+}
+
 
 .nav-links {
   display:   flex;
