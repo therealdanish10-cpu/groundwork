@@ -1289,7 +1289,90 @@ h1.title {
   border-bottom:  1px solid var(--input-border);
 }
 
+/* ---------- About / Team Page ---------- */
+
+/* 5-column grid on desktop; collapses in the responsive section below */
+.team-grid {
+  display:               grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap:                   40px 24px;
+  margin-bottom:         80px;
+}
+
+/*
+ * Each team card is wrapped in a <Reveal> → div.reveal (the grid item).
+ * Centre the card within its grid cell.
+ */
+.team-grid > .reveal {
+  display:         flex;
+  justify-content: center;
+}
+
+.team-card {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            16px;
+  text-align:     center;
+  width:          100%;
+  max-width:      160px;
+}
+
+/* Circular avatar — shared by both real-photo and initials variants */
+.team-avatar {
+  width:         96px;
+  height:        96px;
+  border-radius: 50%;
+  overflow:      hidden;
+  flex-shrink:   0;
+  border:        3px solid var(--ink);
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  /* initials font */
+  font-family:   var(--font-space-grotesk), sans-serif;
+  font-size:     26px;
+  font-weight:   700;
+  transition:    border-color 0.2s ease;
+}
+
+.team-member-name {
+  font-family:   var(--font-space-grotesk), sans-serif;
+  font-size:     16px;
+  font-weight:   700;
+  margin-bottom: 4px;
+  color:         var(--ink);
+}
+
+.team-member-role {
+  font-size:  13px;
+  color:      var(--gray);
+  margin:     0;
+  line-height: 1.4;
+}
+
+/* Company blurb — centred, max-width copy block */
+.about-blurb {
+  max-width:    680px;
+  margin:       0 auto 80px;
+  text-align:   center;
+  border-top:   2px solid var(--ink);
+  padding-top:  48px;
+}
+
+.about-blurb p {
+  color:       var(--gray);
+  font-size:   17px;
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+
+.about-blurb p:last-child {
+  margin-bottom: 0;
+}
+
 /* ---------- Responsive ---------- */
+
 @media (max-width: 900px) {
   .hero-grid-layout  { grid-template-columns: 1fr; }
   .pricing-grid      { grid-template-columns: 1fr; }
@@ -1300,6 +1383,7 @@ h1.title {
   .metrics           { grid-template-columns: 1fr 1fr; }
   .two-col           { grid-template-columns: 1fr; }
   .lead-steps        { grid-template-columns: 1fr 1fr; }
+  .team-grid         { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ---------- 600px — tablets and large phones ---------- */
@@ -1323,6 +1407,7 @@ h1.title {
   /* Collapse to single column */
   .flow-steps  { grid-template-columns: 1fr; }
   .lead-steps  { grid-template-columns: 1fr; }
+  .team-grid   { grid-template-columns: repeat(2, 1fr); }
 
   /* Metric cards — 2-up is still readable, keep */
 

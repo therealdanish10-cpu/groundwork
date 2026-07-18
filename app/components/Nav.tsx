@@ -68,6 +68,7 @@ export default function Nav() {
       <Link href="/#how"     className={isActive('/#how')}     onClick={() => setMenuOpen(false)}>How it works</Link>
       <Link href="/pricing"  className={isActive('/pricing')}  onClick={() => setMenuOpen(false)}>Pricing</Link>
       <Link href="/#faq"     className={isActive('/#faq')}     onClick={() => setMenuOpen(false)}>FAQ</Link>
+      <Link href="/about"    className={isActive('/about')}    onClick={() => setMenuOpen(false)}>About</Link>
       <Link href="/#contact" className={isActive('/#contact')} onClick={() => setMenuOpen(false)}>Contact</Link>
     </>
   );
