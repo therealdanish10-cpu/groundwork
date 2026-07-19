@@ -167,7 +167,8 @@ export default function HomePage() {
                 <div className="plan-name">Grow</div>
                 <div className="plan-tagline">Build + host, plus we find you work</div>
                 <div className="plan-price">$1,000</div>
-                <div className="plan-cadence">per month</div>
+                <div className="plan-cadence" style={{ marginBottom: '4px' }}>one-time setup</div>
+                <div className="plan-recurring">then $70 / month</div>
                 <ul className="plan-features">
                   <li>Everything in Build and Host</li>
                   <li>Ongoing SEO and performance work</li>
@@ -184,7 +185,8 @@ export default function HomePage() {
                 <div className="plan-name">Host</div>
                 <div className="plan-tagline">Keep an existing site alive</div>
                 <div className="plan-price">$700</div>
-                <div className="plan-cadence">per month</div>
+                <div className="plan-cadence" style={{ marginBottom: '4px' }}>one-time setup</div>
+                <div className="plan-recurring">then $50 / month</div>
                 <ul className="plan-features">
                   <li>Hosting, uptime, and backups</li>
                   <li>Security and software updates</li>

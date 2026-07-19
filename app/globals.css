@@ -488,6 +488,16 @@ section {
 
 .plan.featured .plan-cadence { color: #bdbdbd; }
 
+/* Recurring amount shown on Host and Grow cards beneath the one-time setup price */
+.plan-recurring {
+  color:         var(--violet);
+  font-size:     13px;
+  font-weight:   500;
+  margin-bottom: 26px;
+}
+
+.plan.featured .plan-recurring { color: var(--lime); }
+
 .plan-features {
   list-style:    none;
   flex:          1;
