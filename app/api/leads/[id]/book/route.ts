@@ -159,7 +159,7 @@ export async function POST(
       payment_method:       paymentMethodId,
       off_session:          true,
       confirm:              true,
-      description:          `Groundwork lead booking fee — lead ${leadId}`,
+      description:          `Trelio lead booking fee — lead ${leadId}`,
       metadata:             { leadId, clientId: lead.client_id },
     });
 

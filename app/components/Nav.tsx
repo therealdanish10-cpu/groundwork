@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
@@ -77,28 +76,8 @@ export default function Nav() {
     <>
       <nav id="nav" className={scrolled ? 'scrolled' : ''}>
         <div className="nav-inner">
-          {/* Logo — image swaps between light and dark variant via CSS */}
-          <Link href="/" className="logo" aria-label="Groundwork Technologies home">
-            {/* Light-mode logo */}
-            <Image
-              src="/logo-light.svg"
-              alt="Groundwork Technologies"
-              width={240}
-              height={62}
-              style={{ width: 'auto', height: '62px' }}
-              className="logo-img logo-img-light"
-              priority
-            />
-            {/* Dark-mode logo — hidden in light mode via CSS */}
-            <Image
-              src="/logo-dark.svg"
-              alt="Groundwork Technologies"
-              width={240}
-              height={62}
-              style={{ width: 'auto', height: '62px' }}
-              className="logo-img logo-img-dark"
-              priority
-            />
+          <Link href="/" className="logo" aria-label="Trelio home">
+            <span className="logo-text">Trelio</span>
           </Link>
 
           {/* Desktop nav links */}

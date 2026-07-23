@@ -3,7 +3,7 @@ import AuthCard from '../components/AuthCard';
 
 export const metadata: Metadata = {
   title: 'Log in or sign up',
-  description: 'Log in to your Groundwork dashboard or create a new account.',
+  description: 'Log in to your Trelio dashboard or create a new account.',
 };
 
 /* ─────────────────────────────────────────────────────────────

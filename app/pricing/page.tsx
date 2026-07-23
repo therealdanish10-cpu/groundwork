@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from '../components/Reveal';
-import CheckoutButton from '../components/CheckoutButton';
+import PricingCarousel from '../components/PricingCarousel';
 
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Start with just a site, or let Groundwork run the whole thing — hosting, growth, and finding you customers.',
+    'Start with just a site, or let Trelio run the whole thing — hosting, growth, and finding you customers.',
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -23,7 +23,7 @@ export default function PricingPage() {
           <div className="section-eyebrow">PRICING</div>
           <h1>One plan for every stage of your business</h1>
           <p>
-            Start with just a site, or let Groundwork run the whole thing —
+            Start with just a site, or let Trelio run the whole thing —
             hosting, growth, and finding you customers.
           </p>
         </div>
@@ -32,65 +32,9 @@ export default function PricingPage() {
       {/* ── PLAN CARDS ───────────────────────────────────────── */}
       <section className="section-sm">
         <div className="container">
-          <div className="pricing-grid">
-            {/* Build */}
-            <Reveal delay={0}>
-              <div className="plan">
-                <div className="plan-name">Build</div>
-                <div className="plan-tagline">A finished site, handed to you</div>
-                <div className="plan-price">$500</div>
-                <div className="plan-cadence">one-time</div>
-                <ul className="plan-features">
-                  <li>Custom-designed site for your trade</li>
-                  <li>Mobile-friendly, fast-loading</li>
-                  <li>Contact form included</li>
-                  <li>You host it anywhere you like</li>
-                  <li>One round of revisions</li>
-                  <li>Optional hosting add-on: +$20/mo</li>
-                </ul>
-                <CheckoutButton plan="build" className="btn btn-ghost">Get started</CheckoutButton>
-              </div>
-            </Reveal>
-
-            {/* Grow — featured */}
-            <Reveal delay={60}>
-              <div className="plan featured">
-                <div className="plan-badge">MOST POPULAR</div>
-                <div className="plan-name">Grow</div>
-                <div className="plan-tagline">Build + host, plus we find you work</div>
-                <div className="plan-price">$1,000</div>
-                <div className="plan-cadence" style={{ marginBottom: '4px' }}>one-time setup</div>
-                <div className="plan-recurring">then $70 / month</div>
-                <ul className="plan-features">
-                  <li>Everything in Build and Host</li>
-                  <li>Ongoing SEO and performance work</li>
-                  <li>Booking form + call tracking built in</li>
-                  <li>Monthly performance report</li>
-                  <li>$50 charged only when a lead turns into a booked job</li>
-                </ul>
-                <CheckoutButton plan="grow" className="btn btn-primary">Get started</CheckoutButton>
-              </div>
-            </Reveal>
-
-            {/* Host */}
-            <Reveal delay={120}>
-              <div className="plan">
-                <div className="plan-name">Host</div>
-                <div className="plan-tagline">Keep an existing site alive</div>
-                <div className="plan-price">$700</div>
-                <div className="plan-cadence" style={{ marginBottom: '4px' }}>one-time setup</div>
-                <div className="plan-recurring">then $50 / month</div>
-                <ul className="plan-features">
-                  <li>Hosting, uptime, and backups</li>
-                  <li>Security and software updates</li>
-                  <li>Content and copy updates</li>
-                  <li>Direct support line to us</li>
-                  <li>No job fees</li>
-                </ul>
-                <CheckoutButton plan="host" className="btn btn-ghost">Get started</CheckoutButton>
-              </div>
-            </Reveal>
-          </div>
+          <Reveal>
+            <PricingCarousel />
+          </Reveal>
 
           <p className="note">
             All monthly plans are billed month-to-month — cancel or switch

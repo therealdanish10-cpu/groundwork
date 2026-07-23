@@ -5,9 +5,9 @@ import CheckoutButton from './components/CheckoutButton';
 import ContactForm from './components/ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Groundwork — Websites for local trades',
+  title: 'Trelio — Websites for local trades',
   description:
-    'Groundwork designs, hosts, and grows websites for electricians, plumbers, roofers, and other local trades — and we only make more when you do.',
+    'Trelio designs, hosts, and grows websites for electricians, plumbers, roofers, and other local trades — and we only make more when you do.',
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ export default function HomePage() {
               <span className="u">We bring you customers.</span>
             </h1>
             <p>
-              Groundwork designs, hosts, and grows websites for electricians,
+              Trelio designs, hosts, and grows websites for electricians,
               plumbers, roofers, and other local trades — and we only make more
               when you do.
             </p>

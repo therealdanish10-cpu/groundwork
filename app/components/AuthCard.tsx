@@ -175,7 +175,7 @@ export default function AuthCard() {
         {activeTab === 'login' && (
           <div id="panel-login" role="tabpanel" aria-labelledby="tab-login">
             <h1 className="title">Welcome back</h1>
-            <p className="subtitle">Log in to your Groundwork dashboard.</p>
+            <p className="subtitle">Log in to your Trelio dashboard.</p>
 
             <form onSubmit={handleLoginSubmit}>
               <div className="field">
@@ -235,7 +235,7 @@ export default function AuthCard() {
         {activeTab === 'signup' && (
           <div id="panel-signup" role="tabpanel" aria-labelledby="tab-signup">
             <h1 className="title">Create your account</h1>
-            <p className="subtitle">Set up access to your Groundwork dashboard.</p>
+            <p className="subtitle">Set up access to your Trelio dashboard.</p>
 
             <form onSubmit={handleSignupSubmit}>
               {/* Role selector */}
@@ -260,7 +260,7 @@ export default function AuthCard() {
                     tabIndex={selectedRole === 'admin' ? 0 : -1}
                     onClick={() => setSelectedRole('admin')}
                   >
-                    Groundwork admin
+                    Trelio admin
                   </div>
                 </div>
               </div>

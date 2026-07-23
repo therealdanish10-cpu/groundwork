@@ -5,8 +5,8 @@ import { createClient } from '@/lib/supabase/server';
 import PendingLeadsPanel from './PendingLeadsPanel';
 
 export const metadata: Metadata = {
-  title: 'Admin — Groundwork Technologies',
-  description: 'Groundwork admin overview — all clients, leads, and billing at a glance.',
+  title: 'Admin — Trelio',
+  description: 'Trelio admin overview — all clients, leads, and billing at a glance.',
 };
 
 function currentMonthStart(): string {
@@ -146,7 +146,7 @@ export default async function AdminPage() {
 
         {/* ── Page heading ──────────────────────────────────────────────── */}
         <h1 className="page-title">Admin overview</h1>
-        <p className="page-sub">All Groundwork clients at a glance.</p>
+        <p className="page-sub">All Trelio clients at a glance.</p>
 
         {/* ── Metric cards ──────────────────────────────────────────────── */}
         <div className="grid metrics">

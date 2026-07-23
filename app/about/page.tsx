@@ -5,7 +5,7 @@ import Reveal from '../components/Reveal';
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Meet the Groundwork Technologies team — the people helping local trade businesses get online, get found, and grow.',
+    'Meet the Trelio team — the people helping local trade businesses get online, get found, and grow.',
 };
 
 /* ── Team data ────────────────────────────────────────────────────────────
@@ -27,7 +27,7 @@ const TEAM: TeamMember[] = [
     role:        'Founder',
     photoUrl:    null,
     initials:    'JH',
-    avatarBg:    '#7c5cd6',   // violet
+    avatarBg:    '#2563eb',   // blue
     avatarColor: '#ffffff',
   },
   {
@@ -43,8 +43,8 @@ const TEAM: TeamMember[] = [
     role:        'CTO & Lead Developer',
     photoUrl:    null,
     initials:    'DA',
-    avatarBg:    '#c6f24e',   // lime
-    avatarColor: '#0d0d0d',
+    avatarBg:    '#3a3a3a',   // charcoal
+    avatarColor: '#ffffff',
   },
   {
     name:        'Awais Tahir',
@@ -59,7 +59,7 @@ const TEAM: TeamMember[] = [
     role:        'Social Media Manager',
     photoUrl:    null,
     initials:    'AZ',
-    avatarBg:    '#5f42b3',   // violet-dim
+    avatarBg:    '#2563eb',   // blue
     avatarColor: '#ffffff',
   },
 ];
@@ -72,7 +72,7 @@ export default function AboutPage() {
       <header className="page-head">
         <div className="container">
           <div className="section-eyebrow">THE TEAM</div>
-          <h1>The people behind Groundwork</h1>
+          <h1>The people behind Trelio</h1>
           <p>
             We&apos;re a small, focused team that believes local trades deserve
             great websites and real results — not agency runaround.
@@ -123,7 +123,7 @@ export default function AboutPage() {
           <Reveal>
             <div className="about-blurb">
               <p>
-                Groundwork Technologies helps electricians, plumbers, roofers,
+                Trelio helps electricians, plumbers, roofers,
                 and other local trade businesses across the US get online, get
                 found, and keep growing — combining web design, hosting, and
                 lead generation into one straightforward service with no

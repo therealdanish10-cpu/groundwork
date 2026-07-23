@@ -105,7 +105,7 @@ export default function SiteRequestPanel({ siteRequests, clientId }: Props) {
                 fontSize:     '14px',
                 transition:   'var(--transition-theme)',
               }}
-              onFocus={e => (e.target.style.borderColor = 'var(--violet)')}
+              onFocus={e => (e.target.style.borderColor = 'var(--blue)')}
               onBlur={e  => (e.target.style.borderColor = 'var(--input-border)')}
             />
           </div>

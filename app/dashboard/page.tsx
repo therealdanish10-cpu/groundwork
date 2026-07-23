@@ -8,7 +8,7 @@ import ManageBillingButton from '@/app/components/ManageBillingButton';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
-  description: 'Your Groundwork client dashboard — leads, billing, and site management.',
+  description: 'Your Trelio client dashboard — leads, billing, and site management.',
 };
 
 /* Returns the ISO string for the first moment of the current calendar month. */
