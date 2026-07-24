@@ -784,6 +784,25 @@ section {
   width:      100%;
 }
 
+.plan-cta-btn {
+  width:         100%;
+  background:    var(--fg);
+  color:         var(--bg);
+  border:        1px solid var(--fg);
+  border-radius: 999px;
+  padding:       12px 24px;
+  font-size:     15px;
+  font-weight:   600;
+  transition:    all 0.2s ease;
+}
+
+.plan-cta-btn:hover {
+  background:   var(--blue);
+  border-color: var(--blue);
+  color:        #ffffff;
+  transform:    translateY(-1px);
+}
+
 .carousel-controls {
   display:         flex;
   align-items:     center;

@@ -1,13 +1,68 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from '../components/Reveal';
-import PricingCarousel from '../components/PricingCarousel';
+import PricingCarousel, { PlanItem } from '../components/PricingCarousel';
 
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
     'Start with just a site, or let Trelio run the whole thing — hosting, growth, and finding you customers.',
 };
+
+const PRICING_PLANS: PlanItem[] = [
+  {
+    id: 'build',
+    name: 'Build',
+    eyebrow: 'PLAN 01',
+    tagline: 'A finished site, handed to you',
+    description: 'A custom-built website for your trade, ready to launch anywhere.',
+    price: '$500',
+    cadence: 'one-time',
+    features: [
+      'Custom-designed site for your trade',
+      'Mobile-friendly, fast-loading',
+      'Contact form included',
+      'You host it anywhere you like',
+      'Optional hosting add-on: +$20/mo',
+    ],
+    ctaText: 'Start with Build',
+  },
+  {
+    id: 'host',
+    name: 'Host',
+    eyebrow: 'PLAN 02 · MOST CHOSEN',
+    tagline: 'Keep an existing site alive',
+    description: 'Managed hosting, updates, and maintenance so your site stays fast and secure.',
+    price: '$700',
+    cadence: 'one-time setup',
+    recurring: 'then $50 / month',
+    features: [
+      'Hosting, uptime, and backups',
+      'Security and software updates',
+      'Content and copy updates',
+      'Direct support line to us',
+    ],
+    isFeatured: true,
+    ctaText: 'Start with Host',
+  },
+  {
+    id: 'grow',
+    name: 'Grow',
+    eyebrow: 'PLAN 03',
+    tagline: 'Build + host, plus we find you work',
+    description: 'Everything in Host, plus SEO and lead capture that pays for itself.',
+    price: '$1,000',
+    cadence: 'one-time setup',
+    recurring: 'then $70 / month + $50 per booked job',
+    features: [
+      'Everything in Build and Host',
+      'Ongoing SEO and performance work',
+      'Booking form + call tracking built in',
+      '$50 charged only when a lead turns into a booked job',
+    ],
+    ctaText: 'Start with Grow',
+  },
+];
 
 /* ─────────────────────────────────────────────────────────────
    Pricing page — body content only.
@@ -29,14 +84,14 @@ export default function PricingPage() {
         </div>
       </header>
 
-      {/* ── PLAN CARDS ───────────────────────────────────────── */}
+      {/* ── PLAN CAROUSEL ────────────────────────────────────── */}
       <section className="section-sm">
         <div className="container">
           <Reveal>
-            <PricingCarousel />
+            <PricingCarousel plans={PRICING_PLANS} initialIndex={0} />
           </Reveal>
 
-          <p className="note">
+          <p className="note" style={{ marginTop: '36px' }}>
             All monthly plans are billed month-to-month — cancel or switch
             plans any time from your dashboard.
           </p>

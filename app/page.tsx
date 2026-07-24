@@ -1,10 +1,65 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from './components/Reveal';
-import CheckoutButton from './components/CheckoutButton';
 import ContactForm from './components/ContactForm';
 import HeroBackground from './components/HeroBackground';
 import FAQAccordion from './components/FAQAccordion';
+import PricingCarousel, { PlanItem } from './components/PricingCarousel';
+
+const PLANS: PlanItem[] = [
+  {
+    id: 'build',
+    name: 'Build',
+    eyebrow: 'PLAN 01',
+    tagline: 'A finished site, handed to you',
+    description: 'A custom-built website for your trade, ready to launch anywhere.',
+    price: '$500',
+    cadence: 'one-time',
+    features: [
+      'Custom-designed site for your trade',
+      'Mobile-friendly, fast-loading',
+      'Contact form included',
+      'You host it anywhere you like',
+      'Optional hosting add-on: +$20/mo',
+    ],
+    ctaText: 'Start with Build',
+  },
+  {
+    id: 'host',
+    name: 'Host',
+    eyebrow: 'PLAN 02 · MOST CHOSEN',
+    tagline: 'Keep an existing site alive',
+    description: 'Managed hosting, updates, and maintenance so your site stays fast and secure.',
+    price: '$700',
+    cadence: 'one-time setup',
+    recurring: 'then $50 / month',
+    features: [
+      'Hosting, uptime, and backups',
+      'Security and software updates',
+      'Content and copy updates',
+      'Direct support line to us',
+    ],
+    isFeatured: true,
+    ctaText: 'Start with Host',
+  },
+  {
+    id: 'grow',
+    name: 'Grow',
+    eyebrow: 'PLAN 03',
+    tagline: 'Build + host, plus we find you work',
+    description: 'Everything in Host, plus SEO and lead capture that pays for itself.',
+    price: '$1,000',
+    cadence: 'one-time setup',
+    recurring: 'then $70 / month + $50 per booked job',
+    features: [
+      'Everything in Build and Host',
+      'Ongoing SEO and performance work',
+      'Booking form + call tracking built in',
+      '$50 charged only when a lead turns into a booked job',
+    ],
+    ctaText: 'Start with Grow',
+  },
+];
 
 export const metadata: Metadata = {
   title: 'Trelio — Websites for local trades',
@@ -133,74 +188,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 3. PRICING TEASER ───────────────────────────────────── */}
+      {/* ── 3. PRICING CAROUSEL ─────────────────────────────────── */}
       <section id="pricing">
         <div className="container">
           <Reveal className="section-head text-center" style={{ margin: '0 auto 56px', textAlign: 'center' }}>
             <div className="section-eyebrow">PRICING</div>
-            <h2>Choose how much we handle</h2>
+            <h2>Simple plans, no surprises.</h2>
             <p>
               Every plan starts with a site built for your trade. Hosting and
               growth are optional add-ons.
             </p>
           </Reveal>
 
-          <div className="pricing-grid">
-            {/* Build */}
-            <Reveal delay={0}>
-              <div className="plan">
-                <div className="plan-name">Build</div>
-                <div className="plan-tagline">A finished site, handed to you</div>
-                <div className="plan-price">$500</div>
-                <div className="plan-cadence">one-time</div>
-                <ul className="plan-features">
-                  <li>Custom-designed site for your trade</li>
-                  <li>Mobile-friendly, fast-loading</li>
-                  <li>Contact form included</li>
-                  <li>You host it anywhere you like</li>
-                  <li>Optional hosting add-on: +$20/mo</li>
-                </ul>
-                <CheckoutButton plan="build" className="btn btn-ghost">Get started</CheckoutButton>
-              </div>
-            </Reveal>
-
-            {/* Grow — featured */}
-            <Reveal delay={100}>
-              <div className="plan featured">
-                <div className="plan-badge">MOST POPULAR</div>
-                <div className="plan-name">Grow</div>
-                <div className="plan-tagline">Build + host, plus we find you work</div>
-                <div className="plan-price">$1,000</div>
-                <div className="plan-cadence" style={{ marginBottom: '4px' }}>one-time setup</div>
-                <div className="plan-recurring">then $70 / month</div>
-                <ul className="plan-features">
-                  <li>Everything in Build and Host</li>
-                  <li>Ongoing SEO and performance work</li>
-                  <li>Booking form + call tracking built in</li>
-                  <li>$50 charged only when a lead turns into a booked job</li>
-                </ul>
-                <CheckoutButton plan="grow" className="btn btn-primary">Get started</CheckoutButton>
-              </div>
-            </Reveal>
-
-            {/* Host */}
-            <Reveal delay={200}>
-              <div className="plan">
-                <div className="plan-name">Host</div>
-                <div className="plan-tagline">Keep an existing site alive</div>
-                <div className="plan-price">$700</div>
-                <div className="plan-cadence" style={{ marginBottom: '4px' }}>one-time setup</div>
-                <div className="plan-recurring">then $50 / month</div>
-                <ul className="plan-features">
-                  <li>Hosting, uptime, and backups</li>
-                  <li>Security and software updates</li>
-                  <li>Content and copy updates</li>
-                  <li>Direct support line to us</li>
-                </ul>
-                <CheckoutButton plan="host" className="btn btn-ghost">Get started</CheckoutButton>
-              </div>
-            </Reveal>
-          </div>
+          <Reveal delay={100}>
+            <PricingCarousel plans={PLANS} initialIndex={0} />
+          </Reveal>
         </div>
       </section>
 

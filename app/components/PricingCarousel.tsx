@@ -1,179 +1,237 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState, useRef, MouseEvent, TouchEvent, KeyboardEvent } from 'react';
 import CheckoutButton from './CheckoutButton';
 
-type Plan = {
+export interface PlanItem {
   id: 'build' | 'host' | 'grow';
   name: string;
+  eyebrow?: string;
   tagline: string;
+  description?: string;
   price: string;
   cadence: string;
   recurring?: string;
-  badge?: string;
   features: string[];
-  cta: string;
-  ctaVariant: 'btn-ghost' | 'btn-primary';
-};
+  isFeatured?: boolean;
+  ctaText?: string;
+}
 
-const PLANS: Plan[] = [
-  {
-    id: 'build',
-    name: 'Build',
-    tagline: 'A finished site, handed to you',
-    price: '$500',
-    cadence: 'one-time',
-    features: [
-      'Custom-designed site for your trade',
-      'Mobile-friendly, fast-loading',
-      'Contact form included',
-      'You host it anywhere you like',
-      'One round of revisions',
-      'Optional hosting add-on: +$20/mo',
-    ],
-    cta: 'Get started',
-    ctaVariant: 'btn-ghost',
-  },
-  {
-    id: 'host',
-    name: 'Host',
-    tagline: 'Keep an existing site alive',
-    price: '$700',
-    cadence: 'one-time setup',
-    recurring: 'then $50 / month',
-    badge: 'MOST CHOSEN',
-    features: [
-      'Hosting, uptime, and backups',
-      'Security and software updates',
-      'Content and copy updates',
-      'Direct support line to us',
-      'No job fees',
-    ],
-    cta: 'Get started',
-    ctaVariant: 'btn-primary',
-  },
-  {
-    id: 'grow',
-    name: 'Grow',
-    tagline: 'Build + host, plus we find you work',
-    price: '$1,000',
-    cadence: 'one-time setup',
-    recurring: 'then $70 / month',
-    features: [
-      'Everything in Build and Host',
-      'Ongoing SEO and performance work',
-      'Booking form + call tracking built in',
-      'Monthly performance report',
-      '$50 charged only when a lead turns into a booked job',
-    ],
-    cta: 'Get started',
-    ctaVariant: 'btn-ghost',
-  },
-];
+export interface PricingCarouselProps {
+  plans: PlanItem[];
+  initialIndex?: number;
+}
 
-export default function PricingCarousel() {
-  const [index, setIndex] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const dragState = useRef({ isDown: false, startX: 0, dragged: 0 });
+export default function PricingCarousel({
+  plans,
+  initialIndex = 0,
+}: PricingCarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
 
-  function move(dir: number) {
-    setIndex((prev) => (prev + dir + PLANS.length) % PLANS.length);
+  const startXRef = useRef(0);
+  const currentXRef = useRef(0);
+
+  const index = Math.max(0, Math.min(currentIndex, plans.length - 1));
+
+  function goToIndex(nextIndex: number) {
+    if (nextIndex >= 0 && nextIndex < plans.length) {
+      setCurrentIndex(nextIndex);
+    }
   }
 
-  function goTo(i: number) {
-    setIndex(i);
+  function handlePrev() {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
   }
 
-  function onPointerDown(e: React.PointerEvent) {
-    dragState.current.isDown = true;
-    dragState.current.startX = e.clientX;
-    dragState.current.dragged = 0;
-    trackRef.current?.setPointerCapture(e.pointerId);
+  function handleNext() {
+    if (currentIndex < plans.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
   }
 
-  function onPointerMove(e: React.PointerEvent) {
-    if (!dragState.current.isDown) return;
-    dragState.current.dragged = e.clientX - dragState.current.startX;
+  // Mouse Drag handlers
+  function onMouseDown(e: MouseEvent<HTMLDivElement>) {
+    setIsDragging(true);
+    startXRef.current = e.clientX;
+    currentXRef.current = e.clientX;
+    setDragOffset(0);
   }
 
-  function onPointerUp() {
-    if (!dragState.current.isDown) return;
-    dragState.current.isDown = false;
-    const dragged = dragState.current.dragged;
-    if (dragged < -60) move(1);
-    else if (dragged > 60) move(-1);
-    dragState.current.dragged = 0;
+  function onMouseMove(e: MouseEvent<HTMLDivElement>) {
+    if (!isDragging) return;
+    currentXRef.current = e.clientX;
+    const diff = currentXRef.current - startXRef.current;
+    setDragOffset(diff);
+  }
+
+  function onMouseUp() {
+    if (!isDragging) return;
+    const diff = currentXRef.current - startXRef.current;
+    const threshold = 60;
+
+    if (diff < -threshold && currentIndex < plans.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+    } else if (diff > threshold && currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
+
+    setIsDragging(false);
+    setDragOffset(0);
+  }
+
+  function onMouseLeave() {
+    if (isDragging) {
+      onMouseUp();
+    }
+  }
+
+  // Touch Swipe handlers
+  function onTouchStart(e: TouchEvent<HTMLDivElement>) {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      startXRef.current = e.touches[0].clientX;
+      currentXRef.current = e.touches[0].clientX;
+      setDragOffset(0);
+    }
+  }
+
+  function onTouchMove(e: TouchEvent<HTMLDivElement>) {
+    if (!isDragging || e.touches.length !== 1) return;
+    currentXRef.current = e.touches[0].clientX;
+    const diff = currentXRef.current - startXRef.current;
+    setDragOffset(diff);
+  }
+
+  function onTouchEnd() {
+    if (!isDragging) return;
+    const diff = currentXRef.current - startXRef.current;
+    const threshold = 60;
+
+    if (diff < -threshold && currentIndex < plans.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+    } else if (diff > threshold && currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
+
+    setIsDragging(false);
+    setDragOffset(0);
+  }
+
+  // Keyboard navigation
+  function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === 'ArrowLeft') {
+      handlePrev();
+    } else if (e.key === 'ArrowRight') {
+      handleNext();
+    }
   }
 
   return (
     <div className="carousel-shell">
-      <div className="carousel-viewport">
+      <div
+        className="carousel-viewport"
+        tabIndex={0}
+        aria-label="Pricing Plans Carousel"
+        onKeyDown={onKeyDown}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        style={{ userSelect: isDragging ? 'none' : 'auto' }}
+      >
         <div
           className="carousel-track"
-          ref={trackRef}
-          style={{ transform: `translateX(-${index * 100}%)` }}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
+          style={{
+            transform: `translateX(calc(-${index * 100}% + ${dragOffset}px))`,
+            transition: isDragging ? 'none' : 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
         >
-          {PLANS.map((plan) => (
-            <div className="plan-panel" key={plan.id}>
+          {plans.map((plan, i) => (
+            <div key={plan.id} className="plan-panel">
+              {/* Left Column: Plan Overview */}
               <div className="plan-left">
-                <div className="plan-eyebrow">
-                  {plan.name}
-                  {plan.badge ? ` · ${plan.badge}` : ''}
-                </div>
+                <div className="plan-eyebrow">{plan.eyebrow ?? `PLAN 0${i + 1}`}</div>
                 <h3>{plan.name}</h3>
-                <p>{plan.tagline}</p>
+                <p style={{ fontWeight: 600, color: 'var(--fg)', marginBottom: '8px' }}>
+                  {plan.tagline}
+                </p>
+                {plan.description && <p>{plan.description}</p>}
               </div>
-              <div className="plan-right">
+
+              {/* Right Column: Pricing Card Details (No floating badge element) */}
+              <div className={`plan-right ${plan.isFeatured ? 'featured' : ''}`}>
                 <div className="plan-price">
-                  {plan.price} <span className="unit">{plan.cadence}</span>
+                  {plan.price} <span className="unit">/ {plan.cadence}</span>
                 </div>
+
                 {plan.recurring && (
                   <div className="plan-recurring">{plan.recurring}</div>
                 )}
+
                 <div className="plan-features">
-                  {plan.features.map((f) => (
-                    <div className="plan-feature" key={f}>
-                      <span className="check">✓</span> {f}
+                  {plan.features.map((feature, idx) => (
+                    <div key={idx} className="plan-feature">
+                      <span className="check">✓</span>
+                      <span>{feature}</span>
                     </div>
                   ))}
                 </div>
-                <CheckoutButton plan={plan.id} className={`btn ${plan.ctaVariant} plan-cta`}>
-                  {plan.cta}
-                </CheckoutButton>
+
+                <div className="plan-cta">
+                  <CheckoutButton
+                    plan={plan.id}
+                    className="btn plan-cta-btn"
+                  >
+                    {plan.ctaText ?? 'Start with ' + plan.name}
+                  </CheckoutButton>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Carousel Controls: Arrows & Dot Indicators */}
       <div className="carousel-controls">
         <button
           type="button"
           className="carousel-arrow"
+          onClick={handlePrev}
+          disabled={index === 0}
           aria-label="Previous plan"
-          onClick={() => move(-1)}
+          style={{ opacity: index === 0 ? 0.35 : 1, cursor: index === 0 ? 'default' : 'pointer' }}
         >
           ←
         </button>
-        <div className="carousel-dots">
-          {PLANS.map((plan, i) => (
+
+        <div className="carousel-dots" role="tablist" aria-label="Plan slides">
+          {plans.map((plan, i) => (
             <button
               key={plan.id}
               type="button"
-              aria-label={`Show ${plan.name} plan`}
-              className={`dot${i === index ? ' active' : ''}`}
-              onClick={() => goTo(i)}
+              role="tab"
+              aria-selected={i === index}
+              aria-label={`Go to ${plan.name} plan`}
+              className={`dot ${i === index ? 'active' : ''}`}
+              onClick={() => goToIndex(i)}
             />
           ))}
         </div>
+
         <button
           type="button"
           className="carousel-arrow"
+          onClick={handleNext}
+          disabled={index === plans.length - 1}
           aria-label="Next plan"
-          onClick={() => move(1)}
+          style={{ opacity: index === plans.length - 1 ? 0.35 : 1, cursor: index === plans.length - 1 ? 'default' : 'pointer' }}
         >
           →
         </button>
