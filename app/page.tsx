@@ -4,6 +4,7 @@ import Reveal from './components/Reveal';
 import CheckoutButton from './components/CheckoutButton';
 import ContactForm from './components/ContactForm';
 import HeroBackground from './components/HeroBackground';
+import FAQAccordion from './components/FAQAccordion';
 
 export const metadata: Metadata = {
   title: 'Trelio — Websites for local trades',
@@ -83,48 +84,48 @@ export default function HomePage() {
       {/* ── 2. HOW IT WORKS ─────────────────────────────────────── */}
       <section id="how">
         <div className="container">
-          <Reveal className="section-head">
+          <Reveal className="section-head text-center" style={{ margin: '0 auto 56px', textAlign: 'center' }}>
             <div className="section-eyebrow">HOW IT WORKS</div>
-            <h2>Four simple steps to predictable growth</h2>
+            <h2>One site, three ways to move forward</h2>
             <p>
-              Start with just a website, or let us handle hosting, lead capture, and performance.
+              Start with just a website, or let us run everything — including the work of finding you customers.
             </p>
           </Reveal>
 
           <div className="flow-steps">
             <Reveal delay={0}>
               <div className="flow-step">
-                <div className="step-num">STEP 1</div>
+                <div className="step-num">01</div>
                 <h3>We design your site</h3>
                 <p>
-                  Built for your specific trade, your service area, and how local customers actually search for you.
+                  Built for your trade, your service area, and how customers actually search for you.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={80}>
               <div className="flow-step">
-                <div className="step-num">STEP 2</div>
+                <div className="step-num">02</div>
                 <h3>You choose a plan</h3>
                 <p>
-                  Pick a standalone build, managed monthly hosting, or our full pay-per-booked-job growth plan.
+                  Just the build, ongoing hosting, or the full growth plan below.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={160}>
               <div className="flow-step">
-                <div className="step-num">STEP 3</div>
-                <h3>Leads flow through your site</h3>
+                <div className="step-num">03</div>
+                <h3>Leads come through your site</h3>
                 <p>
-                  Smart booking forms and call tracking are built in, automatically logging every lead to your dashboard.
+                  A booking form and call tracking are built in, so every lead is counted.
                 </p>
               </div>
             </Reveal>
             <Reveal delay={240}>
               <div className="flow-step">
-                <div className="step-num">STEP 4</div>
+                <div className="step-num">04</div>
                 <h3>You only pay for results</h3>
                 <p>
-                  On the Grow plan, we charge $50 per confirmed booked job — nothing if it doesn't turn into real revenue.
+                  On the Grow plan, we charge $50 per booked job — nothing if it doesn't turn into work.
                 </p>
               </div>
             </Reveal>
@@ -135,7 +136,7 @@ export default function HomePage() {
       {/* ── 3. PRICING TEASER ───────────────────────────────────── */}
       <section id="pricing">
         <div className="container">
-          <Reveal className="section-head">
+          <Reveal className="section-head text-center" style={{ margin: '0 auto 56px', textAlign: 'center' }}>
             <div className="section-eyebrow">PRICING</div>
             <h2>Choose how much we handle</h2>
             <p>
@@ -219,46 +220,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 5. FAQ (Now Last) ──────────────────────────────────── */}
+      {/* ── 5. FAQ (Collapsible Accordion) ───────────────────────── */}
       <section id="faq">
         <div className="container">
-          <Reveal className="section-head">
+          <Reveal className="section-head text-center" style={{ margin: '0 auto 48px', textAlign: 'center' }}>
             <div className="section-eyebrow">FAQ</div>
             <h2>How the $50-per-booked-job fee works</h2>
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="faq-item">
-              <h3>How do you know when I get a lead?</h3>
-              <p>
-                Your Grow-plan site includes a booking form and a dedicated
-                tracking phone number. Every submission or call through those
-                is logged automatically — nothing to report yourself.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h3>What if the lead doesn't turn into a job?</h3>
-              <p>
-                You're only charged once a lead is marked as a booked job —
-                not for raw form submissions or calls that don't go anywhere.
-                It's a flat $50 per completed job, so there's never a dispute
-                over what it was worth.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h3>Can I see every lead I'm charged for?</h3>
-              <p>
-                Yes — your dashboard shows a running log of every lead, when
-                it came in, and the charge tied to it.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h3>Can I switch plans later?</h3>
-              <p>
-                Yes, you can move between Host and Grow at any time from your
-                dashboard.
-              </p>
-            </div>
+            <FAQAccordion />
           </Reveal>
         </div>
       </section>
