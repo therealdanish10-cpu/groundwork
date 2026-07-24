@@ -208,12 +208,20 @@ export default async function AdminPage() {
                       <td style={{ color: 'var(--gray)', fontSize: '13px' }}>
                         {client.trade ?? '—'}
                       </td>
-                      <td>{planLabel}</td>
+                      <td>
+                        {plan ? (
+                          <span className={`badge ${plan === 'grow' || plan === 'host' ? 'badge-live' : 'badge-pending'}`}>
+                            {planLabel}
+                          </span>
+                        ) : (
+                          <span style={{ color: 'var(--gray)', fontSize: '13px' }}>—</span>
+                        )}
+                      </td>
                       <td>{moLeads > 0 ? moLeads : '—'}</td>
                       <td>
                         <Link
                           href={`/admin/clients/${client.id}`}
-                          className="btn btn-ghost btn-sm"
+                          className="btn plan-cta-btn btn-sm"
                         >
                           Manage
                         </Link>
