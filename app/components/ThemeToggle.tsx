@@ -10,8 +10,7 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>('light');
 
   // On mount, read the saved preference and apply it immediately.
-  // We do this in an effect (not during SSR) so the server HTML is always
-  // in the default (light) state, avoiding a hydration mismatch.
+  // Defaults to 'light' if no preference saved yet.
   useEffect(() => {
     let saved: Theme = 'light';
     try {

@@ -7,9 +7,9 @@ import ThemeToggle from './ThemeToggle';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Nav() {
-  const [scrolled,    setScrolled]    = useState(false);
-  const [hasSession,  setHasSession]  = useState(false);
-  const [menuOpen,    setMenuOpen]    = useState(false);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [hasSession, setHasSession] = useState(false);
+  const [menuOpen,   setMenuOpen]   = useState(false);
   const pathname = usePathname();
   const router   = useRouter();
 
@@ -66,9 +66,9 @@ export default function Nav() {
     <>
       <Link href="/#how"     className={isActive('/#how')}     onClick={() => setMenuOpen(false)}>How it works</Link>
       <Link href="/pricing"  className={isActive('/pricing')}  onClick={() => setMenuOpen(false)}>Pricing</Link>
+      <Link href="/#contact" className={isActive('/#contact')} onClick={() => setMenuOpen(false)}>Contact</Link>
       <Link href="/#faq"     className={isActive('/#faq')}     onClick={() => setMenuOpen(false)}>FAQ</Link>
       <Link href="/about"    className={isActive('/about')}    onClick={() => setMenuOpen(false)}>About</Link>
-      <Link href="/#contact" className={isActive('/#contact')} onClick={() => setMenuOpen(false)}>Contact</Link>
     </>
   );
 
@@ -87,8 +87,6 @@ export default function Nav() {
 
           {/* Right-side controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <ThemeToggle />
-
             {hasSession ? (
               <button
                 id="nav-logout"
@@ -98,8 +96,10 @@ export default function Nav() {
                 Log out
               </button>
             ) : (
-              <Link href="/#contact" className="nav-cta">Get started</Link>
+              <Link href="/login" className="nav-cta">Get started</Link>
             )}
+
+            <ThemeToggle />
 
             {/* Hamburger — visible only on mobile (≤900px via CSS) */}
             <button
@@ -131,7 +131,7 @@ export default function Nav() {
                 Log out
               </button>
             ) : (
-              <Link href="/#contact" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+              <Link href="/login" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
                 Get started
               </Link>
             )}

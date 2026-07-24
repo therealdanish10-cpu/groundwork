@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Reveal from './components/Reveal';
 import CheckoutButton from './components/CheckoutButton';
 import ContactForm from './components/ContactForm';
+import HeroBackground from './components/HeroBackground';
 
 export const metadata: Metadata = {
   title: 'Trelio — Websites for local trades',
@@ -18,69 +19,75 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* ── HERO ─────────────────────────────────────────────── */}
+      {/* ── 1. HERO (Single centered column + 3 blurred gradient blobs) ── */}
       <section className="hero">
-        {/* Animated background */}
-        <div className="blob-field" aria-hidden="true">
-          <div className="blob blob-1" />
-          <div className="blob blob-2" />
-          <div className="grain" />
-        </div>
+        <HeroBackground />
 
-        <div className="container hero-grid-layout">
-          {/* Left column — copy */}
-          <div>
-            <div className="eyebrow">WEBSITES FOR LOCAL TRADES</div>
-            <h1>
-              We build the site.<br />
-              We keep it running.<br />
-              <span className="u">We bring you customers.</span>
-            </h1>
-            <p>
-              Trelio designs, hosts, and grows websites for electricians,
-              plumbers, roofers, and other local trades — and we only make more
-              when you do.
-            </p>
-            <div className="hero-actions">
-              <Link href="#pricing" className="btn btn-primary">See plans</Link>
-              <Link href="#how"     className="btn btn-ghost">How it works</Link>
+        <div className="container">
+          <div className="hero-centered-layout">
+            <Reveal initiallyVisible>
+              <div className="eyebrow">BUILT FOR LOCAL TRADE BUSINESSES</div>
+            </Reveal>
+
+            <Reveal initiallyVisible delay={50}>
+              <h1>
+                Websites that turn clicks into <span className="u">booked jobs</span>.
+              </h1>
+            </Reveal>
+
+            <Reveal initiallyVisible delay={100}>
+              <p>
+                Trelio designs, hosts, and grows websites for local trades — and on our Grow plan, we only charge when a lead turns into real work.
+              </p>
+            </Reveal>
+
+            <Reveal initiallyVisible delay={150}>
+              <div className="hero-actions">
+                <Link href="/login" className="btn btn-primary">Get started</Link>
+                <Link href="#how" className="btn btn-ghost">How it works</Link>
+              </div>
+            </Reveal>
+
+            {/* Staggered Stats Strip */}
+            <div className="hero-stats">
+              <Reveal delay={200} className="stat-item">
+                <span className="stat-number">40+</span>
+                <span className="stat-label">businesses served</span>
+              </Reveal>
+
+              <div className="stat-divider" />
+
+              <Reveal delay={280} className="stat-item">
+                <span className="stat-number">7 days</span>
+                <span className="stat-label">free trial</span>
+              </Reveal>
+
+              <div className="stat-divider" />
+
+              <Reveal delay={360} className="stat-item">
+                <span className="stat-number">99.9%</span>
+                <span className="stat-label">uptime</span>
+              </Reveal>
+
+              <div className="stat-divider" />
+
+              <Reveal delay={440} className="stat-item">
+                <span className="stat-number">$500</span>
+                <span className="stat-label">starting price</span>
+              </Reveal>
             </div>
           </div>
-
-          {/* Right column — hero card (above fold, pre-revealed) */}
-          <Reveal initiallyVisible>
-            <div className="hero-card">
-              <span className="tag">Grow plan</span>
-              <h3>Build → Host → Grow</h3>
-              <p>One plan, three jobs done for you.</p>
-              <div className="mini-flow">
-                <div className="mini-flow-item">
-                  <span className="mini-dot" />
-                  Site built for your trade
-                </div>
-                <div className="mini-flow-item">
-                  <span className="mini-dot" />
-                  Hosted and kept running
-                </div>
-                <div className="mini-flow-item">
-                  <span className="mini-dot" />
-                  $50 per booked job, nothing else
-                </div>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
+      {/* ── 2. HOW IT WORKS ─────────────────────────────────────── */}
       <section id="how">
         <div className="container">
           <Reveal className="section-head">
             <div className="section-eyebrow">HOW IT WORKS</div>
-            <h2>One site, three ways to move forward</h2>
+            <h2>Four simple steps to predictable growth</h2>
             <p>
-              Start with just a website, or let us run everything — including
-              the work of finding you customers.
+              Start with just a website, or let us handle hosting, lead capture, and performance.
             </p>
           </Reveal>
 
@@ -90,38 +97,34 @@ export default function HomePage() {
                 <div className="step-num">STEP 1</div>
                 <h3>We design your site</h3>
                 <p>
-                  Built for your trade, your service area, and how customers
-                  actually search for you.
+                  Built for your specific trade, your service area, and how local customers actually search for you.
                 </p>
               </div>
             </Reveal>
-            <Reveal delay={60}>
+            <Reveal delay={80}>
               <div className="flow-step">
                 <div className="step-num">STEP 2</div>
                 <h3>You choose a plan</h3>
                 <p>
-                  Just the build, ongoing hosting, or the full growth plan
-                  below.
+                  Pick a standalone build, managed monthly hosting, or our full pay-per-booked-job growth plan.
                 </p>
               </div>
             </Reveal>
-            <Reveal delay={120}>
+            <Reveal delay={160}>
               <div className="flow-step">
                 <div className="step-num">STEP 3</div>
-                <h3>Leads come through your site</h3>
+                <h3>Leads flow through your site</h3>
                 <p>
-                  A booking form and call tracking are built in, so every lead
-                  is counted.
+                  Smart booking forms and call tracking are built in, automatically logging every lead to your dashboard.
                 </p>
               </div>
             </Reveal>
-            <Reveal delay={180}>
+            <Reveal delay={240}>
               <div className="flow-step">
                 <div className="step-num">STEP 4</div>
                 <h3>You only pay for results</h3>
                 <p>
-                  On the Grow plan, we charge $50 per booked job — nothing if
-                  it doesn't turn into work.
+                  On the Grow plan, we charge $50 per confirmed booked job — nothing if it doesn't turn into real revenue.
                 </p>
               </div>
             </Reveal>
@@ -129,7 +132,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PRICING TEASER ───────────────────────────────────── */}
+      {/* ── 3. PRICING TEASER ───────────────────────────────────── */}
       <section id="pricing">
         <div className="container">
           <Reveal className="section-head">
@@ -161,7 +164,7 @@ export default function HomePage() {
             </Reveal>
 
             {/* Grow — featured */}
-            <Reveal delay={60}>
+            <Reveal delay={100}>
               <div className="plan featured">
                 <div className="plan-badge">MOST POPULAR</div>
                 <div className="plan-name">Grow</div>
@@ -180,7 +183,7 @@ export default function HomePage() {
             </Reveal>
 
             {/* Host */}
-            <Reveal delay={120}>
+            <Reveal delay={200}>
               <div className="plan">
                 <div className="plan-name">Host</div>
                 <div className="plan-tagline">Keep an existing site alive</div>
@@ -200,7 +203,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FAQ ──────────────────────────────────────────────── */}
+      {/* ── 4. CONTACT (Get Started / Free Quote) ─────────────── */}
+      <section id="contact">
+        <div className="container">
+          <Reveal className="section-head" style={{ margin: '0 auto 40px', textAlign: 'center' }}>
+            <div className="section-eyebrow">GET STARTED</div>
+            <h2>Get a free quote.</h2>
+          </Reveal>
+
+          <Reveal>
+            <div className="contact-card-wrap">
+              <ContactForm />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── 5. FAQ (Now Last) ──────────────────────────────────── */}
       <section id="faq">
         <div className="container">
           <Reveal className="section-head">
@@ -208,7 +227,7 @@ export default function HomePage() {
             <h2>How the $50-per-booked-job fee works</h2>
           </Reveal>
 
-          <Reveal>
+          <Reveal delay={100}>
             <div className="faq-item">
               <h3>How do you know when I get a lead?</h3>
               <p>
@@ -239,24 +258,6 @@ export default function HomePage() {
                 Yes, you can move between Host and Grow at any time from your
                 dashboard.
               </p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── CONTACT ──────────────────────────────────────────── */}
-      <section id="contact">
-        <div className="container">
-          <Reveal>
-            <div className="contact-box">
-              <div className="contact-copy">
-                <h2>Let's build your site</h2>
-                <p>
-                  Tell us about your business and we'll follow up with a plan
-                  recommendation and a quote.
-                </p>
-              </div>
-              <ContactForm />
             </div>
           </Reveal>
         </div>
