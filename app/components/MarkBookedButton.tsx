@@ -48,7 +48,7 @@ export default function MarkBookedButton({ leadId }: Props) {
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
       <button
-        className="btn btn-ghost btn-sm"
+        className="btn plan-cta-btn btn-sm"
         disabled={busy}
         onClick={handleClick}
         style={{ opacity: busy ? 0.7 : 1, cursor: busy ? 'wait' : 'pointer' }}

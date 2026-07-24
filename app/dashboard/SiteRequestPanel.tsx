@@ -96,17 +96,17 @@ export default function SiteRequestPanel({ siteRequests, clientId }: Props) {
               style={{
                 width:        '100%',
                 resize:       'vertical',
-                background:   'var(--white)',
-                border:       '2px solid var(--input-border)',
-                borderRadius: '8px',
-                padding:      '11px 13px',
-                color:        'var(--ink)',
-                fontFamily:   'var(--font-inter), sans-serif',
+                background:   'var(--paper)',
+                border:       '1px solid var(--border)',
+                borderRadius: '12px',
+                padding:      '14px 16px',
+                color:        'var(--fg)',
+                fontFamily:   'var(--font-manrope), sans-serif',
                 fontSize:     '14px',
                 transition:   'var(--transition-theme)',
               }}
               onFocus={e => (e.target.style.borderColor = 'var(--blue)')}
-              onBlur={e  => (e.target.style.borderColor = 'var(--input-border)')}
+              onBlur={e  => (e.target.style.borderColor = 'var(--border)')}
             />
           </div>
           {formError && (
