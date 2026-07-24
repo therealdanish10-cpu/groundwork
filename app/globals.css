@@ -1192,7 +1192,7 @@ header.page-head p {
 /* ---------- Feature Comparison Table ---------- */
 .compare-wrap {
   overflow-x:    auto;
-  margin-bottom: 100px;
+  margin-bottom: 80px;
 }
 
 table {
@@ -1204,20 +1204,23 @@ table {
 th,
 td {
   text-align:    left;
-  padding:       16px;
+  padding:       16px 20px;
   border-bottom: 1px solid var(--border);
   font-size:     14px;
+  font-family:   var(--font-manrope);
 }
 
 thead th {
   font-family:   var(--font-manrope);
   font-size:     15px;
   font-weight:   700;
-  border-bottom: 2px solid var(--fg);
+  border-bottom: 1px solid var(--border);
+  background:    var(--paper-2);
+  color:         var(--fg);
 }
 
-tbody tr:last-child td {
-  border-bottom: none;
+tbody tr:hover {
+  background: rgba(29, 78, 216, 0.02);
 }
 
 th:not(:first-child),
@@ -1225,57 +1228,65 @@ td:not(:first-child) {
   text-align: center;
 }
 
-.check     { color: var(--blue); font-weight: 700; }
-.dash      { color: var(--gray); }
-.row-label { color: var(--gray); }
+.check     { color: var(--blue); font-weight: 700; font-size: 16px; }
+.dash      { color: var(--gray); font-weight: 400; }
+.row-label { color: var(--fg); font-weight: 600; }
 
 /* ---------- Lead Explainer ---------- */
 .lead-explainer {
   background:    var(--paper-2);
   border:        1px solid var(--border);
   border-radius: var(--card-radius);
-  padding:       48px;
-  margin-bottom: 100px;
+  padding:       48px 36px;
+  margin-bottom: 80px;
   box-shadow:    var(--card-shadow);
 }
 
 .lead-explainer h2 {
-  font-size:     26px;
-  margin-bottom: 32px;
+  font-size:     24px;
+  font-weight:   800;
+  margin-bottom: 36px;
   text-align:    center;
 }
 
 .lead-steps {
   display:               grid;
   grid-template-columns: repeat(5, 1fr);
-  gap:                   20px;
+  gap:                   16px;
 }
 
 .lead-step {
-  text-align: center;
+  background:    var(--paper);
+  border:        1px solid var(--border);
+  border-radius: 12px;
+  padding:       22px 16px;
+  text-align:    center;
+  transition:    var(--transition-theme);
+}
+
+.lead-step:hover {
+  border-color: var(--blue);
+  transform:    translateY(-2px);
 }
 
 .lead-step .num {
-  width:           36px;
-  height:          36px;
-  border-radius:   50%;
-  background:      var(--blue);
-  color:           #ffffff;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  font-weight:     700;
-  margin:          0 auto 12px;
+  color:         var(--blue);
+  font-size:     16px;
+  font-weight:   800;
+  margin-bottom: 10px;
 }
 
 .lead-step h3 {
   font-size:     15px;
+  font-weight:   700;
   margin-bottom: 6px;
+  color:         var(--fg);
 }
 
 .lead-step p {
-  color:     var(--gray);
-  font-size: 13px;
+  color:       var(--gray);
+  font-size:   13px;
+  line-height: 1.55;
 }
 
 /* ---------- CTA Band ---------- */
@@ -1284,14 +1295,15 @@ td:not(:first-child) {
   color:         var(--fg);
   border:        1px solid var(--border);
   border-radius: var(--card-radius);
-  padding:       56px;
+  padding:       56px 36px;
   text-align:    center;
-  margin:        100px 0;
+  margin:        80px 0 40px;
   box-shadow:    var(--card-shadow);
 }
 
 .cta-band h2 {
   font-size:     32px;
+  font-weight:   800;
   margin-bottom: 14px;
 }
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Reveal from '../components/Reveal';
 import PricingCarousel, { PlanItem } from '../components/PricingCarousel';
+import FAQAccordion, { FAQItem } from '../components/FAQAccordion';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -64,6 +65,29 @@ const PRICING_PLANS: PlanItem[] = [
   },
 ];
 
+const PRICING_FAQS: FAQItem[] = [
+  {
+    question: 'Can I start with Build and upgrade later?',
+    answer:
+      'Yes — most clients start with Build, then move to Host or Grow once the site is live and they see the value in ongoing support.',
+  },
+  {
+    question: 'Is there a contract or commitment?',
+    answer:
+      'No. Host and Grow are billed monthly and you can cancel or switch anytime from your dashboard.',
+  },
+  {
+    question: 'What if I already have a website?',
+    answer:
+      'We can take over hosting an existing site on the Host plan, or rebuild it as part of Grow if it needs work to convert visitors into leads.',
+  },
+  {
+    question: 'Is the $50 job fee capped?',
+    answer:
+      'Not currently — it scales with how many jobs your site helps you win, which is the same incentive we have: the better it performs, the more we both earn.',
+  },
+];
+
 /* ─────────────────────────────────────────────────────────────
    Pricing page — body content only.
    <nav> and <footer> are rendered by app/layout.tsx.
@@ -72,7 +96,7 @@ const PRICING_PLANS: PlanItem[] = [
 export default function PricingPage() {
   return (
     <>
-      {/* ── PAGE HEADER ──────────────────────────────────────── */}
+      {/* ── 1. PAGE HEADER ───────────────────────────────────── */}
       <header className="page-head">
         <div className="container">
           <div className="section-eyebrow">PRICING</div>
@@ -84,7 +108,7 @@ export default function PricingPage() {
         </div>
       </header>
 
-      {/* ── PLAN CAROUSEL ────────────────────────────────────── */}
+      {/* ── 2. PLAN CAROUSEL ─────────────────────────────────── */}
       <section className="section-sm">
         <div className="container">
           <Reveal>
@@ -98,14 +122,12 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ── FEATURE COMPARISON TABLE ─────────────────────────── */}
+      {/* ── 3. FEATURE COMPARISON TABLE ──────────────────────── */}
       <section className="section-sm">
         <div className="container">
-          <Reveal className="section-head" style={{ maxWidth: '600px', marginBottom: '40px' }}>
+          <Reveal className="section-head text-center" style={{ margin: '0 auto 48px', textAlign: 'center' }}>
             <div className="section-eyebrow">COMPARE</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 32px)' }}>
-              What's included in each plan
-            </h2>
+            <h2>What&apos;s included in each plan</h2>
           </Reveal>
 
           <Reveal className="compare-wrap">
@@ -167,7 +189,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ── HOW THE $50-PER-BOOKED-JOB FEE WORKS ────────────── */}
+      {/* ── 4. HOW THE $50-PER-BOOKED-JOB FEE WORKS ─────────── */}
       <section className="section-sm">
         <div className="container">
           <Reveal>
@@ -175,27 +197,27 @@ export default function PricingPage() {
               <h2>How the $50-per-booked-job fee works</h2>
               <div className="lead-steps">
                 <div className="lead-step">
-                  <div className="num">1</div>
+                  <div className="num">01</div>
                   <h3>Lead comes in</h3>
-                  <p>Through your site's booking form or tracking phone number.</p>
+                  <p>Through your site&apos;s booking form or tracking phone number.</p>
                 </div>
                 <div className="lead-step">
-                  <div className="num">2</div>
-                  <h3>It's logged automatically</h3>
+                  <div className="num">02</div>
+                  <h3>It&apos;s logged automatically</h3>
                   <p>No reporting needed — it shows up in your dashboard right away.</p>
                 </div>
                 <div className="lead-step">
-                  <div className="num">3</div>
+                  <div className="num">03</div>
                   <h3>You mark it as booked</h3>
                   <p>Once the job is won, you or we mark it booked in the dashboard.</p>
                 </div>
                 <div className="lead-step">
-                  <div className="num">4</div>
+                  <div className="num">04</div>
                   <h3>$50 is charged</h3>
                   <p>A flat fee, charged to your card on file, only for booked jobs.</p>
                 </div>
                 <div className="lead-step">
-                  <div className="num">5</div>
+                  <div className="num">05</div>
                   <h3>You see everything</h3>
                   <p>Every lead and every charge is itemized, always visible to you.</p>
                 </div>
@@ -205,56 +227,27 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ── FAQ ──────────────────────────────────────────────── */}
+      {/* ── 5. FAQ (Collapsible Accordion) ───────────────────── */}
       <section id="faq" className="section-sm">
         <div className="container">
-          <Reveal className="section-head" style={{ maxWidth: '600px', marginBottom: '40px' }}>
+          <Reveal className="section-head text-center" style={{ margin: '0 auto 48px', textAlign: 'center' }}>
             <div className="section-eyebrow">FAQ</div>
-            <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 32px)' }}>Common questions</h2>
+            <h2>Common questions</h2>
           </Reveal>
 
-          <Reveal>
-            <div className="faq-item">
-              <h3>Can I start with Build and upgrade later?</h3>
-              <p>
-                Yes — most clients start with Build, then move to Host or Grow
-                once the site is live and they see the value in ongoing support.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h3>Is there a contract or commitment?</h3>
-              <p>
-                No. Host and Grow are billed monthly and you can cancel or
-                switch anytime from your dashboard.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h3>What if I already have a website?</h3>
-              <p>
-                We can take over hosting an existing site on the Host plan, or
-                rebuild it as part of Grow if it needs work to convert visitors
-                into leads.
-              </p>
-            </div>
-            <div className="faq-item">
-              <h3>Is the $50 job fee capped?</h3>
-              <p>
-                Not currently — it scales with how many jobs your site helps
-                you win, which is the same incentive we have: the better it
-                performs, the more we both earn.
-              </p>
-            </div>
+          <Reveal delay={100}>
+            <FAQAccordion items={PRICING_FAQS} />
           </Reveal>
         </div>
       </section>
 
-      {/* ── CLOSING CTA BAND ─────────────────────────────────── */}
+      {/* ── 6. CLOSING CTA BAND ──────────────────────────────── */}
       <section className="section-sm">
         <div className="container">
           <Reveal>
             <div className="cta-band">
               <h2>Ready to get your business online?</h2>
-              <p>Tell us about your trade and we'll recommend the right plan.</p>
+              <p>Tell us about your trade and we&apos;ll recommend the right plan.</p>
               <Link href="/#contact" className="btn btn-primary">Get started</Link>
             </div>
           </Reveal>

@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 
-interface FAQItem {
+export interface FAQItem {
   question: string;
   answer: string;
 }
 
-const FAQS: FAQItem[] = [
+const DEFAULT_FAQS: FAQItem[] = [
   {
     question: 'How do you know when I get a lead?',
     answer:
@@ -30,7 +30,11 @@ const FAQS: FAQItem[] = [
   },
 ];
 
-export default function FAQAccordion() {
+interface Props {
+  items?: FAQItem[];
+}
+
+export default function FAQAccordion({ items = DEFAULT_FAQS }: Props) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   function toggle(idx: number) {
@@ -39,7 +43,7 @@ export default function FAQAccordion() {
 
   return (
     <div className="faq-accordion">
-      {FAQS.map((item, idx) => {
+      {items.map((item, idx) => {
         const isOpen = openIndex === idx;
         return (
           <div key={idx} className={`faq-item ${isOpen ? 'open' : ''}`}>
