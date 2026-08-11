@@ -24,7 +24,7 @@ interface TeamMember {
 const TEAM: TeamMember[] = [
   {
     name:        'Allah Ditta',
-    role:        'Co-founder & CEO',
+    role:        'Founder & CEO',
     photoUrl:    '/allah-ditta.jpg',
     initials:    'AD',
     avatarBg:    '#0d0d0d',
@@ -32,7 +32,7 @@ const TEAM: TeamMember[] = [
   },
   {
     name:        'Danish Awan',
-    role:        'CTO & Lead Developer',
+    role:        'Co-founder & CTO',
     photoUrl:    null,
     initials:    'DA',
     avatarBg:    '#3a3a3a',   // charcoal
