@@ -2,7 +2,7 @@
  * POST /api/checkout
  *
  * Creates a Stripe Checkout Session for the requested plan and returns
- * the session URL. The frontend redirects the browser there.
+ * the session URL. Supports both guest checkout and logged-in clients.
  *
  * Body:  { plan: 'build' | 'host' | 'grow' }
  * Returns: { url: string }
@@ -29,15 +29,11 @@ const PRICES: Record<Plan, { setup: string; monthly?: string }> = {
 };
 
 export async function POST(request: Request) {
-  /* ── Auth check ─────────────────────────────────────────────────── */
+  /* ── 1. Optional user session check (for existing logged-in clients) ─ */
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  /* ── Parse body ─────────────────────────────────────────────────── */
+  /* ── 2. Parse body ─────────────────────────────────────────────────── */
   let plan: Plan;
   try {
     const body = await request.json() as { plan: Plan };
@@ -47,57 +43,65 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid plan' }, { status: 400 });
   }
 
-  /* ── Same-plan guard — don't create a duplicate session ─────────── */
-  const { data: existingActiveSub } = await supabase
-    .from('subscriptions')
-    .select('id')
-    .eq('user_id', user.id)
-    .eq('status', 'active')
-    .eq('plan_type', plan)
-    .maybeSingle();
+  /* ── 3. Same-plan guard for logged-in users ──────────────────────── */
+  if (user) {
+    const { data: existingActiveSub } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .eq('plan_type', plan)
+      .maybeSingle();
 
-  if (existingActiveSub) {
-    const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
-    return NextResponse.json(
-      {
-        error:   'already_subscribed',
-        message: `You already have an active ${planLabel} plan. Visit your dashboard to manage billing.`,
-      },
-      { status: 409 },
-    );
+    if (existingActiveSub) {
+      const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
+      return NextResponse.json(
+        {
+          error:   'already_subscribed',
+          message: `You already have an active ${planLabel} plan. Visit your dashboard to manage billing.`,
+        },
+        { status: 409 },
+      );
+    }
   }
 
+  /* ── 4. Reuse existing Stripe customer if available ──────────────── */
+  let existingCustomerId: string | null = null;
+  if (user) {
+    const { data: existingSub } = await supabase
+      .from('subscriptions')
+      .select('stripe_customer_id')
+      .eq('user_id', user.id)
+      .not('stripe_customer_id', 'is', null)
+      .maybeSingle();
 
-  /* ── Reuse existing Stripe customer if possible ─────────────────── */
-  const { data: existingSub } = await supabase
-    .from('subscriptions')
-    .select('stripe_customer_id')
-    .eq('user_id', user.id)
-    .not('stripe_customer_id', 'is', null)
-    .maybeSingle();
+    existingCustomerId = existingSub?.stripe_customer_id ?? null;
+  }
 
-  const existingCustomerId = existingSub?.stripe_customer_id ?? null;
-
-  /* ── Build redirect URLs ────────────────────────────────────────── */
+  /* ── 5. Build redirect URLs ────────────────────────────────────────── */
   const origin     = request.headers.get('origin') ?? 'http://localhost:3000';
-  const successUrl = `${origin}/dashboard?checkout=success`;
+  const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl  = `${origin}/pricing?checkout=canceled`;
 
   const prices = PRICES[plan];
 
-  /* ── Build session params ────────────────────────────────────────── */
+  /* ── 6. Build session params ────────────────────────────────────────── */
   function buildParams(customerId: string | null) {
     const customerField = customerId
       ? { customer: customerId }
-      : { customer_email: user!.email };
+      : user?.email
+        ? { customer_email: user.email }
+        : {};
+
+    const clientRefField = user?.id ? { client_reference_id: user.id } : {};
 
     if (plan === 'build') {
       return {
         mode:                'payment' as const,
-        client_reference_id: user!.id,
+        ...clientRefField,
         ...customerField,
         line_items: [{ price: prices.setup, quantity: 1 }],
-        metadata:    { plan },
+        metadata:    { plan, userId: user?.id ?? '' },
         success_url: successUrl,
         cancel_url:  cancelUrl,
       };
@@ -106,49 +110,45 @@ export async function POST(request: Request) {
     /* Host or Grow — subscription */
     return {
       mode:                'subscription' as const,
-      client_reference_id: user!.id,
+      ...clientRefField,
       ...customerField,
       line_items: [
         { price: prices.setup,    quantity: 1 },
         { price: prices.monthly!, quantity: 1 },
       ],
-      subscription_data: { metadata: { plan, userId: user!.id } },
-      metadata:    { plan },
+      subscription_data: { metadata: { plan, userId: user?.id ?? '' } },
+      metadata:    { plan, userId: user?.id ?? '' },
       success_url: successUrl,
       cancel_url:  cancelUrl,
     };
   }
 
-  /* ── Create Checkout Session (with stale-customer fallback) ─────── */
+  /* ── 7. Create Checkout Session ────────────────────────────────────── */
   try {
     let session;
 
     try {
       session = await stripe.checkout.sessions.create(buildParams(existingCustomerId));
     } catch (stripeErr) {
-      /* If Stripe rejects the stored customer ID (e.g. it belongs to a
-         different Stripe account after a key rotation), clear it from the
-         DB and retry with just the user's email so Stripe creates a new
-         customer automatically. */
       const msg = stripeErr instanceof Error ? stripeErr.message : '';
       const isStaleCustomer =
         existingCustomerId !== null &&
         (msg.includes('No such customer') || msg.includes('resource_missing'));
 
-      if (!isStaleCustomer) throw stripeErr; // unrelated error — rethrow
+      if (!isStaleCustomer) throw stripeErr;
 
       console.warn(
         `[checkout] Stale customer ID ${existingCustomerId} rejected — clearing and retrying.`
       );
 
-      /* Best-effort clear — don't block checkout if this DB call fails */
-      await supabase
-        .from('subscriptions')
-        .update({ stripe_customer_id: null })
-        .eq('user_id', user.id)
-        .eq('stripe_customer_id', existingCustomerId);
+      if (user) {
+        await supabase
+          .from('subscriptions')
+          .update({ stripe_customer_id: null })
+          .eq('user_id', user.id)
+          .eq('stripe_customer_id', existingCustomerId);
+      }
 
-      /* Retry without a customer ID — Stripe will create a fresh one */
       session = await stripe.checkout.sessions.create(buildParams(null));
     }
 

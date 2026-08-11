@@ -1631,7 +1631,7 @@ h1.title {
 /* ---------- About / Team Page ---------- */
 .team-grid {
   display:               grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap:                   40px 24px;
   margin-bottom:         80px;
 }

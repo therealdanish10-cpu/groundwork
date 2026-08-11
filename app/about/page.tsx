@@ -23,14 +23,6 @@ interface TeamMember {
 
 const TEAM: TeamMember[] = [
   {
-    name:        'James Haungs',
-    role:        'Founder',
-    photoUrl:    null,
-    initials:    'JH',
-    avatarBg:    '#2563eb',   // blue
-    avatarColor: '#ffffff',
-  },
-  {
     name:        'Allah Ditta',
     role:        'Co-founder & CEO',
     photoUrl:    '/allah-ditta.jpg',

@@ -2,17 +2,12 @@
  * POST /api/webhooks/stripe
  *
  * Verifies incoming Stripe webhook events and keeps the Supabase
- * subscriptions table in sync.
+ * subscriptions table and user accounts in sync.
  *
  * Events handled:
- *   checkout.session.completed      → create / upsert subscriptions row
+ *   checkout.session.completed      → resolve/create user account & send email, upsert subscription
  *   customer.subscription.updated   → sync status (active | past_due)
  *   customer.subscription.deleted   → mark canceled
- *
- * IMPORTANT: this handler reads the raw request body (via request.text())
- * which is required for Stripe signature verification.  Next.js App Router
- * route handlers support this pattern natively — no special bodyParser
- * config is needed.
  */
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
@@ -55,20 +50,97 @@ export async function POST(request: Request) {
   try {
     switch (event.type) {
 
-      /* ── New checkout completed ────────────────────────────────── */
+      /* ── New checkout completed (Guest or Authenticated) ────────── */
       case 'checkout.session.completed': {
-        const session     = event.data.object as Stripe.Checkout.Session;
-        const userId      = session.client_reference_id;
-        const plan        = session.metadata?.plan as 'build' | 'host' | 'grow' | undefined;
-        const customerId  = session.customer as string | null;
-        const subId       = session.subscription as string | null;
+        const session    = event.data.object as Stripe.Checkout.Session;
+        let userId       = session.client_reference_id;
+        const plan       = session.metadata?.plan as 'build' | 'host' | 'grow' | undefined;
+        const customerId = session.customer as string | null;
+        const subId      = session.subscription as string | null;
+        const customerEmail = (session.customer_details?.email || session.customer_email || '').toLowerCase().trim();
 
-        if (!userId || !plan) {
-          console.warn('[webhook] checkout.session.completed missing userId or plan', session.id);
+        if (!plan) {
+          console.warn('[webhook] checkout.session.completed missing plan metadata', session.id);
           break;
         }
 
-        const { error } = await supabase.from('subscriptions').upsert(
+        /* If checkout was performed as a guest (no client_reference_id) */
+        if (!userId) {
+          if (!customerEmail) {
+            console.error('[webhook] Guest checkout missing customer email', session.id);
+            return new Response('Missing customer email', { status: 400 });
+          }
+
+          const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+          /* 1. Check if user already exists with this email */
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', customerEmail)
+            .maybeSingle();
+
+          if (existingProfile) {
+            userId = existingProfile.id;
+            console.log(`[webhook] Existing user found for email ${customerEmail} (id: ${userId}). Sending password reset / login link.`);
+
+            /* Send password reset / magic login email to existing user */
+            const { error: resetErr } = await supabase.auth.resetPasswordForEmail(customerEmail, {
+              redirectTo: `${origin}/login`,
+            });
+            if (resetErr) {
+              console.error(`[webhook] resetPasswordForEmail failed for ${customerEmail}:`, resetErr.message);
+            } else {
+              console.log(`[webhook] Password reset / login email successfully dispatched to existing user ${customerEmail}`);
+            }
+
+          } else {
+            /* 2. Brand new guest buyer — Invite user via email (creates user + sends activation email) */
+            console.log(`[webhook] Creating and inviting brand new user for email: ${customerEmail}`);
+
+            const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(
+              customerEmail,
+              {
+                redirectTo: `${origin}/login`,
+                data: { role: 'client' },
+              }
+            );
+
+            if (inviteError || !inviteData?.user) {
+              console.error(`[webhook] inviteUserByEmail failed for ${customerEmail}:`, inviteError?.message || 'Unknown error');
+              console.log('[webhook] Attempting fallback createUser...');
+
+              const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+                email: customerEmail,
+                email_confirm: true,
+                user_metadata: { role: 'client' },
+              });
+
+              if (createError || !newUser?.user) {
+                console.error('[webhook] User creation fallback failed:', createError);
+                return new Response('User creation failed', { status: 500 });
+              }
+
+              userId = newUser.user.id;
+            } else {
+              userId = inviteData.user.id;
+              console.log(`[webhook] Successfully invited new user ${customerEmail} (id: ${userId}) via Supabase Auth email`);
+            }
+
+            /* 3. Ensure profile record exists with role='client' */
+            await supabase.from('profiles').upsert(
+              {
+                id: userId,
+                email: customerEmail,
+                role: 'client',
+              },
+              { onConflict: 'id' }
+            );
+          }
+        }
+
+        /* 4. Upsert active subscription record in database */
+        const { error: subError } = await supabase.from('subscriptions').upsert(
           {
             user_id:                 userId,
             plan_type:               plan,
@@ -78,19 +150,16 @@ export async function POST(request: Request) {
             started_at:              new Date().toISOString(),
           },
           {
-            /* If a row for this user already exists (e.g. upgrading),
-               update it rather than create a duplicate. */
             onConflict: 'user_id',
           },
         );
 
-        if (error) {
-          console.error('[webhook] Failed to upsert subscription:', error);
-          // Return 500 so Stripe retries
+        if (subError) {
+          console.error('[webhook] Failed to upsert subscription:', subError);
           return new Response('DB error', { status: 500 });
         }
 
-        console.log(`[webhook] Subscription created for user ${userId}, plan ${plan}`);
+        console.log(`[webhook] Subscription successfully created for user ${userId} (${customerEmail}), plan ${plan}`);
         break;
       }
 
@@ -125,7 +194,6 @@ export async function POST(request: Request) {
       }
 
       default:
-        // Unhandled event types — acknowledge receipt so Stripe doesn't retry
         break;
     }
   } catch (err) {
