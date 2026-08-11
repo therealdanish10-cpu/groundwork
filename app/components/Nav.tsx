@@ -76,9 +76,25 @@ export default function Nav() {
     <>
       <nav id="nav" className={scrolled ? 'scrolled' : ''}>
         <div className="nav-inner">
-          <Link href="/" className="logo" aria-label="Trelio home">
-            <span className="logo-text">Trelio</span>
-          </Link>
+          <a href="/" className="logo" aria-label="Trelio home">
+            {/* Light-mode logo */}
+            <img
+              src="/trelio-logo-nav.png"
+              alt="Trelio"
+              className="nav-logo-img nav-logo-light"
+              width={495}
+              height={120}
+            />
+            {/* Dark-mode logo — shown via [data-theme="dark"] CSS */}
+            <img
+              src="/trelio-logo-nav-dark.png"
+              alt=""
+              aria-hidden="true"
+              className="nav-logo-img nav-logo-dark"
+              width={495}
+              height={120}
+            />
+          </a>
 
           {/* Desktop nav links */}
           <div className="nav-links">

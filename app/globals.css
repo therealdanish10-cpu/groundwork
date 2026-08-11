@@ -238,22 +238,27 @@ nav.scrolled .nav-inner {
 }
 
 .logo {
-  display:     flex;
-  align-items: center;
-  line-height: normal;
+  display:         flex;
+  align-items:     center;
+  line-height:     normal;
+  text-decoration: none;
 }
 
-.logo-text {
-  font-family: var(--font-manrope);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  font-size:   24px;
-  line-height: 1.1;
-  color:       var(--fg);
+/* Nav logo image — two variants, toggled by data-theme */
+.nav-logo-img {
+  height:  36px;
+  width:   auto;
+  display: block;
 }
+
+.nav-logo-light { display: block; }
+.nav-logo-dark  { display: none;  }
+
+[data-theme="dark"] .nav-logo-light { display: none;  }
+[data-theme="dark"] .nav-logo-dark  { display: block; }
 
 @media (max-width: 600px) {
-  .logo-text { font-size: 20px; }
+  .nav-logo-img { height: 28px; }
 }
 
 .nav-links {

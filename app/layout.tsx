@@ -24,6 +24,17 @@ export const metadata: Metadata = {
   },
   description:
     'Trelio designs, hosts, and grows websites for electricians, plumbers, roofers, and other local trades.',
+  icons: {
+    icon: [
+      // Light-mode favicons (shown when OS/browser is in light mode)
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      // Dark-mode favicons (shown when OS/browser is in dark mode)
+      { url: '/favicon-dark-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+      { url: '/favicon-dark-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+    ],
+    apple: { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+  },
 };
 
 export default function RootLayout({
