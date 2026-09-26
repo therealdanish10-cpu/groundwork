@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import React from 'react';
 
@@ -84,7 +85,8 @@ export default function EditGalleryProjectPage(props: { params: Promise<{ id: st
         router.push('/admin/gallery');
         router.refresh();
       } else {
-        alert('Error updating project');
+        const err = await res.json();
+        alert(err.error || 'Error updating project');
       }
     } catch (error) {
       console.error(error);
@@ -94,102 +96,241 @@ export default function EditGalleryProjectPage(props: { params: Promise<{ id: st
     }
   };
 
-  if (fetching) return <div className="p-8 text-center text-sm text-[var(--gray)]">Loading project...</div>;
+  if (fetching) {
+    return (
+      <div className="max-w-3xl mx-auto py-20 flex flex-col items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[var(--blue)]/30 border-t-[var(--blue)] rounded-full animate-spin mb-3" />
+        <p className="text-xs font-semibold text-[var(--gray)]">Loading project details...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold">Edit Project</h1>
+    <div className="max-w-3xl mx-auto space-y-6">
+      {/* Top Breadcrumb */}
+      <div>
+        <Link 
+          href="/admin/gallery"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--gray)] hover:text-[var(--blue)] transition-colors mb-3"
+        >
+          <span>←</span> Back to Gallery
+        </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-extrabold text-[var(--fg)] tracking-tight">
+              Edit Project
+            </h1>
+            <p className="text-sm text-[var(--gray)] mt-1">
+              Update case study information, media, and destination link.
+            </p>
+          </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-[var(--gray)]/5 p-6 rounded-2xl border border-[var(--border)]">
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Project Name</label>
-          <input
-            required
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-4 py-2 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)]"
-          />
+          {formData.live_link_url && (
+            <a
+              href={formData.live_link_url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--blue)] hover:underline self-start sm:self-auto"
+            >
+              <span>Visit live link</span>
+              <span>↗</span>
+            </a>
+          )}
         </div>
+      </div>
 
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Category</label>
-          <select
-            required
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full px-4 py-2 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] [&>option]:bg-[#111]"
-          >
-            <option value="Web">Web</option>
-            <option value="Mobile">Mobile</option>
-            <option value="AI">AI</option>
-            <option value="Marketing">Marketing</option>
-            <option value="WordPress">WordPress</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        <div className="space-y-3">
-          <label className="block text-sm font-medium">Screenshot (Upload File or Enter URL)</label>
-          <div className="flex flex-col sm:flex-row gap-3">
+      {/* Form Card */}
+      <form 
+        onSubmit={handleSubmit} 
+        className="rounded-2xl border p-8 sm:p-10 space-y-8"
+        style={{
+          background: 'var(--paper-2)',
+          borderColor: 'var(--border)',
+          boxShadow: 'var(--card-shadow)',
+        }}
+      >
+        {/* Name and Category */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="name">
+              Project Name <span className="text-red-500">*</span>
+            </label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-              className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[var(--blue)] file:text-white hover:file:opacity-90 cursor-pointer"
+              id="name"
+              required
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
+              style={{
+                background: 'var(--paper)',
+                borderColor: 'var(--border)',
+                color: 'var(--fg)',
+              }}
             />
           </div>
-          {uploading && <p className="text-xs text-[var(--blue)]">Uploading image...</p>}
-          <input
-            type="text"
-            placeholder="Or paste image URL"
-            value={formData.screenshot_url}
-            onChange={(e) => setFormData({ ...formData, screenshot_url: e.target.value })}
-            className="w-full px-4 py-2 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)]"
-          />
+
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="category">
+              Category <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="category"
+              required
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent cursor-pointer"
+              style={{
+                background: 'var(--paper)',
+                borderColor: 'var(--border)',
+                color: 'var(--fg)',
+              }}
+            >
+              <option value="Web">Web Application / Development</option>
+              <option value="Mobile">Mobile Application (iOS & Android)</option>
+              <option value="AI">AI Automation & Integrations</option>
+              <option value="Marketing">Meta Ads & Performance Marketing</option>
+              <option value="WordPress">WordPress / CMS Development</option>
+              <option value="Other">Other IT Solution</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Screenshot Upload / URL */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-semibold text-[var(--fg)]">
+              Project Screenshot
+            </label>
+            {formData.screenshot_url && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, screenshot_url: '' }))}
+                className="text-xs text-red-500 hover:underline"
+              >
+                Remove image
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+            {/* File Upload Trigger */}
+            <div 
+              className="p-4 rounded-xl border border-dashed text-center flex flex-col items-center justify-center cursor-pointer hover:border-[var(--blue)] transition-colors"
+              style={{ background: 'var(--paper)', borderColor: 'var(--border)' }}
+            >
+              <input
+                type="file"
+                id="file-upload-edit"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <label htmlFor="file-upload-edit" className="cursor-pointer flex flex-col items-center">
+                <svg className="w-8 h-8 text-[var(--gray)] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-xs font-semibold text-[var(--blue)]">
+                  {uploading ? 'Uploading to storage...' : 'Click to replace screenshot'}
+                </span>
+                <span className="text-[11px] text-[var(--gray)] mt-0.5">PNG, JPG, WebP up to 5MB</span>
+              </label>
+            </div>
+
+            {/* Direct URL Input */}
+            <div className="space-y-1.5">
+              <span className="text-xs text-[var(--gray)]">Or paste hosted image URL:</span>
+              <input
+                type="url"
+                placeholder="https://..."
+                value={formData.screenshot_url}
+                onChange={(e) => setFormData({ ...formData, screenshot_url: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
+                style={{
+                  background: 'var(--paper)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--fg)',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Preview Container */}
           {formData.screenshot_url && (
-            <div className="mt-2 relative w-40 h-28 rounded-lg overflow-hidden border border-[var(--border)]">
+            <div className="mt-3 relative w-full sm:w-80 aspect-[16/10] rounded-xl overflow-hidden border shadow-sm" style={{ borderColor: 'var(--border)' }}>
               <img src={formData.screenshot_url} alt="Preview" className="w-full h-full object-cover" />
             </div>
           )}
         </div>
 
+        {/* Live Link URL */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium">Live Link URL</label>
-          <input
-            type="url"
-            placeholder="https://example.com"
-            value={formData.live_link_url}
-            onChange={(e) => setFormData({ ...formData, live_link_url: e.target.value })}
-            className="w-full px-4 py-2 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)]"
-          />
+          <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="live_link">
+            Live Website or App URL
+          </label>
+          <div className="relative">
+            <span className="absolute left-3.5 top-3.5 text-xs text-[var(--gray)] select-none">
+              🌐
+            </span>
+            <input
+              id="live_link"
+              type="url"
+              placeholder="https://client-product.com"
+              value={formData.live_link_url}
+              onChange={(e) => setFormData({ ...formData, live_link_url: e.target.value })}
+              className="w-full pl-10 pr-4 py-3 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
+              style={{
+                background: 'var(--paper)',
+                borderColor: 'var(--border)',
+                color: 'var(--fg)',
+              }}
+            />
+          </div>
         </div>
 
+        {/* Description */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium">Description</label>
+          <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="description">
+            Project Description <span className="text-red-500">*</span>
+          </label>
           <textarea
+            id="description"
             required
             rows={4}
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full px-4 py-2 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] resize-y"
-          ></textarea>
+            className="w-full px-4 py-3 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent resize-y"
+            style={{
+              background: 'var(--paper)',
+              borderColor: 'var(--border)',
+              color: 'var(--fg)',
+            }}
+          />
         </div>
 
-        <div className="flex justify-end gap-4">
+        {/* Action Buttons */}
+        <div className="flex items-center justify-end gap-3 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-6 py-2 rounded-lg font-medium border border-[var(--border)] hover:bg-[var(--gray)]/10"
+            className="btn btn-ghost px-5 py-2.5 rounded-xl text-sm font-semibold border cursor-pointer transition-all"
+            style={{ borderColor: 'var(--border)' }}
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading || uploading}
-            className="px-6 py-2 bg-[var(--blue)] text-white rounded-lg font-medium hover:bg-blue-600 disabled:opacity-50"
+            className="btn btn-primary px-6 py-2.5 rounded-xl text-sm font-semibold shadow-sm hover:shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
           >
-            {loading ? 'Saving...' : 'Update Project'}
+            {loading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <span>Update Project</span>
+            )}
           </button>
         </div>
       </form>
