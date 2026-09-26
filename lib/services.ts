@@ -46,7 +46,7 @@ export const SERVICES: Service[] = [
       'Link building & authority growth',
       'Monthly reporting & analytics',
     ],
-    image: 'https://images.unsplash.com/photo-1571721795195-a2ca2d3370a9?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
     icon: '📈',
   },
   {
@@ -114,7 +114,7 @@ export const SERVICES: Service[] = [
       'Budget management & bid strategy',
       'Performance dashboards & ROI reporting',
     ],
-    image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1533750516457-a7f992034fec?w=800&auto=format&fit=crop&q=80',
     icon: '🎯',
   },
   {

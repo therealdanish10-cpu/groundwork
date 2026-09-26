@@ -26,23 +26,26 @@ export default async function BlogPage() {
   }
 
   return (
-    <div className="pt-24 pb-16">
+    <div className="pt-32 pb-24 min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h1 className="text-4xl font-extrabold text-foreground tracking-tight sm:text-5xl">
-              Blog
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
+              Knowledge & Strategy
+            </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight mt-2 mb-4">
+              Blog & Insights
             </h1>
-            <p className="mt-4 text-xl text-muted-foreground">
-              Insights, guides, and industry news
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">
+              Actionable guides, industry trends, and deep dives from our engineers and marketers.
             </p>
           </div>
         </ScrollReveal>
 
         {!posts || posts.length === 0 ? (
-          <div className="text-center py-20 bg-muted/20 rounded-2xl">
-            <h3 className="text-2xl font-semibold text-foreground">No posts yet</h3>
-            <p className="mt-2 text-muted-foreground">Check back soon for our latest insights and updates.</p>
+          <div className="text-center py-20 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">No articles published yet</h3>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">Check back soon for our latest insights and analysis.</p>
           </div>
         ) : (
           <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -52,53 +55,55 @@ export default async function BlogPage() {
 
               return (
                 <StaggerItem key={post.id}>
-                  <div className="flex flex-col h-full overflow-hidden bg-card rounded-2xl shadow-sm border border-border/50 hover:shadow-md transition-shadow group">
-                    <div className="relative h-48 w-full bg-muted overflow-hidden">
+                  <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 hover:shadow-xl transition-all duration-300 group">
+                    <div className="relative h-52 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                       {post.cover_image ? (
                         <Image
                           src={post.cover_image}
                           alt={post.title}
                           fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                           unoptimized
                         />
                       ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-primary/10">
-                          <span className="text-primary font-medium">Trelio</span>
+                        <div className="absolute inset-0 flex items-center justify-center bg-[var(--blue)]/10">
+                          <span className="text-[var(--blue)] font-bold">Trelio</span>
                         </div>
                       )}
                       {serviceName && (
                         <div className="absolute top-4 right-4 z-10">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-background/90 text-foreground backdrop-blur-sm shadow-sm">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white backdrop-blur-md shadow-sm border border-gray-200/50 dark:border-gray-700/50">
                             {serviceName}
                           </span>
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 p-6 flex flex-col">
-                      <div className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
-                        <time dateTime={post.created_at}>
-                          {new Date(post.created_at).toLocaleDateString('en-US', {
-                            month: 'long',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                        </time>
+                    <div className="flex-1 p-6 flex flex-col justify-between">
+                      <div>
+                        <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2">
+                          <time dateTime={post.created_at}>
+                            {new Date(post.created_at).toLocaleDateString('en-US', {
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </time>
+                        </div>
+                        <Link href={`/blog/${post.slug}`} className="block mt-1">
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-[var(--blue)] dark:group-hover:text-[var(--blue)] transition-colors line-clamp-2 leading-snug">
+                            {post.title}
+                          </h3>
+                        </Link>
+                        <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">
+                          {post.content ? post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : ''}
+                        </p>
                       </div>
-                      <Link href={`/blog/${post.slug}`} className="block mt-2">
-                        <h3 className="text-xl font-bold text-foreground hover:text-primary transition-colors line-clamp-2">
-                          {post.title}
-                        </h3>
-                      </Link>
-                      <p className="mt-3 text-base text-muted-foreground line-clamp-3">
-                        {post.content ? post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : ''}
-                      </p>
-                      <div className="mt-auto pt-6">
+                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
                         <Link 
                           href={`/blog/${post.slug}`}
-                          className="text-primary font-medium hover:text-primary/80 inline-flex items-center gap-1 group/link"
+                          className="text-[var(--blue)] font-bold text-sm inline-flex items-center gap-1 group/link"
                         >
-                          Read more
+                          <span>Read article</span>
                           <span className="transition-transform duration-200 group-hover/link:translate-x-1">→</span>
                         </Link>
                       </div>

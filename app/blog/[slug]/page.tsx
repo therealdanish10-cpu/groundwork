@@ -65,20 +65,21 @@ export default async function BlogPostPage({ params }: Props) {
   const serviceName = service ? service.name : post.service_tag
 
   return (
-    <article className="pt-24 pb-16">
+    <article className="pt-32 pb-24 min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
       <ScrollReveal>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <Link href="/blog" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-8 transition-colors">
-            ← Back to blog
+          <Link href="/blog" className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-[var(--blue)] dark:text-gray-400 dark:hover:text-[var(--blue)] mb-8 transition-colors gap-1.5">
+            <span>←</span>
+            <span>Back to all articles</span>
           </Link>
           
           <div className="flex items-center gap-4 mb-6">
             {serviceName && (
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[var(--blue)]/10 text-[var(--blue)]">
                 {serviceName}
               </span>
             )}
-            <time dateTime={post.created_at} className="text-sm text-muted-foreground">
+            <time dateTime={post.created_at} className="text-sm text-gray-500 dark:text-gray-400">
               {new Date(post.created_at).toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
@@ -87,7 +88,7 @@ export default async function BlogPostPage({ params }: Props) {
             </time>
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight mb-8 leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-8 leading-tight">
             {post.title}
           </h1>
         </div>
@@ -96,7 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
       {post.cover_image && (
         <ScrollReveal delay={0.1}>
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-            <div className="relative aspect-[21/9] w-full rounded-3xl overflow-hidden bg-muted shadow-lg">
+            <div className="relative aspect-[21/9] w-full rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-800">
               <Image
                 src={post.cover_image}
                 alt={post.title}
@@ -120,12 +121,12 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Related Posts */}
       {relatedPosts && relatedPosts.length > 0 && (
         <ScrollReveal delay={0.3}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 pt-16 border-t border-border/50">
-            <h2 className="text-3xl font-bold mb-8">Related Articles</h2>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 pt-16 border-t border-gray-200 dark:border-gray-800">
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-8">Related Articles</h2>
             <div className="grid gap-8 md:grid-cols-3">
               {relatedPosts.map((relatedPost) => (
                 <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`} className="group block">
-                  <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-4 bg-muted">
+                  <div className="relative h-48 w-full rounded-2xl overflow-hidden mb-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800">
                     {relatedPost.cover_image ? (
                       <Image
                         src={relatedPost.cover_image}
@@ -135,19 +136,19 @@ export default async function BlogPostPage({ params }: Props) {
                         unoptimized
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-primary/10">
-                        <span className="text-primary font-medium">Trelio</span>
+                      <div className="absolute inset-0 flex items-center justify-center bg-[var(--blue)]/10">
+                        <span className="text-[var(--blue)] font-bold">Trelio</span>
                       </div>
                     )}
                   </div>
-                  <time dateTime={relatedPost.created_at} className="text-xs text-muted-foreground block mb-2">
+                  <time dateTime={relatedPost.created_at} className="text-xs text-gray-500 dark:text-gray-400 block mb-2">
                     {new Date(relatedPost.created_at).toLocaleDateString('en-US', {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric'
                     })}
                   </time>
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-[var(--blue)] dark:group-hover:text-[var(--blue)] transition-colors line-clamp-2 leading-snug">
                     {relatedPost.title}
                   </h3>
                 </Link>

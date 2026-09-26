@@ -44,10 +44,18 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var t = localStorage.getItem('groundwork-theme');
+                  var urlParams = new URLSearchParams(window.location.search);
+                  var urlTheme = urlParams.get('theme');
+                  var t = urlTheme || localStorage.getItem('groundwork-theme');
+                  if (urlTheme) {
+                    try { localStorage.setItem('groundwork-theme', urlTheme); } catch(e) {}
+                  }
                   if (t === 'dark') {
                     document.documentElement.setAttribute('data-theme', 'dark');
                     document.documentElement.classList.add('dark');
+                  } else if (t === 'light') {
+                    document.documentElement.removeAttribute('data-theme');
+                    document.documentElement.classList.remove('dark');
                   }
                 } catch(e) {}
               })();

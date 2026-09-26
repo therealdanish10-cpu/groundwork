@@ -32,16 +32,18 @@ export default async function HomePage() {
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Top-tier US-focused IT services agency delivering scalable, innovative, and reliable solutions that drive growth.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-14">
                 <Link 
                   href="/services" 
-                  className="px-8 py-4 bg-[var(--blue)] text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors w-full sm:w-auto text-center shadow-md hover:shadow-lg"
+                  className="px-9 py-4 bg-[var(--blue)] hover:bg-blue-600 text-white rounded-xl font-bold transition-all w-full sm:w-auto text-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 inline-flex items-center justify-center text-lg"
+                  style={{ color: '#ffffff', minHeight: '56px' }}
                 >
                   Explore Our Services
                 </Link>
                 <Link 
                   href="/contact" 
-                  className="px-8 py-4 bg-transparent border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl font-semibold hover:border-[var(--blue)] hover:text-[var(--blue)] transition-colors w-full sm:w-auto text-center"
+                  className="px-9 py-4 bg-transparent border-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl font-bold hover:border-[var(--blue)] hover:text-[var(--blue)] dark:hover:text-[var(--blue)] transition-all w-full sm:w-auto text-center inline-flex items-center justify-center text-lg"
+                  style={{ minHeight: '56px' }}
                 >
                   Contact Us
                 </Link>
@@ -90,7 +92,7 @@ export default async function HomePage() {
                   className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/80 hover:border-[var(--blue)] dark:hover:border-[var(--blue)] transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1"
                 >
                   {/* Card Image */}
-                  <div className="h-52 relative w-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+                  <div className="h-44 relative w-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
                     <Image 
                       src={service.image} 
                       alt={service.name}
@@ -102,7 +104,7 @@ export default async function HomePage() {
                   </div>
 
                   {/* Card Content with Generous Spacing */}
-                  <div className="p-6 sm:p-7 flex flex-col flex-grow justify-between gap-3">
+                  <div className="p-6 flex flex-col flex-1 justify-between gap-4">
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-snug group-hover:text-[var(--blue)] transition-colors">
                         {service.name}
@@ -112,7 +114,7 @@ export default async function HomePage() {
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-auto border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
+                    <div className="pt-4 mt-auto border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
                       <span className="text-xs font-bold text-[var(--blue)] group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
                         Learn more <span>→</span>
                       </span>
@@ -145,22 +147,58 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: '🇺🇸', title: 'US-Based Execution', desc: 'Direct, clear communication aligned with your working hours and time zones.' },
-              { icon: '🎯', title: 'Result-Driven Metrics', desc: 'We optimize for measurable business impact: conversions, uptime, and ROI.' },
-              { icon: '🚀', title: 'Cutting-Edge Stack', desc: 'Architected with React, Next.js, and cloud systems to guarantee future-proof performance.' },
-              { icon: '🎧', title: '24/7 Dedicated Support', desc: 'Active monitoring, continuous updates, and immediate SLA response times.' }
+              { 
+                title: 'US-Based Execution', 
+                desc: 'Direct, clear communication aligned with your working hours and time zones.',
+                icon: (
+                  <svg className="w-6 h-6 text-[var(--blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )
+              },
+              { 
+                title: 'Result-Driven Metrics', 
+                desc: 'We optimize for measurable business impact: conversions, uptime, and ROI.',
+                icon: (
+                  <svg className="w-6 h-6 text-[var(--blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                )
+              },
+              { 
+                title: 'Cutting-Edge Stack', 
+                desc: 'Architected with React, Next.js, and cloud systems to guarantee future-proof performance.',
+                icon: (
+                  <svg className="w-6 h-6 text-[var(--blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                )
+              },
+              { 
+                title: '24/7 Dedicated Support', 
+                desc: 'Active monitoring, continuous updates, and immediate SLA response times.',
+                icon: (
+                  <svg className="w-6 h-6 text-[var(--blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                )
+              }
             ].map((feature, i) => (
               <ScrollReveal 
                 key={i} 
-                className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-center shadow-sm hover:shadow-md transition-shadow"
+                className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-left shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
               >
-                <div className="text-4xl mb-4 select-none">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                  {feature.desc}
-                </p>
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-[var(--blue)]/10 flex items-center justify-center mb-6">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
               </ScrollReveal>
             ))}
           </div>
@@ -277,16 +315,18 @@ export default async function HomePage() {
             ].map((step) => (
               <StaggerItem 
                 key={step.num} 
-                className="relative p-8 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 shadow-sm overflow-hidden flex flex-col justify-between"
+                className="p-8 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
               >
-                <div className="text-6xl font-black text-gray-200 dark:text-gray-800 select-none absolute top-4 right-4 pointer-events-none z-0">
-                  {step.num}
-                </div>
-                <div className="relative z-10 pt-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[var(--blue)]">
-                    Step {step.num}
-                  </span>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 mt-1 leading-snug">
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="w-10 h-10 rounded-xl bg-[var(--blue)]/10 text-[var(--blue)] font-extrabold flex items-center justify-center text-sm">
+                      {step.num}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                      Phase {step.num}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-snug">
                     {step.title}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">

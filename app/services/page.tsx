@@ -30,7 +30,7 @@ export default function ServicesPage() {
             <StaggerItem key={service.slug} className="h-full">
               <Link href={`/services/${service.slug}`} className="group block h-full">
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl overflow-hidden hover:border-[var(--blue)] dark:hover:border-[var(--blue)] transition-all duration-300 h-full flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1">
-                  <div className="relative h-52 w-full bg-gray-100 dark:bg-gray-700 overflow-hidden flex-shrink-0">
+                  <div className="relative h-44 w-full bg-gray-100 dark:bg-gray-700 overflow-hidden flex-shrink-0">
                     <Image
                       src={service.image}
                       alt={service.name}
@@ -40,7 +40,7 @@ export default function ServicesPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                   </div>
-                  <div className="p-6 sm:p-7 flex flex-col flex-grow justify-between gap-3">
+                  <div className="p-6 flex flex-col flex-1 justify-between gap-4">
                     <div>
                       <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-snug group-hover:text-[var(--blue)] transition-colors">
                         {service.name}
@@ -53,7 +53,7 @@ export default function ServicesPage() {
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-auto border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
+                    <div className="pt-4 mt-auto border-t border-gray-100 dark:border-gray-700/60 flex items-center justify-between">
                       <span className="text-xs font-bold text-[var(--blue)] group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
                         Explore scope <span>→</span>
                       </span>

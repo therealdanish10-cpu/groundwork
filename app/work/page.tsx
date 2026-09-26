@@ -24,30 +24,33 @@ export default async function WorkPage() {
   }
 
   return (
-    <div className="pt-24 pb-16">
+    <div className="pt-32 pb-24 min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h1 className="text-4xl font-extrabold text-foreground tracking-tight sm:text-5xl">
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--blue)]">
+              Proven Track Record
+            </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight mt-2 mb-4">
               Our Work
             </h1>
-            <p className="mt-4 text-xl text-muted-foreground">
-              Projects we're proud of
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">
+              A curated selection of high-impact digital solutions built for our clients.
             </p>
           </div>
         </ScrollReveal>
 
         {!projects || projects.length === 0 ? (
-          <div className="text-center py-20 bg-muted/20 rounded-2xl">
-            <h3 className="text-2xl font-semibold text-foreground">Portfolio updating</h3>
-            <p className="mt-2 text-muted-foreground">We are currently adding our recent projects. Check back soon!</p>
+          <div className="text-center py-20 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Portfolio updating</h3>
+            <p className="mt-2 text-gray-600 dark:text-gray-300">We are currently adding our recent projects. Check back soon!</p>
           </div>
         ) : (
           <StaggerContainer className="grid gap-10 md:grid-cols-2">
             {projects.map((project) => (
               <StaggerItem key={project.id}>
-                <div className="flex flex-col h-full bg-card rounded-3xl shadow-sm border border-border/50 overflow-hidden hover:shadow-lg transition-shadow group">
-                  <div className="relative aspect-[4/3] w-full bg-muted overflow-hidden">
+                <div className="flex flex-col h-full bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl transition-all duration-300 group">
+                  <div className="relative aspect-[16/10] w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     {(project.screenshot || project.screenshot_url) ? (
                       <Image
                         src={project.screenshot || project.screenshot_url}
@@ -57,35 +60,37 @@ export default async function WorkPage() {
                         unoptimized
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-primary/10">
-                        <span className="text-primary font-medium text-xl">{project.name}</span>
+                      <div className="absolute inset-0 flex items-center justify-center bg-[var(--blue)]/10">
+                        <span className="text-[var(--blue)] font-bold text-xl">{project.name}</span>
                       </div>
                     )}
                     {project.category && (
-                      <div className="absolute top-6 left-6 z-10">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-background/95 text-foreground backdrop-blur-sm shadow-sm">
+                      <div className="absolute top-5 left-5 z-10">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white backdrop-blur-md shadow-sm border border-gray-200/50 dark:border-gray-700/50">
                           {project.category}
                         </span>
                       </div>
                     )}
                   </div>
-                  <div className="p-8 flex flex-col flex-1">
-                    <h3 className="text-2xl font-bold text-foreground mb-3">
-                      {project.name}
-                    </h3>
-                    <p className="text-base text-muted-foreground mb-8 flex-1">
-                      {project.description}
-                    </p>
+                  <div className="p-8 flex flex-col flex-1 justify-between">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                        {project.name}
+                      </h3>
+                      <p className="text-base text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                        {project.description}
+                      </p>
+                    </div>
                     {(project.live_link || project.live_link_url) && (
-                      <div>
+                      <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
                         <a 
                           href={project.live_link || project.live_link_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center px-6 py-3 border border-border bg-background text-foreground text-sm font-medium rounded-xl hover:bg-muted transition-colors w-full sm:w-auto"
+                          className="inline-flex items-center justify-center px-6 py-3 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm font-bold rounded-xl hover:bg-[var(--blue)] hover:text-white hover:border-[var(--blue)] dark:hover:bg-[var(--blue)] dark:hover:border-[var(--blue)] transition-all w-full sm:w-auto gap-2"
                         >
-                          View Live Project
-                          <span className="ml-2">↗</span>
+                          <span>View Live Project</span>
+                          <span>↗</span>
                         </a>
                       </div>
                     )}

@@ -104,7 +104,7 @@ export default function Nav() {
                 Admin
               </Link>
             ) : (
-              <Link href="/login" className="nav-cta">Get started</Link>
+              <Link href="/contact" className="nav-cta">Get in Touch</Link>
             )}
 
             <ThemeToggle />
@@ -139,8 +139,8 @@ export default function Nav() {
                 Admin
               </Link>
             ) : (
-              <Link href="/login" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
-                Get started
+              <Link href="/contact" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+                Get in Touch
               </Link>
             )}
           </div>
