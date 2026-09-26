@@ -36,8 +36,26 @@ export default function RootLayout({
       lang="en"
       data-scroll-behavior="smooth"
       className={manrope.variable}
+      suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var t = localStorage.getItem('groundwork-theme');
+                  if (t === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="flex flex-col min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
         <Nav />
         <main className="flex-grow">
           {children}

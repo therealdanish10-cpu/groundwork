@@ -18,7 +18,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'web-development',
     name: 'Web Development',
-    tagline: 'Modern websites built for performance and conversion',
+    tagline: 'Modern websites built for performance, security, and conversion',
     description:
       'We design and develop responsive, high-performance websites using cutting-edge technologies like React, Next.js, and Tailwind CSS. Every site is optimized for speed, accessibility, and search engine visibility — built to convert visitors into customers.',
     scope: [
@@ -29,13 +29,13 @@ export const SERVICES: Service[] = [
       'E-commerce & payment gateway setup',
       'Ongoing maintenance & support',
     ],
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=80',
     icon: '🌐',
   },
   {
     slug: 'seo',
     name: 'SEO',
-    tagline: 'Rank higher. Get found. Drive organic growth.',
+    tagline: 'Rank higher. Get found. Drive sustainable organic revenue.',
     description:
       'Our data-driven SEO strategies help your business climb search rankings and attract qualified leads organically. We handle everything from technical audits to content optimization and link building — measurable results, no guesswork.',
     scope: [
@@ -46,13 +46,13 @@ export const SERVICES: Service[] = [
       'Link building & authority growth',
       'Monthly reporting & analytics',
     ],
-    image: 'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1571721795195-a2ca2d3370a9?w=800&auto=format&fit=crop&q=80',
     icon: '📈',
   },
   {
     slug: 'app-development',
     name: 'App Development',
-    tagline: 'Native and cross-platform apps that users love',
+    tagline: 'Native and cross-platform mobile apps engineered to scale',
     description:
       'From concept to launch, we build iOS and Android applications that deliver seamless user experiences. Whether you need a native app or a cross-platform solution, we engineer apps that scale with your business.',
     scope: [
@@ -63,13 +63,13 @@ export const SERVICES: Service[] = [
       'App Store & Google Play deployment',
       'Post-launch support & updates',
     ],
-    image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&auto=format&fit=crop&q=80',
     icon: '📱',
   },
   {
     slug: 'social-media-management',
     name: 'Social Media Management',
-    tagline: 'Build your brand. Engage your audience.',
+    tagline: 'Build authority, engage your audience, and amplify your brand',
     description:
       'We create, schedule, and manage content across your social platforms to build brand awareness and drive engagement. Our team handles strategy, creative production, community management, and performance analytics.',
     scope: [
@@ -80,13 +80,13 @@ export const SERVICES: Service[] = [
       'Influencer outreach & partnerships',
       'Analytics & performance reporting',
     ],
-    image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1611926653458-09294b3142bf?w=800&auto=format&fit=crop&q=80',
     icon: '📣',
   },
   {
     slug: 'ai-automation',
     name: 'AI Automation',
-    tagline: 'Automate workflows. Scale smarter.',
+    tagline: 'Automate manual workflows and scale smarter with intelligent systems',
     description:
       'Leverage artificial intelligence and automation to streamline operations, reduce costs, and unlock new capabilities. We integrate AI tools, build custom chatbots, and design automated workflows that let your team focus on high-value work.',
     scope: [
@@ -97,13 +97,13 @@ export const SERVICES: Service[] = [
       'CRM & sales automation',
       'Process optimization consulting',
     ],
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80',
     icon: '🤖',
   },
   {
     slug: 'meta-ads',
     name: 'Meta Ads',
-    tagline: 'High-ROI ad campaigns on Facebook & Instagram',
+    tagline: 'High-ROI paid advertising campaigns across Facebook & Instagram',
     description:
       'We plan, launch, and optimize advertising campaigns across Meta platforms to drive leads, sales, and brand awareness. Our team manages every aspect — targeting, creative, budgets, and ongoing A/B testing for maximum return on ad spend.',
     scope: [
@@ -114,13 +114,13 @@ export const SERVICES: Service[] = [
       'Budget management & bid strategy',
       'Performance dashboards & ROI reporting',
     ],
-    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?w=800&auto=format&fit=crop&q=80',
     icon: '🎯',
   },
   {
     slug: 'content-writing',
     name: 'Content Writing',
-    tagline: 'Words that inform, persuade, and convert',
+    tagline: 'Compelling copy that educates, persuades, and drives conversions',
     description:
       'Professional content writing that speaks to your audience and supports your marketing goals. From blog posts and landing pages to email campaigns and whitepapers — we deliver polished, SEO-friendly copy that drives results.',
     scope: [
@@ -131,13 +131,13 @@ export const SERVICES: Service[] = [
       'Social media content',
       'Brand voice & style guides',
     ],
-    image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&auto=format&fit=crop&q=80',
     icon: '✍️',
   },
   {
     slug: 'wordpress-development',
     name: 'WordPress Development',
-    tagline: 'Custom WordPress sites built to perform',
+    tagline: 'Enterprise-grade custom WordPress solutions tailored to your brand',
     description:
       'Expert WordPress development for businesses that need a powerful, easy-to-manage website. We build custom themes, optimize performance, and set up the plugins and integrations you need — all with clean code and security best practices.',
     scope: [
@@ -148,7 +148,7 @@ export const SERVICES: Service[] = [
       'Migration from other platforms',
       'Ongoing maintenance & updates',
     ],
-    image: 'https://images.unsplash.com/photo-1614332287897-cdc485fa562d?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80',
     icon: '🔧',
   },
 ];

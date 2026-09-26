@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
 /* ---------- Design Tokens ---------- */
 :root {
   /* Raw Trelio palette (Light mode default) */
@@ -230,7 +232,7 @@ nav.scrolled .nav-inner {
   border-color: var(--blue-hover);
   transform: translateY(-2px);
 }
-[data-theme="dark"] .btn-primary { color: #0d0d0d; }
+[data-theme="dark"] .btn-primary { color: #ffffff; }
 
 .btn-ghost { background: transparent; color: var(--fg); border-color: var(--border); }
 .btn-ghost:hover { background: var(--paper-2); border-color: var(--gray); transform: translateY(-1px); }
