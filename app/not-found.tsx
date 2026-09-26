@@ -2,68 +2,32 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '404 — Page not found',
+  title: '404 — Page not found | Trelio IT Services',
 };
 
-/**
- * Branded 404 page — shown for any URL that doesn't match a route.
- * Uses the app's existing design tokens so it looks consistent.
- */
 export default function NotFound() {
   return (
-    <div
-      className="app-shell"
-      style={{
-        display:         'flex',
-        alignItems:      'center',
-        justifyContent:  'center',
-        minHeight:       '100vh',
-        padding:         '80px 24px 60px',
-        textAlign:       'center',
-      }}
-    >
-      <div style={{ maxWidth: '440px', width: '100%' }}>
-        <div
-          className="section-eyebrow"
-          style={{ justifyContent: 'center', marginBottom: '20px', fontSize: '11px', letterSpacing: '4px' }}
-        >
-          404
+    <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center py-20">
+      <div className="max-w-md w-full">
+        <div className="text-[var(--blue)] font-bold tracking-widest text-sm uppercase mb-6">
+          404 Error
         </div>
-
-        <h1
-          style={{
-            fontFamily:  'var(--font-space-grotesk), sans-serif',
-            fontSize:    'clamp(30px, 6vw, 52px)',
-            fontWeight:  700,
-            lineHeight:  1.1,
-            marginBottom: '16px',
-          }}
-        >
+        
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-zinc-900 dark:text-white tracking-tight">
           Page not found
         </h1>
-
-        <p
-          style={{
-            color:        'var(--gray)',
-            fontSize:     '16px',
-            lineHeight:   1.6,
-            marginBottom: '36px',
-          }}
-        >
-          This page doesn&apos;t exist or may have moved. Check the URL, or
-          head back to where you started.
+        
+        <p className="text-zinc-600 dark:text-zinc-400 text-lg mb-8">
+          The page you are looking for doesn&apos;t exist or has been moved. Check the URL or navigate back to our services.
         </p>
 
-        <div
-          style={{
-            display:        'flex',
-            gap:            '12px',
-            justifyContent: 'center',
-            flexWrap:       'wrap',
-          }}
-        >
-          <Link href="/" className="btn btn-primary">Back to home</Link>
-          <Link href="/pricing" className="btn btn-ghost">View pricing</Link>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link href="/" className="btn btn-primary">
+            Back to home
+          </Link>
+          <Link href="/services" className="btn btn-ghost">
+            Our Services
+          </Link>
         </div>
       </div>
     </div>

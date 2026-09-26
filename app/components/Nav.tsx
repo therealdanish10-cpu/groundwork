@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import { createClient } from '@/lib/supabase/client';
+import Image from 'next/image';
 
 export default function Nav() {
-  const [scrolled,   setScrolled]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [hasSession, setHasSession] = useState(false);
-  const [menuOpen,   setMenuOpen]   = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const router   = useRouter();
+  const router = useRouter();
 
   // ── Scroll handler ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -50,25 +51,18 @@ export default function Nav() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // ── Log out ─────────────────────────────────────────────────────────────
-  async function handleLogout() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    setMenuOpen(false);
-    router.push('/');
-  }
-
   function isActive(href: string) {
     return pathname === href ? 'active' : undefined;
   }
 
   const navLinks = (
     <>
-      <Link href="/#how"     className={isActive('/#how')}     onClick={() => setMenuOpen(false)}>How it works</Link>
-      <Link href="/pricing"  className={isActive('/pricing')}  onClick={() => setMenuOpen(false)}>Pricing</Link>
-      <Link href="/#contact" className={isActive('/#contact')} onClick={() => setMenuOpen(false)}>Contact</Link>
-      <Link href="/#faq"     className={isActive('/#faq')}     onClick={() => setMenuOpen(false)}>FAQ</Link>
-      <Link href="/about"    className={isActive('/about')}    onClick={() => setMenuOpen(false)}>About</Link>
+      <Link href="/" className={isActive('/')} onClick={() => setMenuOpen(false)}>Home</Link>
+      <Link href="/services" className={isActive('/services')} onClick={() => setMenuOpen(false)}>Services</Link>
+      <Link href="/work" className={isActive('/work')} onClick={() => setMenuOpen(false)}>Work</Link>
+      <Link href="/blog" className={isActive('/blog')} onClick={() => setMenuOpen(false)}>Blog</Link>
+      <Link href="/about" className={isActive('/about')} onClick={() => setMenuOpen(false)}>About</Link>
+      <Link href="/contact" className={isActive('/contact')} onClick={() => setMenuOpen(false)}>Contact</Link>
     </>
   );
 
@@ -76,25 +70,27 @@ export default function Nav() {
     <>
       <nav id="nav" className={scrolled ? 'scrolled' : ''}>
         <div className="nav-inner">
-          <a href="/" className="logo" aria-label="Trelio home">
+          <Link href="/" className="logo" aria-label="Trelio home">
             {/* Light-mode logo */}
-            <img
+            <Image
               src="/trelio-logo-nav.png"
               alt="Trelio"
               className="nav-logo-img nav-logo-light"
               width={495}
               height={120}
+              priority
             />
             {/* Dark-mode logo — shown via [data-theme="dark"] CSS */}
-            <img
+            <Image
               src="/trelio-logo-nav-dark.png"
               alt=""
               aria-hidden="true"
               className="nav-logo-img nav-logo-dark"
               width={495}
               height={120}
+              priority
             />
-          </a>
+          </Link>
 
           {/* Desktop nav links */}
           <div className="nav-links">
@@ -104,13 +100,9 @@ export default function Nav() {
           {/* Right-side controls */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             {hasSession ? (
-              <button
-                id="nav-logout"
-                className="nav-cta nav-logout"
-                onClick={handleLogout}
-              >
-                Log out
-              </button>
+              <Link href="/admin" className="nav-cta">
+                Admin
+              </Link>
             ) : (
               <Link href="/login" className="nav-cta">Get started</Link>
             )}
@@ -143,9 +135,9 @@ export default function Nav() {
             {navLinks}
             <div className="nav-mobile-divider" />
             {hasSession ? (
-              <button className="nav-mobile-logout" onClick={handleLogout}>
-                Log out
-              </button>
+              <Link href="/admin" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+                Admin
+              </Link>
             ) : (
               <Link href="/login" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
                 Get started

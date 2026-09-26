@@ -2,201 +2,184 @@
 
 import { useState } from 'react';
 
-interface FieldErrors {
-  name?: string;
-  email?: string;
-}
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SERVICES = [
+  'Custom Software Development',
+  'Web Application Development',
+  'Mobile App Development',
+  'Cloud Architecture',
+  'DevOps & CI/CD',
+  'API Development',
+  'Legacy System Modernization',
+  'IT Consulting',
+  'Other'
+];
 
 export default function ContactForm() {
-  const [name, setPersonName] = useState('');
-  const [businessName, setBusinessName] = useState('');
-  const [email, setEmail] = useState('');
-  const [trade, setTrade] = useState('Electrician');
-  const [message, setMessage] = useState('');
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  function validate(): FieldErrors {
-    const e: FieldErrors = {};
-    if (!name.trim()) e.name = 'Your name is required.';
-    if (!email.trim()) e.email = 'Email is required.';
-    else if (!EMAIL_RE.test(email)) e.email = 'Please enter a valid email address.';
-    return e;
-  }
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fieldErrors = validate();
-    if (Object.keys(fieldErrors).length > 0) {
-      setErrors(fieldErrors);
-      return;
-    }
+    setIsSubmitting(true);
+    setError('');
 
-    setErrors({});
-    setSubmitting(true);
-    setSubmitError(null);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name'),
+      companyName: formData.get('companyName'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      serviceInterest: formData.get('serviceInterest'),
+      message: formData.get('message'),
+    };
 
     try {
-      const res = await fetch('/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim(),
-          businessName: businessName.trim(),
-          email: email.trim(),
-          trade: trade.trim(),
-          message: message.trim(),
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setSubmitted(true);
-      } else {
-        setSubmitError(data.error || 'Failed to submit quote request. Please try again.');
+      if (!response.ok) {
+        throw new Error('Failed to send message.');
       }
-    } catch {
-      setSubmitError('An unexpected error occurred. Please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
-  /* ── Success state ──────────────────────────────────────────── */
-  if (submitted) {
+      setIsSuccess(true);
+      (e.target as HTMLFormElement).reset();
+    } catch (err: any) {
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSuccess) {
     return (
-      <div
-        style={{
-          background:   'rgba(29, 78, 216, 0.08)',
-          border:       '1px solid var(--blue)',
-          borderRadius: '12px',
-          padding:      '32px 24px',
-          textAlign:    'center',
-        }}
-      >
-        <div style={{ fontSize: '28px', color: 'var(--blue)', marginBottom: '12px' }}>✓</div>
-        <p style={{ fontWeight: 600, marginBottom: '6px', fontSize: '16px' }}>
-          Got it — we&apos;ll be in touch soon.
+      <div className="text-center py-12">
+        <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold mb-2">Message Sent!</h3>
+        <p className="text-[var(--gray)] mb-6">
+          Thank you for reaching out. We will get back to you within 24 hours.
         </p>
-        <p style={{ color: 'var(--gray)', fontSize: '14px' }}>
-          No obligation. We&apos;ll get back to you within one business day.
-        </p>
+        <button
+          onClick={() => setIsSuccess(false)}
+          className="px-6 py-2 bg-[var(--blue)] text-white rounded-lg hover:opacity-90 transition-opacity"
+        >
+          Send Another Message
+        </button>
       </div>
     );
   }
 
-  /* ── Form ───────────────────────────────────────────────────── */
   return (
-    <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      {submitError && (
-        <div role="alert" className="auth-error">
-          {submitError}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+          {error}
         </div>
       )}
 
-      <div className="form-grid">
-        {/* Row 1, Col 1: Name */}
-        <div className="field">
-          <label htmlFor="form-name">Name</label>
-          <input
-            id="form-name"
-            type="text"
-            placeholder="Your name"
-            aria-invalid={!!errors.name}
-            value={name}
-            onChange={e => {
-              setPersonName(e.target.value);
-              if (errors.name) setErrors(p => ({ ...p, name: undefined }));
-            }}
-            style={errors.name ? { borderColor: '#dc2626' } : undefined}
-          />
-          {errors.name && (
-            <p role="alert" style={{ color: '#dc2626', fontSize: '12px', marginTop: '4px' }}>
-              {errors.name}
-            </p>
-          )}
-        </div>
-
-        {/* Row 1, Col 2: Business name */}
-        <div className="field">
-          <label htmlFor="form-business">Business name</label>
-          <input
-            id="form-business"
-            type="text"
-            placeholder="Business name"
-            value={businessName}
-            onChange={e => setBusinessName(e.target.value)}
-          />
-        </div>
-
-        {/* Row 2, Col 1: Email */}
-        <div className="field">
-          <label htmlFor="form-email">Email</label>
-          <input
-            id="form-email"
-            type="email"
-            placeholder="you@business.com"
-            aria-invalid={!!errors.email}
-            value={email}
-            onChange={e => {
-              setEmail(e.target.value);
-              if (errors.email) setErrors(p => ({ ...p, email: undefined }));
-            }}
-            style={errors.email ? { borderColor: '#dc2626' } : undefined}
-          />
-          {errors.email && (
-            <p role="alert" style={{ color: '#dc2626', fontSize: '12px', marginTop: '4px' }}>
-              {errors.email}
-            </p>
-          )}
-        </div>
-
-        {/* Row 2, Col 2: Trade */}
-        <div className="field">
-          <label htmlFor="form-trade">Trade</label>
-          <select
-            id="form-trade"
-            value={trade}
-            onChange={e => setTrade(e.target.value)}
-          >
-            <option value="Electrician">Electrician</option>
-            <option value="Plumber">Plumber</option>
-            <option value="Roofer">Roofer</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        {/* Row 3, Full Width: Message */}
-        <div className="field full-width">
-          <label htmlFor="form-message">
-            What&apos;s not working about your current site (if you have one)?
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium mb-2">
+            Name <span className="text-red-500">*</span>
           </label>
-          <textarea
-            id="form-message"
-            placeholder="Tell us a bit about what you need..."
-            value={message}
-            onChange={e => setMessage(e.target.value)}
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            className="w-full px-4 py-3 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] focus:ring-1 focus:ring-[var(--blue)] transition-colors"
+            placeholder="John Doe"
+          />
+        </div>
+        <div>
+          <label htmlFor="companyName" className="block text-sm font-medium mb-2">
+            Company Name
+          </label>
+          <input
+            type="text"
+            id="companyName"
+            name="companyName"
+            className="w-full px-4 py-3 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] focus:ring-1 focus:ring-[var(--blue)] transition-colors"
+            placeholder="Your Company Ltd"
           />
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginTop: '4px' }}>
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={submitting}
-          style={{ width: '100%', padding: '14px 24px', borderRadius: '10px', fontSize: '15px' }}
-        >
-          {submitting ? 'Sending request...' : 'Request my free quote'}
-        </button>
-        <p style={{ fontSize: '12px', color: 'var(--gray)', textAlign: 'center' }}>
-          No obligation. We&apos;ll get back to you within one business day.
-        </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium mb-2">
+            Email <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            className="w-full px-4 py-3 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] focus:ring-1 focus:ring-[var(--blue)] transition-colors"
+            placeholder="john@example.com"
+          />
+        </div>
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium mb-2">
+            Phone
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            className="w-full px-4 py-3 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] focus:ring-1 focus:ring-[var(--blue)] transition-colors"
+            placeholder="+1 (555) 000-0000"
+          />
+        </div>
       </div>
+
+      <div>
+        <label htmlFor="serviceInterest" className="block text-sm font-medium mb-2">
+          Service Interest
+        </label>
+        <select
+          id="serviceInterest"
+          name="serviceInterest"
+          className="w-full px-4 py-3 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] focus:ring-1 focus:ring-[var(--blue)] transition-colors appearance-none"
+        >
+          <option value="" className="bg-[var(--bg)] text-gray-500">Select a service...</option>
+          {SERVICES.map((service) => (
+            <option key={service} value={service} className="bg-[var(--bg)]">
+              {service}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium mb-2">
+          Message
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          rows={5}
+          className="w-full px-4 py-3 bg-transparent border border-[var(--border)] rounded-lg focus:outline-none focus:border-[var(--blue)] focus:ring-1 focus:ring-[var(--blue)] transition-colors resize-none"
+          placeholder="Tell us about your project..."
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full py-4 bg-[var(--blue)] text-white font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isSubmitting ? 'Sending...' : 'Send Message'}
+      </button>
     </form>
   );
 }

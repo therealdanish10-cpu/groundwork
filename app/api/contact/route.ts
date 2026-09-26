@@ -1,52 +1,76 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-export async function POST(req: Request) {
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json();
-    const { name, businessName, email, trade, message } = body;
+    const body = await request.json();
+    const { name, companyName, email, phone, serviceInterest, message } = body;
 
-    if (!name?.trim() || !email?.trim()) {
-      return NextResponse.json({ error: 'Name and email are required.' }, { status: 400 });
+    if (!name || !email) {
+      return NextResponse.json(
+        { error: 'Name and email are required fields.' },
+        { status: 400 }
+      );
     }
 
-    const supabase = createAdminClient();
+    const htmlContent = `
+      <h2>New Inquiry from ${name}</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Company:</strong> ${companyName || 'N/A'}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+      <p><strong>Service Interest:</strong> ${serviceInterest || 'N/A'}</p>
+      <h3>Message:</h3>
+      <p>${message || 'No message provided.'}</p>
+    `;
 
-    // Anonymous public quote submissions belong in contact_inquiries,
-    // distinct from site_requests which requires an authenticated client_id FK.
-    const { error } = await supabase
-      .from('contact_inquiries')
-      .insert({
-        name: name.trim(),
-        business_name: (businessName || '').trim(),
-        email: email.trim(),
-        trade: (trade || '').trim(),
-        message: (message || '').trim(),
-        status: 'new',
-      });
-
-    if (error) {
-      console.warn('contact_inquiries insert notice:', error.message);
-      // Fallback: try inserting into public_leads table if schema differs
-      const fallback = await supabase
-        .from('public_leads')
-        .insert({
-          name: name.trim(),
-          business_name: (businessName || '').trim(),
-          email: email.trim(),
-          trade: (trade || '').trim(),
-          message: (message || '').trim(),
+    // 1. Send Email via Resend
+    try {
+      if (process.env.RESEND_API_KEY) {
+        await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL || 'Trelio <hello@trelio.tech>',
+          to: process.env.NOTIFY_EMAIL || 'hello@trelio.tech',
+          replyTo: email,
+          subject: `New Inquiry from ${name} - ${serviceInterest || 'General'}`,
+          html: htmlContent,
         });
-      
-      if (fallback.error) {
-        console.warn('public_leads insert notice:', fallback.error.message);
       }
+    } catch (emailError) {
+      console.error('Failed to send email via Resend:', emailError);
+      // Non-fatal, continue to Supabase insert
     }
 
-    // Always succeed gracefully for the visitor so lead is captured
+    // 2. Insert into Supabase
+    try {
+      const supabase = createAdminClient();
+      const { error: dbError } = await supabase
+        .from('contact_inquiries')
+        .insert([{
+          name,
+          company_name: companyName,
+          email,
+          phone,
+          service_interest: serviceInterest,
+          message
+        }]);
+
+      if (dbError) {
+        console.error('Failed to insert into Supabase:', dbError);
+        // Do not fail user request if DB lacks table yet
+      }
+    } catch (dbError) {
+      console.error('Failed to connect to Supabase:', dbError);
+    }
+
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error('API /api/contact error:', err);
-    return NextResponse.json({ error: err.message || 'Internal error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Contact API Error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error.' },
+      { status: 500 }
+    );
   }
 }
