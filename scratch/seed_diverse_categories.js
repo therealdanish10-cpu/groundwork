@@ -11,8 +11,12 @@ envContent.split('\n').forEach(line => {
 const adminClient = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
 
 async function run() {
-  const { data } = await adminClient.from('gallery').select('id, name, category');
-  console.log('Categories present:');
+  await adminClient.from('gallery').update({ category: 'Mobile' }).eq('id', '7c2dae7d-96ca-4f97-9da8-cfd9f6315cb3');
+  await adminClient.from('gallery').update({ category: 'AI' }).eq('id', 'e635a44f-523b-401d-8422-ec712a6266f1');
+  await adminClient.from('gallery').update({ category: 'WordPress' }).eq('id', '780b8ef7-849a-4a83-b759-c3109485ba9e');
+
+  const { data } = await adminClient.from('gallery').select('name, category');
+  console.log('Updated categories:');
   data.forEach(d => console.log(`- [${d.category}] ${d.name}`));
 }
 
