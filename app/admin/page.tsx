@@ -4,22 +4,31 @@ import Link from 'next/link';
 export default async function AdminDashboard() {
   const supabase = await createClient();
 
-  // Parallel data fetching
+  // Fetch blogs and gallery in 2 lean parallel queries instead of 5 separate round-trips
   const [
-    { count: totalBlogs },
-    { count: publishedBlogs },
-    { count: totalProjects },
-    { data: recentBlogs },
-    { data: recentProjects }
+    { data: blogsData },
+    { data: galleryData }
   ] = await Promise.all([
-    supabase.from('blogs').select('*', { count: 'exact', head: true }),
-    supabase.from('blogs').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-    supabase.from('gallery').select('*', { count: 'exact', head: true }),
-    supabase.from('blogs').select('id, title, service_tag, status, created_at').order('created_at', { ascending: false }).limit(4),
-    supabase.from('gallery').select('id, name, category, live_link, screenshot, sort_order').order('sort_order', { ascending: true }).limit(4)
+    supabase
+      .from('blogs')
+      .select('id, title, service_tag, status, created_at')
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('gallery')
+      .select('id, name, category, live_link, screenshot, sort_order')
+      .order('sort_order', { ascending: true })
   ]);
 
-  const draftBlogs = (totalBlogs || 0) - (publishedBlogs || 0);
+  const allBlogs = blogsData || [];
+  const allProjects = galleryData || [];
+
+  const totalBlogs = allBlogs.length;
+  const publishedBlogs = allBlogs.filter((b) => b.status === 'published').length;
+  const draftBlogs = totalBlogs - publishedBlogs;
+  const totalProjects = allProjects.length;
+
+  const recentBlogs = allBlogs.slice(0, 4);
+  const recentProjects = allProjects.slice(0, 4);
 
   return (
     <div className="space-y-10">
@@ -40,6 +49,7 @@ export default async function AdminDashboard() {
         <div className="flex flex-wrap items-center gap-3">
           <Link 
             href="/admin/blogs/new"
+            prefetch={true}
             className="btn btn-primary text-sm px-5 py-2.5 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,6 +59,7 @@ export default async function AdminDashboard() {
           </Link>
           <Link 
             href="/admin/gallery/new"
+            prefetch={true}
             className="btn btn-ghost text-sm px-5 py-2.5 rounded-xl font-semibold border transition-all flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -156,6 +167,7 @@ export default async function AdminDashboard() {
             </div>
             <Link 
               href="/admin/blogs" 
+              prefetch={true}
               className="text-xs font-semibold text-[var(--blue)] hover:underline flex items-center gap-1"
             >
               View all <span>→</span>
@@ -195,6 +207,7 @@ export default async function AdminDashboard() {
                     </span>
                     <Link
                       href={`/admin/blogs/${post.id}/edit`}
+                      prefetch={true}
                       className="p-1.5 rounded-lg border text-xs font-medium text-[var(--gray)] hover:text-[var(--blue)] hover:border-[var(--blue)] transition-colors"
                       style={{ borderColor: 'var(--border)' }}
                     >
@@ -227,6 +240,7 @@ export default async function AdminDashboard() {
             </div>
             <Link 
               href="/admin/gallery" 
+              prefetch={true}
               className="text-xs font-semibold text-[var(--blue)] hover:underline flex items-center gap-1"
             >
               View all <span>→</span>
@@ -274,6 +288,7 @@ export default async function AdminDashboard() {
                     )}
                     <Link
                       href={`/admin/gallery/${project.id}/edit`}
+                      prefetch={true}
                       className="p-1.5 px-3 rounded-lg border text-xs font-medium text-[var(--gray)] hover:text-[var(--blue)] hover:border-[var(--blue)] transition-colors"
                       style={{ borderColor: 'var(--border)' }}
                     >

@@ -137,6 +137,11 @@ export default function Nav() {
     </>
   );
 
+  // ── Hide public nav entirely on /admin and /login routes ──────────────
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
+    return null;
+  }
+
   return (
     <>
       <nav 

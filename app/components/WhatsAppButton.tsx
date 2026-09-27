@@ -6,8 +6,8 @@ import Link from 'next/link';
 export default function WhatsAppButton() {
   const pathname = usePathname();
 
-  // Hide on admin pages
-  if (pathname?.startsWith('/admin')) {
+  // Hide on admin and login pages
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/login')) {
     return null;
   }
 

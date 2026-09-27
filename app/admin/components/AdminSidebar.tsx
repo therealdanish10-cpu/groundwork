@@ -149,6 +149,7 @@ export default function AdminSidebar({ userEmail }: { userEmail?: string | null 
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 onClick={() => setMobileOpen(false)}
                 className={`
                   flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all

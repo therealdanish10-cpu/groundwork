@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
       <div 
         className="w-full max-w-md rounded-2xl border p-8 sm:p-10 transition-all duration-300"
         style={{

@@ -7,7 +7,7 @@ export default async function AdminGalleryPage() {
   const supabase = await createClient();
   const { data: projects } = await supabase
     .from('gallery')
-    .select('*')
+    .select('id, name, description, category, screenshot, screenshot_url, live_link, live_link_url, sort_order')
     .order('sort_order', { ascending: true });
 
   return (
@@ -30,6 +30,7 @@ export default async function AdminGalleryPage() {
 
         <Link 
           href="/admin/gallery/new"
+          prefetch={true}
           className="btn btn-primary text-sm px-5 py-2.5 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all flex items-center gap-2 self-start sm:self-auto"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,6 +145,7 @@ export default async function AdminGalleryPage() {
                         <div className="flex items-center justify-end gap-2">
                           <Link 
                             href={`/admin/gallery/${project.id}/edit`} 
+                            prefetch={true}
                             className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg border text-[var(--fg)] hover:text-[var(--blue)] hover:border-[var(--blue)] bg-[var(--paper)] transition-all"
                             style={{ borderColor: 'var(--border)' }}
                           >

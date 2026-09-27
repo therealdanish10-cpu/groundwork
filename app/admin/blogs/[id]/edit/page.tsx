@@ -92,6 +92,7 @@ export default function EditBlogPage(props: { params: Promise<{ id: string }> })
       <div>
         <Link 
           href="/admin/blogs"
+          prefetch={true}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--gray)] hover:text-[var(--blue)] transition-colors mb-3"
         >
           <span>←</span> Back to Articles
