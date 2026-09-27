@@ -30,11 +30,13 @@ export default function ServicesPage() {
             <StaggerItem key={service.slug} index={index} className="h-full">
               <Link href={`/services/${service.slug}`} className="group block h-full">
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl overflow-hidden hover:border-[var(--blue)] dark:hover:border-[var(--blue)] transition-all duration-300 h-full flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1">
-                  <div className="relative h-44 w-full bg-gray-100 dark:bg-gray-700 overflow-hidden flex-shrink-0">
+                  <div className="relative h-44 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">
                     <Image
                       src={service.image}
                       alt={service.name}
                       fill
+                      priority={index < 2}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       unoptimized
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />

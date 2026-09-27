@@ -152,11 +152,13 @@ export default async function HomePage() {
                   className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/80 hover:border-[var(--blue)] dark:hover:border-[var(--blue)] transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1"
                 >
                   {/* Card Image */}
-                  <div className="h-44 relative w-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+                  <div className="h-44 relative w-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
                     <Image 
                       src={service.image} 
                       alt={service.name}
                       fill
+                      priority={index < 2}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       unoptimized
                     />

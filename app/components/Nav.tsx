@@ -192,7 +192,7 @@ export default function Nav() {
           </div>
 
           {/* Right-side controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div className="nav-right-controls">
             {hasSession ? (
               <Link href="/admin" className="nav-cta">
                 Admin

@@ -25,13 +25,13 @@ export const StaggerItem = ({
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15, margin: '0px 0px -40px 0px' }}
       transition={{ 
-        duration: 0.5, 
-        delay: (index % 4) * 0.12, 
-        ease: [0.16, 1, 0.3, 1] 
+        duration: 0.8, 
+        delay: (index % 4) * 0.18, 
+        ease: [0.22, 1, 0.36, 1] 
       }}
       className={className}
     >
@@ -72,7 +72,7 @@ export const ScrollReveal = ({
       initial={{ opacity: 0, x: offset.x, y: offset.y }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, amount, margin: '0px 0px -40px 0px' }}
-      transition={{ duration: 0.5, delay: delaySec, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.75, delay: delaySec, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
