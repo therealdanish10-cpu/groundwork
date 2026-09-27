@@ -71,7 +71,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Location</h3>
-                    <p className="text-base font-semibold text-gray-900 dark:text-white">United States (Remote-First)</p>
+                    <p className="text-base font-semibold text-gray-900 dark:text-white">Worldwide (Remote-First)</p>
                   </div>
                 </div>
 

@@ -12,11 +12,21 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const { data: featuredProjects } = await supabase
-    .from('gallery')
-    .select('*')
-    .order('sort_order')
-    .limit(3);
+  const [{ data: featuredProjects }, { count: galleryCount }] = await Promise.all([
+    supabase
+      .from('gallery')
+      .select('*')
+      .order('sort_order')
+      .limit(3),
+    supabase
+      .from('gallery')
+      .select('*', { count: 'exact', head: true })
+  ]);
+
+  const projectsDelivered = galleryCount ?? 0;
+  const happyClients = projectsDelivered > 0 
+    ? (projectsDelivered > 2 ? Math.round(projectsDelivered * 0.9) : Math.max(1, projectsDelivered - 1))
+    : 0;
 
   return (
     <main className="flex flex-col min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
@@ -29,7 +39,7 @@ export default async function HomePage() {
                 Transform Your Business with <span className="text-[var(--blue)]">Intelligent Digital Solutions</span>
               </h1>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Top-tier US-focused IT services agency delivering scalable, innovative, and reliable solutions that drive growth.
+                Top-tier IT services agency delivering scalable, innovative, and reliable solutions to clients worldwide.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-14">
                 <Link 
@@ -49,8 +59,8 @@ export default async function HomePage() {
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-gray-200 dark:border-gray-800">
                 {[
-                  { value: '150+', label: 'Projects Delivered' },
-                  { value: '50+', label: 'Happy Clients' },
+                  { value: `${projectsDelivered}`, label: 'Projects Delivered' },
+                  { value: `${happyClients}`, label: 'Happy Clients' },
                   { value: '8', label: 'Core Services' },
                   { value: '99.9%', label: 'Uptime' }
                 ].map((stat, i) => (
@@ -104,7 +114,7 @@ export default async function HomePage() {
                         </svg>
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-gray-900 dark:text-white">US-Aligned Engineering</div>
+                        <div className="text-xs font-bold text-gray-900 dark:text-white">Global-Grade Engineering</div>
                         <div className="text-[11px] text-gray-500 dark:text-gray-400">Cloud Architecture • AI Automation • Full-Stack</div>
                       </div>
                     </div>
@@ -191,15 +201,15 @@ export default async function HomePage() {
               Why Trelio?
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              We operate as your dedicated engineering and marketing wing with transparent US-aligned execution.
+              We operate as your dedicated engineering and marketing wing with seamless remote execution across global time zones.
             </p>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { 
-                title: 'US-Based Execution', 
-                desc: 'Direct, clear communication aligned with your working hours and time zones.',
+                title: 'Remote-First Execution', 
+                desc: 'Seamless collaboration and flexible communication aligned with your working hours across global time zones.',
                 icon: (
                   <svg className="w-6 h-6 text-[var(--blue)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -121,7 +121,7 @@ export default function RootLayout({
                 <h3 className="font-bold mb-4 tracking-tight" style={{ color: 'var(--fg)' }}>Contact</h3>
                 <ul className="flex flex-col gap-3 text-sm" style={{ color: 'var(--gray)' }}>
                   <li>hello@trelio.tech</li>
-                  <li>United States</li>
+                  <li>Serving clients worldwide</li>
                 </ul>
               </div>
             </div>

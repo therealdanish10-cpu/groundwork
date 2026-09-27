@@ -49,7 +49,7 @@ export default function AboutPage() {
               About Trelio
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-              We are a premier IT services agency based in the United States, dedicated to helping businesses scale and innovate through cutting-edge technology and data-backed digital marketing.
+              We are a premier IT services agency serving forward-thinking businesses worldwide, dedicated to scaling and innovating through cutting-edge technology and data-backed digital marketing.
             </p>
           </div>
         </ScrollReveal>
@@ -67,7 +67,7 @@ export default function AboutPage() {
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mt-2 mb-6">Our Story</h2>
                 <div className="space-y-6 text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                   <p>
-                    Trelio was founded with a singular vision: to bridge the gap between complex technological challenges and elegant, scalable business solutions. We recognized that businesses across the US needed more than just vendors—they needed strategic technology partners.
+                    Trelio was founded with a singular vision: to bridge the gap between complex technological challenges and elegant, scalable business solutions. We recognized that growing businesses worldwide needed more than just vendors—they needed strategic technology partners.
                   </p>
                   <p>
                     Since our inception, we have been committed to delivering excellence in software development, cloud architecture, and digital growth. Our approach combines deep technical expertise with a profound understanding of modern business dynamics.
