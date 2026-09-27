@@ -18,7 +18,7 @@ const team = [
   {
     name: 'Danish Awan',
     role: 'Co-founder & CTO',
-    image: null,
+    image: '/danish-awan.png',
     initials: 'DA'
   },
   {
