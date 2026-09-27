@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -45,6 +46,10 @@ export async function POST(req: NextRequest) {
       .update({ sort_order: newOrder })
       .eq('id', id);
 
+    revalidatePath('/admin/gallery');
+    revalidatePath('/admin');
+    revalidatePath('/work');
+    revalidatePath('/');
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

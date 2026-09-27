@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -37,6 +38,10 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidatePath('/admin/blogs');
+  revalidatePath('/admin');
+  revalidatePath('/blog');
+  revalidatePath('/');
   return NextResponse.json(data);
 }
 
@@ -62,6 +67,10 @@ export async function PUT(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidatePath('/admin/blogs');
+  revalidatePath('/admin');
+  revalidatePath('/blog');
+  revalidatePath('/');
   return NextResponse.json(data);
 }
 
@@ -85,5 +94,9 @@ export async function DELETE(req: NextRequest) {
     .eq('id', id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidatePath('/admin/blogs');
+  revalidatePath('/admin');
+  revalidatePath('/blog');
+  revalidatePath('/');
   return NextResponse.json({ success: true });
 }

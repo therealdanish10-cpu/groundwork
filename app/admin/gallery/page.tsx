@@ -1,11 +1,13 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
 import DeleteButton from '../components/DeleteButton';
 import ReorderButton from '../components/ReorderButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminGalleryPage() {
-  const supabase = await createClient();
-  const { data: projects } = await supabase
+  const adminClient = createAdminClient();
+  const { data: projects } = await adminClient
     .from('gallery')
     .select('id, name, description, category, screenshot, screenshot_url, live_link, live_link_url, sort_order')
     .order('sort_order', { ascending: true });

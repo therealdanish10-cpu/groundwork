@@ -61,15 +61,14 @@ export default function NewGalleryProjectPage() {
 
       if (res.ok) {
         router.push('/admin/gallery');
-        router.refresh();
       } else {
         const err = await res.json();
         alert(err.error || 'Error creating project');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       alert('Error creating project');
-    } finally {
       setLoading(false);
     }
   };

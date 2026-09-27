@@ -64,15 +64,14 @@ export default function EditBlogPage(props: { params: Promise<{ id: string }> })
 
       if (res.ok) {
         router.push('/admin/blogs');
-        router.refresh();
       } else {
         const err = await res.json();
         alert(err.error || 'Error updating blog post');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       alert('Error updating blog post');
-    } finally {
       setLoading(false);
     }
   };

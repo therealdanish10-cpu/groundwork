@@ -1,11 +1,13 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
 import DeleteButton from '../components/DeleteButton';
 import { SERVICES } from '@/lib/services';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminBlogsPage() {
-  const supabase = await createClient();
-  const { data: blogs } = await supabase
+  const adminClient = createAdminClient();
+  const { data: blogs } = await adminClient
     .from('blogs')
     .select('id, title, slug, service_tag, status, cover_image, created_at')
     .order('created_at', { ascending: false });

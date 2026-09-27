@@ -1,34 +1,40 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
 
-export default async function AdminDashboard() {
-  const supabase = await createClient();
+export const dynamic = 'force-dynamic';
 
-  // Fetch blogs and gallery in 2 lean parallel queries instead of 5 separate round-trips
+export default async function AdminDashboard() {
+  const adminClient = createAdminClient();
+
+  // Fast lean parallel queries using service role client to bypass RLS evaluation overhead
   const [
-    { data: blogsData },
-    { data: galleryData }
+    { count: totalBlogsCount, data: recentBlogsData },
+    { count: publishedBlogsCount },
+    { count: totalProjectsCount, data: recentProjectsData }
   ] = await Promise.all([
-    supabase
+    adminClient
       .from('blogs')
-      .select('id, title, service_tag, status, created_at')
-      .order('created_at', { ascending: false }),
-    supabase
+      .select('id, title, service_tag, status, created_at', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .limit(4),
+    adminClient
+      .from('blogs')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'published'),
+    adminClient
       .from('gallery')
-      .select('id, name, category, live_link, screenshot, sort_order')
+      .select('id, name, category, live_link, screenshot, sort_order', { count: 'exact' })
       .order('sort_order', { ascending: true })
+      .limit(4)
   ]);
 
-  const allBlogs = blogsData || [];
-  const allProjects = galleryData || [];
+  const totalBlogs = totalBlogsCount || 0;
+  const publishedBlogs = publishedBlogsCount || 0;
+  const draftBlogs = Math.max(0, totalBlogs - publishedBlogs);
+  const totalProjects = totalProjectsCount || 0;
 
-  const totalBlogs = allBlogs.length;
-  const publishedBlogs = allBlogs.filter((b) => b.status === 'published').length;
-  const draftBlogs = totalBlogs - publishedBlogs;
-  const totalProjects = allProjects.length;
-
-  const recentBlogs = allBlogs.slice(0, 4);
-  const recentProjects = allProjects.slice(0, 4);
+  const recentBlogs = recentBlogsData || [];
+  const recentProjects = recentProjectsData || [];
 
   return (
     <div className="space-y-10">

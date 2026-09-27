@@ -40,15 +40,14 @@ export default function NewBlogPage() {
 
       if (res.ok) {
         router.push('/admin/blogs');
-        router.refresh();
       } else {
         const err = await res.json();
         alert(err.error || 'Error creating blog post');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       alert('Error creating blog post');
-    } finally {
       setLoading(false);
     }
   };

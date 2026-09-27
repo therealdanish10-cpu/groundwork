@@ -83,15 +83,14 @@ export default function EditGalleryProjectPage(props: { params: Promise<{ id: st
 
       if (res.ok) {
         router.push('/admin/gallery');
-        router.refresh();
       } else {
         const err = await res.json();
         alert(err.error || 'Error updating project');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       alert('Error updating project');
-    } finally {
       setLoading(false);
     }
   };
