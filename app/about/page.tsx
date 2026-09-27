@@ -30,7 +30,7 @@ const team = [
   {
     name: 'Alishba Zaheer',
     role: 'Social Media Manager',
-    image: null,
+    image: '/alishba.jpeg',
     initials: 'AZ'
   }
 ]
