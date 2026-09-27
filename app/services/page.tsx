@@ -26,8 +26,8 @@ export default function ServicesPage() {
 
       <div className="px-6 max-w-7xl mx-auto">
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {SERVICES.map((service) => (
-            <StaggerItem key={service.slug} className="h-full">
+          {SERVICES.map((service, index) => (
+            <StaggerItem key={service.slug} index={index} className="h-full">
               <Link href={`/services/${service.slug}`} className="group block h-full">
                 <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/80 rounded-2xl overflow-hidden hover:border-[var(--blue)] dark:hover:border-[var(--blue)] transition-all duration-300 h-full flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1">
                   <div className="relative h-44 w-full bg-gray-100 dark:bg-gray-700 overflow-hidden flex-shrink-0">

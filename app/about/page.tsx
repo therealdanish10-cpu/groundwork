@@ -114,7 +114,7 @@ export default function AboutPage() {
             { title: 'Transparency', desc: 'Clear communication, honest timelines, and high-impact deliverables. We build trust through openness and accountability.' },
             { title: 'Innovation', desc: 'We stay at the bleeding edge of technology to bring the most effective solutions to our clients\' challenges.' }
           ].map((value, i) => (
-            <StaggerItem key={i}>
+            <StaggerItem key={i} index={i}>
               <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-2xl h-full shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-[var(--blue)]/10 text-[var(--blue)] rounded-xl flex items-center justify-center mb-6">
                   <div className="w-4 h-4 bg-[var(--blue)] rounded-full" />
@@ -143,8 +143,8 @@ export default function AboutPage() {
           </ScrollReveal>
 
           <StaggerContainer className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member) => (
-              <StaggerItem key={member.name}>
+            {team.map((member, i) => (
+              <StaggerItem key={member.name} index={i}>
                 <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
                   <div className="relative w-36 h-36 rounded-full overflow-hidden mb-6 bg-gray-100 dark:bg-gray-800 border-4 border-[var(--blue)]/20 shadow-md">
                     {member.image ? (

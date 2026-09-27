@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 import { createClient } from '@/lib/supabase/client';
@@ -9,19 +9,78 @@ import Image from 'next/image';
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
   const [hasSession, setHasSession] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  // ── Scroll handler ──────────────────────────────────────────────────────
+  const lastScrollY = useRef(0);
+  const pauseTimer = useRef<NodeJS.Timeout | null>(null);
+  const isHovered = useRef(false);
+
+  // ── Scroll to true top (0,0) on initial load / reload ─────────────────────
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  // ── Auto-hiding nav on scroll + pause behavior ───────────────────────────
   useEffect(() => {
     function onScroll() {
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      setScrolled(currentScrollY > 20);
+
+      // At the true top (<= 50px), always keep nav visible
+      if (currentScrollY <= 50) {
+        setNavVisible(true);
+        if (pauseTimer.current) {
+          clearTimeout(pauseTimer.current);
+          pauseTimer.current = null;
+        }
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      const diff = currentScrollY - lastScrollY.current;
+
+      // Scrolling DOWN -> hide nav immediately
+      if (diff > 0) {
+        if (pauseTimer.current) {
+          clearTimeout(pauseTimer.current);
+          pauseTimer.current = null;
+        }
+        if (!menuOpen) {
+          setNavVisible(false);
+        }
+      } 
+      // Scrolling UP even slightly -> make full nav appear/slide into view
+      else if (diff < 0) {
+        setNavVisible(true);
+        if (pauseTimer.current) {
+          clearTimeout(pauseTimer.current);
+        }
+        // Hides again after the user pauses scrolling (stops scrolling for a moment)
+        pauseTimer.current = setTimeout(() => {
+          if (window.scrollY > 50 && !isHovered.current && !menuOpen) {
+            setNavVisible(false);
+          }
+        }, 1500);
+      }
+
+      lastScrollY.current = currentScrollY;
     }
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (pauseTimer.current) clearTimeout(pauseTimer.current);
+    };
+  }, [menuOpen]);
 
   // ── Close mobile menu on route change ───────────────────────────────────
   useEffect(() => {
@@ -55,9 +114,21 @@ export default function Nav() {
     return pathname === href ? 'active' : undefined;
   }
 
+  // ── Ensure clicking logo or Home always lands at true top (0,0) ───────────
+  const handleLogoOrHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setMenuOpen(false);
+    if (pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  };
+
   const navLinks = (
     <>
-      <Link href="/" className={isActive('/')} onClick={() => setMenuOpen(false)}>Home</Link>
+      <Link href="/" className={isActive('/')} onClick={handleLogoOrHomeClick}>Home</Link>
       <Link href="/services" className={isActive('/services')} onClick={() => setMenuOpen(false)}>Services</Link>
       <Link href="/work" className={isActive('/work')} onClick={() => setMenuOpen(false)}>Work</Link>
       <Link href="/blog" className={isActive('/blog')} onClick={() => setMenuOpen(false)}>Blog</Link>
@@ -68,9 +139,27 @@ export default function Nav() {
 
   return (
     <>
-      <nav id="nav" className={scrolled ? 'scrolled' : ''}>
+      <nav 
+        id="nav" 
+        className={`${scrolled ? 'scrolled' : ''} ${navVisible ? 'nav-visible' : 'nav-hidden'}`}
+        onMouseEnter={() => {
+          isHovered.current = true;
+          if (pauseTimer.current) clearTimeout(pauseTimer.current);
+        }}
+        onMouseLeave={() => {
+          isHovered.current = false;
+          if (window.scrollY > 50 && !menuOpen) {
+            if (pauseTimer.current) clearTimeout(pauseTimer.current);
+            pauseTimer.current = setTimeout(() => {
+              if (window.scrollY > 50 && !isHovered.current && !menuOpen) {
+                setNavVisible(false);
+              }
+            }, 1500);
+          }
+        }}
+      >
         <div className="nav-inner">
-          <Link href="/" className="logo" aria-label="Trelio home">
+          <Link href="/" className="logo" aria-label="Trelio home" onClick={handleLogoOrHomeClick}>
             {/* Light-mode logo */}
             <Image
               src="/trelio-logo-nav.png"

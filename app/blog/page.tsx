@@ -49,12 +49,12 @@ export default async function BlogPage() {
           </div>
         ) : (
           <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => {
+            {posts.map((post, index) => {
               const service = SERVICES.find(s => s.slug === post.service_tag)
               const serviceName = service ? service.name : post.service_tag
 
               return (
-                <StaggerItem key={post.id}>
+                <StaggerItem key={post.id} index={index}>
                   <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 hover:shadow-xl transition-all duration-300 group">
                     <div className="relative h-52 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                       {post.cover_image ? (

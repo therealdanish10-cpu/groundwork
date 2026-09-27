@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { SERVICES } from '@/lib/services';
-import { ScrollReveal, StaggerContainer, StaggerItem } from './components/MotionWrapper';
+import { ScrollReveal, StaggerContainer, StaggerItem, LazyCard } from './components/MotionWrapper';
 
 export const metadata: Metadata = {
   title: 'Trelio | Intelligent Digital Solutions',
@@ -145,8 +145,8 @@ export default async function HomePage() {
           </ScrollReveal>
           
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {SERVICES.map((service) => (
-              <StaggerItem key={service.slug} className="group cursor-pointer h-full">
+            {SERVICES.map((service, index) => (
+              <StaggerItem key={service.slug} index={index} className="group cursor-pointer h-full">
                 <Link 
                   href={`/services/${service.slug}`} 
                   className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/80 hover:border-[var(--blue)] dark:hover:border-[var(--blue)] transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1"
@@ -205,7 +205,7 @@ export default async function HomePage() {
             </p>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { 
                 title: 'Remote-First Execution', 
@@ -244,8 +244,9 @@ export default async function HomePage() {
                 )
               }
             ].map((feature, i) => (
-              <ScrollReveal 
+              <StaggerItem 
                 key={i} 
+                index={i}
                 className="p-8 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-left shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
               >
                 <div>
@@ -259,9 +260,9 @@ export default async function HomePage() {
                     {feature.desc}
                   </p>
                 </div>
-              </ScrollReveal>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -297,54 +298,57 @@ export default async function HomePage() {
             </ScrollReveal>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredProjects.map((project) => (
-                <ScrollReveal 
-                  key={project.id} 
-                  className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col"
-                >
-                  <div className="h-60 relative overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
-                    {(project.screenshot || project.screenshot_url) ? (
-                      <Image 
-                        src={project.screenshot || project.screenshot_url} 
-                        alt={project.name}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        unoptimized
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center font-bold text-gray-400">
-                        {project.name}
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow justify-between gap-3">
-                    <div>
-                      {project.category && (
-                        <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[var(--blue)]/10 text-[var(--blue)] mb-2">
-                          {project.category}
-                        </span>
+              {featuredProjects.map((project, index) => (
+                <LazyCard key={project.id} minHeight="380px" className="h-full">
+                  <StaggerItem 
+                    index={index} 
+                    className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                  >
+                    <div className="h-60 relative overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0">
+                      {(project.screenshot || project.screenshot_url) ? (
+                        <Image 
+                          src={project.screenshot || project.screenshot_url} 
+                          alt={project.name}
+                          fill
+                          loading="lazy"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center font-bold text-gray-400">
+                          {project.name}
+                        </div>
                       )}
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-snug">
-                        {project.name}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 leading-relaxed">
-                        {project.description}
-                      </p>
                     </div>
+                    <div className="p-6 flex flex-col flex-grow justify-between gap-3">
+                      <div>
+                        {project.category && (
+                          <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[var(--blue)]/10 text-[var(--blue)] mb-2">
+                            {project.category}
+                          </span>
+                        )}
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-snug">
+                          {project.name}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 leading-relaxed">
+                          {project.description}
+                        </p>
+                      </div>
 
-                    {(project.live_link || project.live_link_url) && (
-                      <a
-                        href={project.live_link || project.live_link_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-bold text-[var(--blue)] hover:underline pt-2 mt-auto"
-                      >
-                        <span>Visit live product</span>
-                        <span>↗</span>
-                      </a>
-                    )}
-                  </div>
-                </ScrollReveal>
+                      {(project.live_link || project.live_link_url) && (
+                        <a
+                          href={project.live_link || project.live_link_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-xs font-bold text-[var(--blue)] hover:underline pt-2 mt-auto"
+                        >
+                          <span>Visit live product</span>
+                          <span>↗</span>
+                        </a>
+                      )}
+                    </div>
+                  </StaggerItem>
+                </LazyCard>
               ))}
             </div>
           )}
@@ -372,9 +376,10 @@ export default async function HomePage() {
               { num: '02', title: 'Design & Engineering', desc: 'Crafting intuitive UI/UX prototypes and robust, production-grade software architectures.' },
               { num: '03', title: 'QA & Optimization', desc: 'Rigorous end-to-end testing, speed benchmarks, security audits, and zero-downtime deployment.' },
               { num: '04', title: 'Scale & Growth', desc: 'Continuous performance analytics, iterative feature releases, and reliable maintenance.' }
-            ].map((step) => (
+            ].map((step, index) => (
               <StaggerItem 
                 key={step.num} 
+                index={index}
                 className="p-8 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
               >
                 <div>
