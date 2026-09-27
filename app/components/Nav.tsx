@@ -82,9 +82,11 @@ export default function Nav() {
     };
   }, [menuOpen]);
 
-  // ── Close mobile menu on route change ───────────────────────────────────
+  // ── Close mobile menu and ensure nav is visible on route change ──────────
   useEffect(() => {
     setMenuOpen(false);
+    setNavVisible(true);
+    lastScrollY.current = 0;
   }, [pathname]);
 
   // ── Prevent body scroll while mobile menu is open ───────────────────────
@@ -115,13 +117,9 @@ export default function Nav() {
   }
 
   // ── Ensure clicking logo or Home always lands at true top (0,0) ───────────
-  const handleLogoOrHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLogoOrHomeClick = () => {
     setMenuOpen(false);
-    if (pathname === '/') {
-      e.preventDefault();
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      requestAnimationFrame(() => window.scrollTo(0, 0));
-    } else {
+    if (pathname === '/' && typeof window !== 'undefined') {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   };

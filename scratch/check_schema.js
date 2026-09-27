@@ -19,10 +19,15 @@ const { createClient } = require('@supabase/supabase-js');
 const s = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
 
 async function q() {
-  const { data: sites } = await s.from('sites').select('*').limit(2);
-  console.log('Sites sample:', sites);
-  const { data: site_requests } = await s.from('site_requests').select('*').limit(2);
-  console.log('Site requests sample:', site_requests);
+  const { data: blog, error: bErr } = await s.from('blogs').select('*').limit(1);
+  console.log('Blogs error:', bErr);
+  console.log('Blogs sample or columns:', blog);
+
+  const { data: gal, error: gErr } = await s.from('gallery').select('*').limit(1);
+  console.log('Gallery error:', gErr);
+  if (gal && gal[0]) {
+    console.log('Gallery columns:', Object.keys(gal[0]));
+  }
 }
 
 q();

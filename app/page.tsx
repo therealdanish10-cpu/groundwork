@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { SERVICES } from '@/lib/services';
 import { ScrollReveal, StaggerContainer, StaggerItem, LazyCard } from './components/MotionWrapper';
 
@@ -10,17 +10,19 @@ export const metadata: Metadata = {
   description: 'Transform Your Business with Intelligent Digital Solutions. Trelio offers comprehensive IT services for modern businesses.',
 };
 
+export const revalidate = 60;
+
 export default async function HomePage() {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
   const [{ data: featuredProjects }, { count: galleryCount }] = await Promise.all([
-    supabase
+    adminClient
       .from('gallery')
-      .select('*')
+      .select('id, name, description, category, screenshot, live_link, sort_order')
       .order('sort_order')
       .limit(3),
-    supabase
+    adminClient
       .from('gallery')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
   ]);
 
   const projectsDelivered = galleryCount ?? 0;

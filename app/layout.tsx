@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
@@ -39,8 +40,11 @@ export default function RootLayout({
       className={manrope.variable}
       suppressHydrationWarning
     >
-      <head>
-        <script
+      <head />
+      <body className="flex flex-col min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -67,8 +71,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body className="flex flex-col min-h-screen bg-white dark:bg-gray-950 text-gray-900 dark:text-white">
         <Nav />
         <main className="flex-grow">
           {children}

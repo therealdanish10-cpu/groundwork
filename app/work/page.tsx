@@ -8,14 +8,14 @@ export const metadata: Metadata = {
   description: 'Projects we\'re proud of. Explore our portfolio of successful IT implementations and digital solutions.',
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function WorkPage() {
   const adminClient = createAdminClient()
   
   const { data: projects, error } = await adminClient
     .from('gallery')
-    .select('*')
+    .select('id, name, description, category, screenshot, live_link, sort_order, created_at')
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false })
     

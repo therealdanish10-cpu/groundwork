@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { SERVICES } from '@/lib/services'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   description: 'Insights, guides, and industry news from the Trelio team.',
 }
 
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 60
 
 export default async function BlogPage() {
-  const supabase = await createClient()
+  const adminClient = createAdminClient()
   
-  const { data: posts, error } = await supabase
+  const { data: posts, error } = await adminClient
     .from('blogs')
-    .select('*')
+    .select('id, title, slug, service_tag, cover_image, created_at, status')
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     

@@ -180,10 +180,12 @@ nav#nav {
 
 nav#nav.nav-visible {
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 nav#nav.nav-hidden {
   transform: translateY(-100%);
+  pointer-events: none;
 }
 
 .nav-inner {
