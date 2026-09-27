@@ -9,8 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@splinetool/react-spline": "^4.1.0",
-    "@splinetool/runtime": "^2.0.58",
     "@stripe/stripe-js": "^9.9.0",
     "@supabase/ssr": "^0.12.1",
     "@supabase/supabase-js": "^2.110.4",

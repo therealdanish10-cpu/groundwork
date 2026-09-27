@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { SERVICES } from '@/lib/services';
-import SplineHero from './components/SplineHero';
 import { ScrollReveal, StaggerContainer, StaggerItem } from './components/MotionWrapper';
 
 export const metadata: Metadata = {
@@ -62,8 +61,59 @@ export default async function HomePage() {
                 ))}
               </div>
             </ScrollReveal>
-            <div className="flex-1 w-full relative z-0">
-              <SplineHero scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" />
+            {/* Clean Static Hero Visual */}
+            <div className="flex-1 w-full relative z-0 max-w-xl mx-auto lg:max-w-none">
+              {/* Subtle ambient gradient aura */}
+              <div className="absolute -inset-2 bg-gradient-to-tr from-blue-600/20 via-indigo-500/15 to-transparent rounded-3xl blur-2xl opacity-60 dark:opacity-40 -z-10 pointer-events-none" />
+
+              <div className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/90 shadow-2xl overflow-hidden backdrop-blur-sm">
+                {/* Mockup Window Chrome */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-800/80">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 rounded-full bg-red-400" />
+                    <div className="w-3 h-3 rounded-full bg-amber-400" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                  </div>
+                  <div className="text-xs font-mono text-gray-500 dark:text-gray-400">
+                    trelio.engineering // platform
+                  </div>
+                  <div className="flex items-center space-x-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span>Active</span>
+                  </div>
+                </div>
+
+                {/* High-Quality Relevant Tech Image */}
+                <div className="relative h-72 sm:h-96 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&auto=format&fit=crop&q=80"
+                    alt="Trelio Engineering & Digital Solutions"
+                    fill
+                    priority
+                    unoptimized
+                    className="object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/70 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Floating capability badge */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-white/95 dark:bg-gray-900/95 border border-gray-200 dark:border-gray-700/80 rounded-xl p-3.5 shadow-lg flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-[var(--blue)]/10 text-[var(--blue)] flex items-center justify-center text-[var(--blue)] shrink-0">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-gray-900 dark:text-white">US-Aligned Engineering</div>
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400">Cloud Architecture • AI Automation • Full-Stack</div>
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-bold text-[var(--blue)] uppercase tracking-wider hidden sm:inline">
+                      Enterprise
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
