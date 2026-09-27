@@ -19,12 +19,14 @@ export interface GalleryProject {
 
 const CATEGORIES = [
   'All',
-  'Web',
-  'Mobile',
-  'App',
-  'AI',
-  'Marketing',
-  'WordPress',
+  'Web Development',
+  'SEO',
+  'App Development',
+  'Social Media Management',
+  'AI Automation',
+  'Meta Ads',
+  'Content Writing',
+  'WordPress Development',
 ];
 
 export default function WorkGalleryClient({
@@ -41,9 +43,6 @@ export default function WorkGalleryClient({
       const cat = p.category?.trim();
       if (!cat) return;
       counts[cat] = (counts[cat] || 0) + 1;
-      // Handle mobile/app alias
-      if (cat.toLowerCase() === 'mobile') counts['App'] = (counts['App'] || 0) + 1;
-      if (cat.toLowerCase() === 'app') counts['Mobile'] = (counts['Mobile'] || 0) + 1;
     });
     return counts;
   }, [initialProjects]);
@@ -53,16 +52,9 @@ export default function WorkGalleryClient({
     if (selectedCategory === 'All') {
       return initialProjects;
     }
-    const target = selectedCategory.toLowerCase();
     return initialProjects.filter((p) => {
       if (!p.category) return false;
-      const cat = p.category.toLowerCase().trim();
-      if (cat === target) return true;
-      // Alias Mobile <-> App
-      if ((target === 'mobile' && cat === 'app') || (target === 'app' && cat === 'mobile')) {
-        return true;
-      }
-      return false;
+      return p.category.trim() === selectedCategory;
     });
   }, [initialProjects, selectedCategory]);
 
@@ -70,7 +62,7 @@ export default function WorkGalleryClient({
     <div>
       {/* Category Filter Bar */}
       <div className="flex items-center justify-center mb-12">
-        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-gray-100/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-800/80 overflow-x-auto max-w-full no-scrollbar">
+        <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-gray-100/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-800/80 max-w-full">
           {CATEGORIES.map((category) => {
             const active = selectedCategory === category;
             const count = categoryCounts[category] || 0;
@@ -78,11 +70,11 @@ export default function WorkGalleryClient({
             return (
               <button
                 key={category}
-                id={`tab-${category.toLowerCase()}`}
+                id={`tab-${category.toLowerCase().replace(/\s+/g, '-')}`}
                 type="button"
                 onClick={() => setSelectedCategory(category)}
                 className={`
-                  px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-tight whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-1.5
+                  px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-tight whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-1.5
                   ${active
                     ? 'bg-[var(--blue)] text-white shadow-md shadow-blue-500/20'
                     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-gray-800'

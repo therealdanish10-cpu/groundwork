@@ -186,12 +186,14 @@ export default function EditGalleryProjectPage(props: { params: Promise<{ id: st
                 color: 'var(--fg)',
               }}
             >
-              <option value="Web">Web Application / Development</option>
-              <option value="Mobile">Mobile Application (iOS & Android)</option>
-              <option value="AI">AI Automation & Integrations</option>
-              <option value="Marketing">Meta Ads & Performance Marketing</option>
-              <option value="WordPress">WordPress / CMS Development</option>
-              <option value="Other">Other IT Solution</option>
+              <option value="Web Development">Web Development</option>
+              <option value="SEO">SEO</option>
+              <option value="App Development">App Development</option>
+              <option value="Social Media Management">Social Media Management</option>
+              <option value="AI Automation">AI Automation</option>
+              <option value="Meta Ads">Meta Ads</option>
+              <option value="Content Writing">Content Writing</option>
+              <option value="WordPress Development">WordPress Development</option>
             </select>
           </div>
         </div>
