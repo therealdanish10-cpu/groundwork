@@ -62,7 +62,7 @@ export default async function HomePage() {
                   { value: `${projectsDelivered}`, label: 'Projects Delivered' },
                   { value: `${happyClients}`, label: 'Happy Clients' },
                   { value: '8', label: 'Core Services' },
-                  { value: '99.9%', label: 'Uptime' }
+                  { value: '98.5%', label: 'Uptime' }
                 ].map((stat, i) => (
                   <div key={i}>
                     <div className="text-2xl lg:text-3xl font-extrabold text-gray-900 dark:text-white">{stat.value}</div>
