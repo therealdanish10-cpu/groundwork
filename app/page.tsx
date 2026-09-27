@@ -17,7 +17,7 @@ export default async function HomePage() {
   const [{ data: featuredProjects }, { count: galleryCount }] = await Promise.all([
     adminClient
       .from('gallery')
-      .select('id, name, description, category, screenshot, live_link, sort_order')
+      .select('id, name, description, category, screenshot, screenshot_url, live_link, live_link_url, sort_order')
       .order('sort_order')
       .limit(3),
     adminClient

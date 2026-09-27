@@ -17,7 +17,7 @@ export default async function BlogPage() {
   
   const { data: posts, error } = await adminClient
     .from('blogs')
-    .select('id, title, slug, service_tag, cover_image, created_at, status')
+    .select('id, title, slug, service_tag, cover_image, created_at, status, content')
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     
