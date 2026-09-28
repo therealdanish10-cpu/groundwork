@@ -4,9 +4,22 @@ import { Metadata } from 'next'
 import { StaggerContainer, StaggerItem, ScrollReveal } from '@/app/components/MotionWrapper'
 
 export const metadata: Metadata = {
-  title: 'About Us | Trelio IT Services',
-  description: 'Learn about Trelio, our mission, values, and the team dedicated to transforming businesses through technology.',
-}
+  title: 'About Us | Trelio - Global Digital Agency',
+  description: 'Learn about Trelio\'s mission, leadership team, and values. We partner with growing businesses worldwide to engineer high-impact digital solutions.',
+  openGraph: {
+    title: 'About Us | Trelio - Global Digital Agency',
+    description: 'Learn about Trelio\'s mission, leadership team, and values. We partner with growing businesses worldwide to engineer high-impact digital solutions.',
+    url: 'https://www.trelio.tech/about',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'About Us | Trelio - Global Digital Agency',
+      },
+    ],
+  },
+};
 
 const team = [
   {
@@ -150,7 +163,7 @@ export default function AboutPage() {
                     {member.image ? (
                       <Image
                         src={member.image}
-                        alt={member.name}
+                        alt={`${member.name} - ${member.role} at Trelio`}
                         fill
                         className="object-cover"
                         unoptimized

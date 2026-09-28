@@ -22,9 +22,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
+  const title = `${service.name} | Trelio Digital Services`;
+  const description = service.description;
+
   return {
-    title: `${service.name} | Trelio`,
-    description: service.description,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://www.trelio.tech/services/${service.slug}`,
+      images: [
+        {
+          url: service.image || '/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: `${service.name} - Trelio`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [service.image || '/og-image.png'],
+    },
   };
 }
 
@@ -65,7 +87,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             <div className="relative aspect-video lg:aspect-square w-full max-h-[500px] rounded-3xl overflow-hidden shadow-2xl border border-[var(--border)]">
               <Image
                 src={service.image}
-                alt={service.name}
+                alt={`${service.name} - Trelio digital service`}
                 fill
                 unoptimized
                 className="object-cover"

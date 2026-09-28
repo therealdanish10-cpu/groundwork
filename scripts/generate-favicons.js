@@ -83,34 +83,57 @@ async function main() {
     .toFile(path.join(PUBLIC, 'trelio-logo-nav-dark.png'));
   console.log('✓ trelio-logo-nav-dark.png (dark mode nav)');
 
-  /* ── 5. Favicon: crop T-icon (left square of trimmed image) ────────
-     The T-icon occupies roughly the left 33% of the trimmed width.
-     We take a square of side = trimmed height.
+  /* ── 5. Favicon: crop full T-icon with proper aspect ratio & padding ──
+     The T-icon occupies roughly 323px wide by 268px high in the trimmed logo.
+     We extract the full T-mark and center it with comfortable breathing padding.
   ─────────────────────────────────────────────────────────────────── */
-  const iconSide = trimMeta.height;  // square crop = full height of trimmed logo
-  const iconLeft = 0;
-  const iconTop  = 0;
-
-  // Safety: if the trimmed width < iconSide, use width instead
-  const cropSide = Math.min(iconSide, trimMeta.width);
+  const iconWidth  = Math.min(Math.round(trimMeta.height * 1.21), trimMeta.width); // ~323px
+  const iconHeight = trimMeta.height; // ~268px
+  const iconLeft   = 0;
+  const iconTop    = 0;
 
   const iconBuf = await sharp(trimBuf)
-    .extract({ left: iconLeft, top: iconTop, width: cropSide, height: cropSide })
+    .extract({ left: iconLeft, top: iconTop, width: iconWidth, height: iconHeight })
     .toBuffer();
 
-  /* Light-mode favicons */
-  for (const size of [180, 32, 16]) {
-    const name = size === 180 ? 'apple-touch-icon.png' : `favicon-${size}.png`;
+  /* Light-mode favicons (transparent background with ~15% padding) */
+  for (const size of [32, 16]) {
+    const name = `favicon-${size}.png`;
+    const targetW = Math.max(1, Math.round(size * 0.84));
+    const targetH = Math.max(1, Math.round(targetW * (iconHeight / iconWidth)));
     await sharp(iconBuf)
-      .resize(size, size, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+      .resize(targetW, targetH, { fit: 'contain' })
+      .extend({
+        top: Math.floor((size - targetH) / 2),
+        bottom: Math.ceil((size - targetH) / 2),
+        left: Math.floor((size - targetW) / 2),
+        right: Math.ceil((size - targetW) / 2),
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
       .png({ compressionLevel: 9 })
       .toFile(path.join(PUBLIC, name));
     console.log(`✓ ${name} (${size}×${size} light)`);
   }
 
-  /* Dark-mode favicons */
+  /* Apple touch icon (180x180, clean white background with padding) */
+  const appleW = Math.round(180 * 0.76);
+  const appleH = Math.round(appleW * (iconHeight / iconWidth));
+  await sharp(iconBuf)
+    .resize(appleW, appleH, { fit: 'contain' })
+    .extend({
+      top: Math.floor((180 - appleH) / 2),
+      bottom: Math.ceil((180 - appleH) / 2),
+      left: Math.floor((180 - appleW) / 2),
+      right: Math.ceil((180 - appleW) / 2),
+      background: { r: 255, g: 255, b: 255, alpha: 1 }
+    })
+    .png({ compressionLevel: 9 })
+    .toFile(path.join(PUBLIC, 'apple-touch-icon.png'));
+  console.log(`✓ apple-touch-icon.png (180×180 white background)`);
+
+  /* Dark-mode favicons (white & blue on transparent) */
   const iconRaw = await sharp(iconBuf)
-    .resize(180, 180, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+    .resize(256, Math.round(256 * (iconHeight / iconWidth)), { fit: 'contain' })
     .raw()
     .toBuffer({ resolveWithObject: true });
 
@@ -122,8 +145,17 @@ async function main() {
   });
 
   for (const size of [32, 16]) {
+    const targetW = Math.max(1, Math.round(size * 0.84));
+    const targetH = Math.max(1, Math.round(targetW * (iconHeight / iconWidth)));
     await darkIconSharp.clone()
-      .resize(size, size)
+      .resize(targetW, targetH)
+      .extend({
+        top: Math.floor((size - targetH) / 2),
+        bottom: Math.ceil((size - targetH) / 2),
+        left: Math.floor((size - targetW) / 2),
+        right: Math.ceil((size - targetW) / 2),
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
       .png({ compressionLevel: 9 })
       .toFile(path.join(PUBLIC, `favicon-dark-${size}.png`));
     console.log(`✓ favicon-dark-${size}.png (${size}×${size} dark)`);

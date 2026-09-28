@@ -2,8 +2,21 @@ import { Metadata } from 'next';
 import ContactForm from '@/app/components/ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Trelio',
-  description: 'Get in touch with Trelio to discuss your next IT project. Send us a message and we\'ll get back to you within 24 hours.',
+  title: 'Contact Us | Start Your Project with Trelio',
+  description: 'Get in touch with Trelio today. Schedule a consultation to discuss your web development, mobile app, AI automation, or digital marketing project.',
+  openGraph: {
+    title: 'Contact Us | Start Your Project with Trelio',
+    description: 'Get in touch with Trelio today. Schedule a consultation to discuss your web development, mobile app, AI automation, or digital marketing project.',
+    url: 'https://www.trelio.tech/contact',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Contact Us | Start Your Project with Trelio',
+      },
+    ],
+  },
 };
 
 export default function ContactPage() {

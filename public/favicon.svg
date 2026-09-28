@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-35 -35 393 338" width="100%" height="100%">
+  <style>
+    .t-accent { fill: #1A73FD; }
+    .t-body { fill: #14171A; }
+    @media (prefers-color-scheme: dark) {
+      .t-accent { fill: #388BFD; }
+      .t-body { fill: #FFFFFF; }
+    }
+  </style>
+  <!-- Top-left blue slanted bar -->
+  <polygon class="t-accent" points="32,0 138,0 110,56 4,56" />
+  <!-- Lower blue dynamic accent wedge -->
+  <polygon class="t-accent" points="51,80 109,80 51,233" />
+  <!-- Main T stem & top-right crossbar (dark in light mode, white in dark mode) -->
+  <polygon class="t-body" points="165,0 321,0 294,56 214,56 127,267 65,267 145,60" />
+</svg>

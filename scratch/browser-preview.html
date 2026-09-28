@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trelio Favicon Browser Tab Verification</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    /* Browser Shell Mockup */
+    .browser-window {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      margin-bottom: 16px;
+    }
+    
+    /* Light Theme Browser */
+    .browser-light {
+      background: #ffffff;
+    }
+    .browser-light .window-top {
+      background: #dee1e6;
+      padding: 10px 14px 0 14px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .browser-light .tab-bar {
+      display: flex;
+      align-items: flex-end;
+      flex: 1;
+    }
+    .browser-light .tab {
+      background: #ffffff;
+      height: 38px;
+      padding: 0 16px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 320px;
+      width: 300px;
+      box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
+    }
+    .browser-light .tab-title {
+      font-size: 12px;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+    .browser-light .tab-close {
+      margin-left: auto;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .browser-light .nav-bar {
+      background: #ffffff;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .browser-light .url-bar {
+      background: #f1f5f9;
+      height: 30px;
+      border-radius: 20px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 12px;
+      color: #475569;
+      gap: 8px;
+    }
+    .browser-light .url-bar .lock {
+      color: #10b981;
+      font-size: 11px;
+    }
+
+    /* Dark Theme Browser */
+    .browser-dark {
+      background: #1e2022;
+    }
+    .browser-dark .window-top {
+      background: #191a1c;
+      padding: 10px 14px 0 14px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .browser-dark .tab-bar {
+      display: flex;
+      align-items: flex-end;
+      flex: 1;
+    }
+    .browser-dark .tab {
+      background: #2b2d30;
+      height: 38px;
+      padding: 0 16px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 320px;
+      width: 300px;
+    }
+    .browser-dark .tab-title {
+      font-size: 12px;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+    .browser-dark .tab-close {
+      margin-left: auto;
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .browser-dark .nav-bar {
+      background: #2b2d30;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #33383f;
+    }
+    .browser-dark .url-bar {
+      background: #1c1d1f;
+      height: 30px;
+      border-radius: 20px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 12px;
+      color: #94a3b8;
+      gap: 8px;
+    }
+    .browser-dark .url-bar .lock {
+      color: #10b981;
+      font-size: 11px;
+    }
+
+    /* Window Controls (Red, Yellow, Green dots) */
+    .controls {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      margin-right: 6px;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot.red { background: #ef4444; }
+    .dot.yellow { background: #f59e0b; }
+    .dot.green { background: #10b981; }
+
+    /* Favicon image container */
+    .favicon-16 {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    .favicon-32 {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    /* Comparison Section */
+    .inspection-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .inspection-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .inspection-card h3 {
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+    .preview-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .preview-box.light {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .preview-box.dark {
+      background: #0f172a;
+      border: 1px solid #334155;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .badge-green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Trelio Favicon & SEO Verification</h1>
+    <p>Live preview at actual browser tab size (16×16 px) and high-DPI (32×32 px)</p>
+  </div>
+
+  <!-- Light Theme Browser Window -->
+  <div class="browser-window browser-light">
+    <div class="window-top">
+      <div class="controls">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">
+          <img src="../public/favicon-16.png" class="favicon-16" alt="favicon" />
+          <span class="tab-title">Trelio | Digital Solutions for Growing Businesses Globally</span>
+          <span class="tab-close">×</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar">
+      <div class="url-bar">
+        <span class="lock">🔒</span>
+        <span>https://www.trelio.tech</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark Theme Browser Window -->
+  <div class="browser-window browser-dark">
+    <div class="window-top">
+      <div class="controls">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">
+          <img src="../public/favicon-dark-16.png" class="favicon-16" alt="favicon" />
+          <span class="tab-title">Trelio | Digital Solutions for Growing Businesses Globally</span>
+          <span class="tab-close">×</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar">
+      <div class="url-bar">
+        <span class="lock">🔒</span>
+        <span>https://www.trelio.tech</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Close-up inspection grid -->
+  <div class="inspection-grid">
+    <div class="inspection-card">
+      <h3>16×16 Tab Favicon (Light)</h3>
+      <div class="preview-box light">
+        <img src="../public/favicon-16.png" style="width: 16px; height: 16px;" alt="favicon-16" />
+      </div>
+      <span class="badge badge-green">Actual Size (16px)</span>
+    </div>
+
+    <div class="inspection-card">
+      <h3>16×16 Tab Favicon (Dark)</h3>
+      <div class="preview-box dark">
+        <img src="../public/favicon-dark-16.png" style="width: 16px; height: 16px;" alt="favicon-dark-16" />
+      </div>
+      <span class="badge badge-green">Actual Size (16px)</span>
+    </div>
+
+    <div class="inspection-card">
+      <h3>32×32 Retina Favicon (Light)</h3>
+      <div class="preview-box light">
+        <img src="../public/favicon-32.png" style="width: 32px; height: 32px;" alt="favicon-32" />
+      </div>
+      <span class="badge badge-green">Retina 2x (32px)</span>
+    </div>
+
+    <div class="inspection-card">
+      <h3>32×32 Retina Favicon (Dark)</h3>
+      <div class="preview-box dark">
+        <img src="../public/favicon-dark-32.png" style="width: 32px; height: 32px;" alt="favicon-dark-32" />
+      </div>
+      <span class="badge badge-green">Retina 2x (32px)</span>
+    </div>
+  </div>
+
+</body>
+</html>

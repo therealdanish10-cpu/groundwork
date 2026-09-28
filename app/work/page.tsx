@@ -4,9 +4,22 @@ import { ScrollReveal } from '@/app/components/MotionWrapper'
 import WorkGalleryClient from './WorkGalleryClient'
 
 export const metadata: Metadata = {
-  title: 'Our Work | Trelio IT Services',
-  description: 'Projects we\'re proud of. Explore our portfolio of successful IT implementations and digital solutions.',
-}
+  title: 'Our Work & Case Studies | Trelio',
+  description: 'Discover our portfolio of successful digital projects, custom web platforms, mobile apps, and growth solutions delivered for clients worldwide.',
+  openGraph: {
+    title: 'Our Work & Case Studies | Trelio',
+    description: 'Discover our portfolio of successful digital projects, custom web platforms, mobile apps, and growth solutions delivered for clients worldwide.',
+    url: 'https://www.trelio.tech/work',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Our Work & Case Studies | Trelio',
+      },
+    ],
+  },
+};
 
 export const revalidate = 60
 

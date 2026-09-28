@@ -15,10 +15,38 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: 'Trelio — IT Services & Digital Solutions',
-  description: 'Trelio is a modern IT services agency providing innovative digital solutions, web development, and cloud services for forward-thinking businesses.',
+  metadataBase: new URL('https://www.trelio.tech'),
+  title: {
+    default: 'Trelio | Digital Solutions for Growing Businesses Globally',
+    template: '%s | Trelio',
+  },
+  description: 'Trelio is a global digital agency offering web development, SEO, app development, social media management, AI automation, and more for growing businesses worldwide.',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://www.trelio.tech',
+    siteName: 'Trelio',
+    title: 'Trelio | Digital Solutions for Growing Businesses Globally',
+    description: 'Trelio is a global digital agency offering web development, SEO, app development, social media management, AI automation, and more for growing businesses worldwide.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Trelio | Digital Solutions for Growing Businesses Globally',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Trelio | Digital Solutions for Growing Businesses Globally',
+    description: 'Trelio is a global digital agency offering web development, SEO, app development, social media management, AI automation, and more for growing businesses worldwide.',
+    images: ['/og-image.png'],
+  },
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: light)' },
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
       { url: '/favicon-dark-16.png', sizes: '16x16', type: 'image/png', media: '(prefers-color-scheme: dark)' },

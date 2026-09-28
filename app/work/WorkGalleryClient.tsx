@@ -140,7 +140,7 @@ export default function WorkGalleryClient({
                       {imageUrl ? (
                         <Image
                           src={imageUrl}
-                          alt={project.name}
+                          alt={`${project.name} - ${project.category || 'Portfolio project'} by Trelio`}
                           fill
                           priority={index < 2}
                           sizes="(max-width: 768px) 100vw, 50vw"

@@ -6,9 +6,22 @@ import { Metadata } from 'next'
 import { StaggerContainer, StaggerItem, ScrollReveal } from '@/app/components/MotionWrapper'
 
 export const metadata: Metadata = {
-  title: 'Blog | Trelio IT Services',
-  description: 'Insights, guides, and industry news from the Trelio team.',
-}
+  title: 'Blog & Digital Insights | Trelio',
+  description: 'Stay ahead with actionable insights, expert guides, and the latest trends in web development, AI automation, SEO, and digital growth from Trelio.',
+  openGraph: {
+    title: 'Blog & Digital Insights | Trelio',
+    description: 'Stay ahead with actionable insights, expert guides, and the latest trends in web development, AI automation, SEO, and digital growth from Trelio.',
+    url: 'https://www.trelio.tech/blog',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Blog & Digital Insights | Trelio',
+      },
+    ],
+  },
+};
 
 export const revalidate = 60
 
@@ -60,7 +73,7 @@ export default async function BlogPage() {
                       {post.cover_image ? (
                         <Image
                           src={post.cover_image}
-                          alt={post.title}
+                          alt={`${post.title} - Trelio blog post`}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                           unoptimized

@@ -6,8 +6,23 @@ import { SERVICES } from '@/lib/services';
 import { ScrollReveal, StaggerContainer, StaggerItem, LazyCard } from './components/MotionWrapper';
 
 export const metadata: Metadata = {
-  title: 'Trelio | Intelligent Digital Solutions',
-  description: 'Transform Your Business with Intelligent Digital Solutions. Trelio offers comprehensive IT services for modern businesses.',
+  title: {
+    absolute: 'Trelio | Digital Solutions for Growing Businesses Globally',
+  },
+  description: 'Trelio is a global digital agency offering web development, SEO, app development, social media management, AI automation, and more for growing businesses worldwide.',
+  openGraph: {
+    title: 'Trelio | Digital Solutions for Growing Businesses Globally',
+    description: 'Trelio is a global digital agency offering web development, SEO, app development, social media management, AI automation, and more for growing businesses worldwide.',
+    url: 'https://www.trelio.tech',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Trelio | Digital Solutions for Growing Businesses Globally',
+      },
+    ],
+  },
 };
 
 export const revalidate = 60;
@@ -157,7 +172,7 @@ export default async function HomePage() {
                   <div className="h-44 relative w-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
                     <Image 
                       src={service.image} 
-                      alt={service.name}
+                      alt={`${service.name} - Trelio digital service`}
                       fill
                       priority={index < 2}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
@@ -312,7 +327,7 @@ export default async function HomePage() {
                       {(project.screenshot || project.screenshot_url) ? (
                         <Image 
                           src={project.screenshot || project.screenshot_url} 
-                          alt={project.name}
+                          alt={`${project.name} - ${project.category || 'Featured project'} by Trelio`}
                           fill
                           loading="lazy"
                           className="object-cover group-hover:scale-105 transition-transform duration-500"

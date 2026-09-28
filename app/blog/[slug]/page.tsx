@@ -21,7 +21,7 @@ export async function generateMetadata(
   
   const { data: post } = await supabase
     .from('blogs')
-    .select('title, content')
+    .select('title, content, cover_image')
     .eq('slug', slug)
     .single()
  
@@ -29,9 +29,33 @@ export async function generateMetadata(
     return { title: 'Post Not Found | Trelio' }
   }
  
+  const title = `${post.title} | Trelio Blog`
+  const description = post.content?.replace(/<[^>]+>/g, '').substring(0, 150) || 'Read more on Trelio Blog'
+  const ogImage = post.cover_image || '/og-image.png'
+
   return {
-    title: `${post.title} | Trelio Blog`,
-    description: post.content?.replace(/<[^>]+>/g, '').substring(0, 150) || 'Read more on Trelio Blog',
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://www.trelio.tech/blog/${slug}`,
+      type: 'article',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+    },
   }
 }
 

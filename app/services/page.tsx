@@ -5,8 +5,21 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from '@/app/components/Mo
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Our Services | Trelio',
-  description: 'Comprehensive digital solutions tailored to help your business grow, innovate, and succeed in a fast-paced world.',
+  title: 'Digital Services & Solutions | Trelio',
+  description: 'Explore Trelio\'s comprehensive digital services, including web development, SEO, mobile apps, AI automation, social media management, and paid advertising.',
+  openGraph: {
+    title: 'Digital Services & Solutions | Trelio',
+    description: 'Explore Trelio\'s comprehensive digital services, including web development, SEO, mobile apps, AI automation, social media management, and paid advertising.',
+    url: 'https://www.trelio.tech/services',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Digital Services & Solutions | Trelio',
+      },
+    ],
+  },
 };
 
 export default function ServicesPage() {
@@ -33,7 +46,7 @@ export default function ServicesPage() {
                   <div className="relative h-44 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">
                     <Image
                       src={service.image}
-                      alt={service.name}
+                      alt={`${service.name} - Trelio digital services`}
                       fill
                       priority={index < 2}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
