@@ -61,6 +61,29 @@ export default function EditGalleryProjectPage(props: { params: Promise<{ id: st
       console.warn('Supabase storage upload fell back:', err);
     }
 
+    try {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+      uploadData.append('bucket', 'gallery');
+      uploadData.append('folder', 'screenshots');
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: uploadData
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.publicUrl) {
+          setFormData(prev => ({ ...prev, screenshot_url: result.publicUrl }));
+          setUploading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('API upload fell back:', err);
+    }
+
     // Fallback: Read as base64 data URL
     const reader = new FileReader();
     reader.onloadend = () => {

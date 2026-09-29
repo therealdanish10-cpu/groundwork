@@ -4,10 +4,22 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SERVICES } from '@/lib/services';
+import { createClient } from '@/lib/supabase/client';
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trimStart()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
 
 export default function NewBlogPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [isSlugCustomized, setIsSlugCustomized] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -19,23 +31,94 @@ export default function NewBlogPage() {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)+/g, '');
-    
-    setFormData(prev => ({ ...prev, title, slug }));
+    if (!isSlugCustomized) {
+      const slug = slugify(title);
+      setFormData(prev => ({ ...prev, title, slug }));
+    } else {
+      setFormData(prev => ({ ...prev, title }));
+    }
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const slug = e.target.value;
+    if (slug === '') {
+      setIsSlugCustomized(false);
+      setFormData(prev => ({ ...prev, slug: slugify(formData.title).replace(/-+$/, '') }));
+    } else {
+      setIsSlugCustomized(true);
+      setFormData(prev => ({ ...prev, slug }));
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const supabase = createClient();
+      const fileExt = file.name.split('.').pop() || 'png';
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `blogs/${fileName}`;
+
+      const { data, error } = await supabase.storage.from('gallery').upload(filePath, file);
+      if (!error && data) {
+        const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(filePath);
+        setFormData(prev => ({ ...prev, cover_image: publicUrl }));
+        setUploading(false);
+        return;
+      }
+    } catch (err) {
+      console.warn('Direct Supabase storage upload fell back:', err);
+    }
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+      uploadData.append('bucket', 'gallery');
+      uploadData.append('folder', 'blogs');
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: uploadData
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.publicUrl) {
+          setFormData(prev => ({ ...prev, cover_image: result.publicUrl }));
+          setUploading(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('API upload fell back:', err);
+    }
+
+    // Fallback: Read as base64 data URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({ ...prev, cover_image: reader.result as string }));
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    const cleanSlug = formData.slug.trim().replace(/^-+|-+$/g, '');
+    const submissionData = {
+      ...formData,
+      slug: cleanSlug || slugify(formData.title).replace(/^-+|-+$/g, '')
+    };
+
     try {
       const res = await fetch('/api/admin/blogs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submissionData)
       });
 
       if (res.ok) {
@@ -108,9 +191,23 @@ export default function NewBlogPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="slug">
-              URL Slug <span className="text-red-500">*</span>
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="slug">
+                URL Slug <span className="text-red-500">*</span>
+              </label>
+              {isSlugCustomized && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSlugCustomized(false);
+                    setFormData(prev => ({ ...prev, slug: slugify(prev.title).replace(/-+$/, '') }));
+                  }}
+                  className="text-xs text-[var(--blue)] hover:underline cursor-pointer"
+                >
+                  Reset to auto-generated
+                </button>
+              )}
+            </div>
             <div className="relative">
               <span className="absolute left-3.5 top-3.5 text-xs text-[var(--gray)] font-mono select-none">
                 /blog/
@@ -121,7 +218,7 @@ export default function NewBlogPage() {
                 type="text"
                 placeholder="10-high-impact-seo-strategies"
                 value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                onChange={handleSlugChange}
                 className="w-full pl-16 pr-4 py-3 rounded-xl text-sm font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
                 style={{
                   background: 'var(--paper)',
@@ -184,26 +281,69 @@ export default function NewBlogPage() {
           </div>
         </div>
 
-        {/* Cover Image */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="cover_image">
-            Cover Image URL
-          </label>
-          <input
-            id="cover_image"
-            type="url"
-            placeholder="https://images.unsplash.com/..."
-            value={formData.cover_image}
-            onChange={(e) => setFormData({ ...formData, cover_image: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
-            style={{
-              background: 'var(--paper)',
-              borderColor: 'var(--border)',
-              color: 'var(--fg)',
-            }}
-          />
+        {/* Cover Image Upload / URL */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="cover_image">
+              Cover Image
+            </label>
+            {formData.cover_image && (
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, cover_image: '' }))}
+                className="text-xs text-red-500 hover:underline cursor-pointer"
+              >
+                Remove image
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+            {/* File Upload Trigger */}
+            <div 
+              className="p-4 rounded-xl border border-dashed text-center flex flex-col items-center justify-center cursor-pointer hover:border-[var(--blue)] transition-colors"
+              style={{ background: 'var(--paper)', borderColor: 'var(--border)' }}
+            >
+              <input
+                type="file"
+                id="cover-image-upload"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <label htmlFor="cover-image-upload" className="cursor-pointer flex flex-col items-center">
+                <svg className="w-8 h-8 text-[var(--gray)] mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-xs font-semibold text-[var(--blue)]">
+                  {uploading ? 'Uploading to storage...' : 'Click to upload cover image'}
+                </span>
+                <span className="text-[11px] text-[var(--gray)] mt-0.5">PNG, JPG, WebP up to 5MB</span>
+              </label>
+            </div>
+
+            {/* Direct URL Input */}
+            <div className="space-y-1.5">
+              <span className="text-xs text-[var(--gray)]">Or paste hosted image URL:</span>
+              <input
+                id="cover_image"
+                type="url"
+                placeholder="https://images.unsplash.com/..."
+                value={formData.cover_image}
+                onChange={(e) => setFormData({ ...formData, cover_image: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-xl text-sm border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent"
+                style={{
+                  background: 'var(--paper)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--fg)',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Preview Container */}
           {formData.cover_image && (
-            <div className="mt-3 relative w-48 aspect-[16/9] rounded-xl overflow-hidden border" style={{ borderColor: 'var(--border)' }}>
+            <div className="mt-3 relative w-full sm:w-80 aspect-[16/10] rounded-xl overflow-hidden border shadow-sm" style={{ borderColor: 'var(--border)' }}>
               <img src={formData.cover_image} alt="Preview" className="w-full h-full object-cover" />
             </div>
           )}
