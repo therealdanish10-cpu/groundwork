@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/app/components/MotionWrapper';
 import { Metadata } from 'next';
+import { stripMarkdown } from '@/lib/markdown';
 
 export async function generateStaticParams() {
   return SERVICES.map((service) => ({
@@ -28,6 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://www.trelio.tech/services/${service.slug}`,
+    },
     openGraph: {
       title,
       description,
@@ -164,11 +168,11 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                         </h3>
                         {blog.excerpt ? (
                           <p className="text-[var(--gray)] text-sm line-clamp-3 mb-4">
-                            {blog.excerpt}
+                            {stripMarkdown(blog.excerpt)}
                           </p>
                         ) : blog.content ? (
                           <p className="text-[var(--gray)] text-sm line-clamp-3 mb-4">
-                            {blog.content.substring(0, 150).replace(/<[^>]+>/g, '')}...
+                            {stripMarkdown(blog.content).substring(0, 150)}...
                           </p>
                         ) : null}
                         <div className="mt-auto">

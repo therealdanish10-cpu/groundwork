@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { SERVICES } from '@/lib/services';
+import BlogMarkdown from '@/app/components/BlogMarkdown';
 import React from 'react';
 
 function slugify(text: string): string {
@@ -23,6 +24,7 @@ export default function EditBlogPage(props: { params: Promise<{ id: string }> })
   const [uploading, setUploading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [isSlugCustomized, setIsSlugCustomized] = useState(true);
+  const [contentTab, setContentTab] = useState<'write' | 'preview' | 'split'>('write');
   
   const [formData, setFormData] = useState({
     title: '',
@@ -129,6 +131,12 @@ export default function EditBlogPage(props: { params: Promise<{ id: string }> })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.content.trim()) {
+      alert('Please enter article content');
+      return;
+    }
+
     setLoading(true);
 
     const cleanSlug = formData.slug.trim().replace(/^-+|-+$/g, '');
@@ -390,26 +398,131 @@ export default function EditBlogPage(props: { params: Promise<{ id: string }> })
         </div>
 
         {/* Content Area */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <label className="block text-sm font-semibold text-[var(--fg)]" htmlFor="content">
-              Content (Markdown or HTML) <span className="text-red-500">*</span>
+              Content (Markdown) <span className="text-red-500">*</span>
             </label>
-            <span className="text-xs text-[var(--gray)]">Supports markdown formatting</span>
+            <div 
+              className="inline-flex items-center gap-1 p-1 rounded-xl border"
+              style={{ background: 'var(--paper)', borderColor: 'var(--border)' }}
+            >
+              <button
+                type="button"
+                onClick={() => setContentTab('write')}
+                className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  contentTab === 'write'
+                    ? 'bg-[var(--blue)] text-white shadow-sm'
+                    : 'text-[var(--gray)] hover:text-[var(--fg)]'
+                }`}
+              >
+                Write
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentTab('preview')}
+                className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  contentTab === 'preview'
+                    ? 'bg-[var(--blue)] text-white shadow-sm'
+                    : 'text-[var(--gray)] hover:text-[var(--fg)]'
+                }`}
+              >
+                Preview
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentTab('split')}
+                className={`hidden md:inline-flex px-3 py-1 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                  contentTab === 'split'
+                    ? 'bg-[var(--blue)] text-white shadow-sm'
+                    : 'text-[var(--gray)] hover:text-[var(--fg)]'
+                }`}
+              >
+                Split View
+              </button>
+            </div>
           </div>
-          <textarea
-            id="content"
-            required
-            rows={12}
-            value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl text-sm font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent resize-y"
-            style={{
-              background: 'var(--paper)',
-              borderColor: 'var(--border)',
-              color: 'var(--fg)',
-            }}
-          />
+
+          {/* Write Tab */}
+          {contentTab === 'write' && (
+            <textarea
+              id="content"
+              rows={15}
+              placeholder="Write your article content here in Markdown...&#10;&#10;## Section Heading&#10;Write detailed paragraphs with **bold text**, [links](https://...), and actionable insights.&#10;&#10;- Bullet point 1&#10;- Bullet point 2"
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl text-sm font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent resize-y"
+              style={{
+                background: 'var(--paper)',
+                borderColor: 'var(--border)',
+                color: 'var(--fg)',
+                minHeight: '340px',
+              }}
+            />
+          )}
+
+          {/* Preview Tab */}
+          {contentTab === 'preview' && (
+            <div
+              className="w-full p-6 sm:p-8 rounded-xl border overflow-y-auto"
+              style={{
+                background: 'var(--paper)',
+                borderColor: 'var(--border)',
+                minHeight: '340px',
+                maxHeight: '650px',
+              }}
+            >
+              {formData.content.trim() ? (
+                <BlogMarkdown content={formData.content} />
+              ) : (
+                <div className="py-16 text-center text-[var(--gray)]">
+                  <p className="text-sm font-medium">Nothing to preview yet.</p>
+                  <p className="text-xs mt-1">Switch to the Write tab and enter some Markdown content.</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Split Tab */}
+          {contentTab === 'split' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <textarea
+                id="content-split"
+                rows={15}
+                placeholder="Write your article content here in Markdown..."
+                value={formData.content}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl text-sm font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[var(--blue)] focus:border-transparent resize-y"
+                style={{
+                  background: 'var(--paper)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--fg)',
+                  minHeight: '340px',
+                }}
+              />
+              <div
+                className="w-full p-6 rounded-xl border overflow-y-auto"
+                style={{
+                  background: 'var(--paper)',
+                  borderColor: 'var(--border)',
+                  minHeight: '340px',
+                  maxHeight: '520px',
+                }}
+              >
+                {formData.content.trim() ? (
+                  <BlogMarkdown content={formData.content} />
+                ) : (
+                  <div className="py-16 text-center text-[var(--gray)]">
+                    <p className="text-sm font-medium">Live preview will render here as you type.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          <p className="text-xs text-[var(--gray)] mt-1.5">
+            Supports Markdown: ## for headings, - for bullets, ** for bold
+          </p>
         </div>
 
         {/* Action Buttons */}

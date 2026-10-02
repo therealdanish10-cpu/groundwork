@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { StaggerContainer, StaggerItem, ScrollReveal } from '@/app/components/MotionWrapper'
+import { stripMarkdown } from '@/lib/markdown'
 
 export const metadata: Metadata = {
   title: 'Blog & Digital Insights | Trelio',
@@ -68,6 +69,7 @@ export default async function BlogPage() {
             {posts.map((post, index) => {
               const service = SERVICES.find(s => s.slug === post.service_tag)
               const serviceName = service ? service.name : post.service_tag
+              const excerpt = stripMarkdown(post.content)
 
               return (
                 <StaggerItem
@@ -112,11 +114,16 @@ export default async function BlogPage() {
                         )}
                       </div>
 
-                      {/* Bottom left: Title and Date */}
+                      {/* Bottom left: Title, Excerpt, and Date */}
                       <div>
-                        <h2 className="text-lg sm:text-xl font-bold text-white leading-snug line-clamp-3 drop-shadow-sm group-hover:text-blue-100 transition-colors duration-300">
+                        <h2 className="text-lg sm:text-xl font-bold text-white leading-snug line-clamp-2 drop-shadow-sm group-hover:text-blue-100 transition-colors duration-300">
                           {post.title}
                         </h2>
+                        {excerpt && (
+                          <p className="text-xs sm:text-sm text-gray-200/85 line-clamp-2 mt-1 leading-relaxed font-normal">
+                            {excerpt}
+                          </p>
+                        )}
                         <time
                           dateTime={post.created_at}
                           className="text-xs text-gray-300/90 font-medium mt-2 block"

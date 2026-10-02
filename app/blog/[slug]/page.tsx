@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Metadata, ResolvingMetadata } from 'next'
 import { ScrollReveal } from '@/app/components/MotionWrapper'
+import { stripMarkdown } from '@/lib/markdown'
+import BlogMarkdown from '@/app/components/BlogMarkdown'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -30,7 +32,8 @@ export async function generateMetadata(
   }
  
   const title = `${post.title} | Trelio Blog`
-  const description = post.content?.replace(/<[^>]+>/g, '').substring(0, 150) || 'Read more on Trelio Blog'
+  const plainText = stripMarkdown(post.content)
+  const description = plainText ? plainText.substring(0, 150) : 'Read more on Trelio Blog'
   const ogImage = post.cover_image || '/og-image.png'
 
   return {
@@ -64,7 +67,7 @@ export async function generateMetadata(
 
 function getReadingTime(content: string | null | undefined): string {
   if (!content) return '1 min read';
-  const text = content.replace(/<[^>]+>/g, '');
+  const text = stripMarkdown(content);
   const words = text.trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.ceil(words / 200));
   return `${minutes} min read`;
@@ -171,8 +174,8 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Article Body */}
       <ScrollReveal delay={0.15}>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-lg prose-slate dark:prose-invert">
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <BlogMarkdown content={post.content} />
         </div>
       </ScrollReveal>
 
