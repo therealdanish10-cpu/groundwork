@@ -8,6 +8,9 @@ import { StaggerContainer, StaggerItem, ScrollReveal } from '@/app/components/Mo
 export const metadata: Metadata = {
   title: 'Blog & Digital Insights | Trelio',
   description: 'Stay ahead with actionable insights, expert guides, and the latest trends in web development, AI automation, SEO, and digital growth from Trelio.',
+  alternates: {
+    canonical: 'https://www.trelio.tech/blog',
+  },
   openGraph: {
     title: 'Blog & Digital Insights | Trelio',
     description: 'Stay ahead with actionable insights, expert guides, and the latest trends in web development, AI automation, SEO, and digital growth from Trelio.',
@@ -61,67 +64,72 @@ export default async function BlogPage() {
             <p className="mt-2 text-gray-600 dark:text-gray-300">Check back soon for our latest insights and analysis.</p>
           </div>
         ) : (
-          <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {posts.map((post, index) => {
               const service = SERVICES.find(s => s.slug === post.service_tag)
               const serviceName = service ? service.name : post.service_tag
 
               return (
-                <StaggerItem key={post.id} index={index}>
-                  <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 hover:shadow-xl transition-all duration-300 group">
-                    <div className="relative h-52 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                      {post.cover_image ? (
-                        <Image
-                          src={post.cover_image}
-                          alt={`${post.title} - Trelio blog post`}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          unoptimized
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-[var(--blue)]/10">
-                          <span className="text-[var(--blue)] font-bold">Trelio</span>
-                        </div>
-                      )}
-                      {serviceName && (
-                        <div className="absolute top-4 right-4 z-10">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white backdrop-blur-md shadow-sm border border-gray-200/50 dark:border-gray-700/50">
+                <StaggerItem
+                  key={post.id}
+                  index={index}
+                  duration={1.05}
+                  y={20}
+                  stagger={0.12}
+                >
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group relative block w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 ease-out hover:-translate-y-1.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--blue)] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950 border border-gray-200/60 dark:border-gray-800"
+                  >
+                    {/* Background image or Fallback Navy-to-Blue Gradient */}
+                    {post.cover_image ? (
+                      <Image
+                        src={post.cover_image}
+                        alt={`${post.title} - Trelio`}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#0B192C] via-[#0F284E] to-[#1E40AF]" />
+                    )}
+
+                    {/* Overall dark tint for readable text across any image */}
+                    <div className="absolute inset-0 bg-black/30 z-[1]" />
+
+                    {/* Dark gradient overlay, stronger at the bottom */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent z-[2]" />
+
+                    {/* Content overlay */}
+                    <div className="relative z-10 h-full p-5 sm:p-6 flex flex-col justify-between">
+                      {/* Top left: Category pill */}
+                      <div>
+                        {serviceName && (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[var(--blue)] text-white shadow-sm">
                             {serviceName}
                           </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 p-6 flex flex-col justify-between">
+                        )}
+                      </div>
+
+                      {/* Bottom left: Title and Date */}
                       <div>
-                        <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2">
-                          <time dateTime={post.created_at}>
-                            {new Date(post.created_at).toLocaleDateString('en-US', {
-                              month: 'long',
-                              day: 'numeric',
-                              year: 'numeric'
-                            })}
-                          </time>
-                        </div>
-                        <Link href={`/blog/${post.slug}`} className="block mt-1">
-                          <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-[var(--blue)] dark:group-hover:text-[var(--blue)] transition-colors line-clamp-2 leading-snug">
-                            {post.title}
-                          </h3>
-                        </Link>
-                        <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">
-                          {post.content ? post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : ''}
-                        </p>
-                      </div>
-                      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
-                        <Link 
-                          href={`/blog/${post.slug}`}
-                          className="text-[var(--blue)] font-bold text-sm inline-flex items-center gap-1 group/link"
+                        <h2 className="text-lg sm:text-xl font-bold text-white leading-snug line-clamp-3 drop-shadow-sm group-hover:text-blue-100 transition-colors duration-300">
+                          {post.title}
+                        </h2>
+                        <time
+                          dateTime={post.created_at}
+                          className="text-xs text-gray-300/90 font-medium mt-2 block"
                         >
-                          <span>Read article</span>
-                          <span className="transition-transform duration-200 group-hover/link:translate-x-1">→</span>
-                        </Link>
+                          {new Date(post.created_at).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </time>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </StaggerItem>
               )
             })}
